@@ -7,12 +7,18 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Tests {@link SyncSuccessfulPDU}
+ */
 public class SyncSuccessfulPDUTest {
 
+    /**
+     * Tests serialize() method by serializing to ByteArrayOutputStream and then checking
+     * if the according inputstream.readInt() returns the needed pdu ID
+     */
     @Test
     public void testSerialize() {
         System.out.println("Testing SyncSuccessfulPDU Serializing");
@@ -29,15 +35,15 @@ public class SyncSuccessfulPDUTest {
         }
     }
 
+    /**
+     * Checks if deserialisation works correctly with a given inputstream.<br>
+     * actually a joke-test because the pdu has no datablock...
+     */
     @Test
     public void testDeserialize() {
         System.out.println("Testing SyncSuccessfulPDU Deserializing");
         try {
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            DataOutputStream dos = new DataOutputStream(os);
-            dos.writeInt(SyncSuccessfulPDU.ID);
-            assertEquals(4, os.size());
-            InputStream is = new ByteArrayInputStream(os.toByteArray());
+            InputStream is = new ByteArrayInputStream(new byte[0]);
             PDU pdu = SyncSuccessfulPDU.fromInputStream(is);
             assertEquals(SyncSuccessfulPDU.ID, pdu.getID());
         } catch (IOException e) {
