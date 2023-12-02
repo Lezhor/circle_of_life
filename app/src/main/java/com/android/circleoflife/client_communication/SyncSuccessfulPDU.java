@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * PDU which terminates the synchronisation. has no datablock
+ */
 class SyncSuccessfulPDU implements PDU {
 
     final static int ID = 6;

@@ -16,7 +16,7 @@ import java.io.OutputStream;
  */
 class SendAuthPDU implements PDU {
 
-    final static int ID = 6;
+    final static int ID = 1;
 
     private String authString;
 
