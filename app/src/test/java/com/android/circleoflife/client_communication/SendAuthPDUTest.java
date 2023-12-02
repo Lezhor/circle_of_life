@@ -3,6 +3,7 @@ package com.android.circleoflife.client_communication;
 import static org.junit.Assert.*;
 
 import com.android.circleoflife.auth.Authentication;
+import com.android.circleoflife.auth.AuthenticationFailedException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class SendAuthPDUTest {
      * returns <code>auth[johnny_depp123|24257]</code>
      */
     @Before
-    public void setUp() {
+    public void setUp() throws AuthenticationFailedException {
         auth = Mockito.mock(Authentication.class);
         Mockito.when(auth.getAuthenticationString()).thenReturn("auth[johnny_depp123|24257]");
         //System.out.println("Mocked Authentication.getAuthenticationString() to return '" + auth.getAuthenticationString() + "'");
@@ -49,7 +50,7 @@ public class SendAuthPDUTest {
             DataInputStream dis = new DataInputStream(is);
             assertEquals(pdu.getID(), dis.readInt());
             assertEquals(pdu.getAuthString(), dis.readUTF());
-        } catch (IOException e) {
+        } catch (IOException | AuthenticationFailedException e) {
             fail();
         }
     }
@@ -68,7 +69,7 @@ public class SendAuthPDUTest {
             SendAuthPDU pdu = SendAuthPDU.fromInputStream(is);
             assertEquals(SendAuthPDU.ID, pdu.getID());
             assertEquals(auth.getAuthenticationString(), pdu.getAuthString());
-        } catch (IOException e) {
+        } catch (IOException | AuthenticationFailedException e) {
             fail();
         }
     }
