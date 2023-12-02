@@ -10,18 +10,7 @@ import java.io.OutputStream;
  * LogSerializer can serialize and deserialize {@link Log logs} from and to IOStreams.<br>
  * It is used in the {@link com.android.circleoflife.client_communication.SendLogsPDU SendLogsPDU}.
  */
-public class LogSerializer {
-
-    private static LogSerializer instance;
-
-    public static LogSerializer getInstance() {
-        if (instance == null) {
-            instance = new LogSerializer();
-        }
-        return instance;
-    }
-
-    private LogSerializer() {}
+public interface LogSerializer {
 
     /**
      * serializes log to OutputStream
@@ -29,9 +18,7 @@ public class LogSerializer {
      * @param log log to be serialized
      * @throws IOException if serializing fails
      */
-    public void serialize(OutputStream os, Log log) throws IOException {
-        // TODO: 02.12.2023 serialize logs
-    }
+    public void serialize(OutputStream os, Log log) throws IOException;
 
     /**
      * deserializes log from InputStream
@@ -39,9 +26,6 @@ public class LogSerializer {
      * @return log to be serialized
      * @throws IOException if deserializing fails
      */
-    public Log deserialize(InputStream is) throws IOException {
-        // TODO: 02.12.2023 deserialize logs
-        return new Log("Log|max_mustermann|" + System.currentTimeMillis());
-    }
+    public Log deserialize(InputStream is) throws IOException;
 
 }

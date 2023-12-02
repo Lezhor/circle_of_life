@@ -1,6 +1,7 @@
 package com.android.circleoflife;
 
 import com.android.circleoflife.logging.serializing.LogSerializer;
+import com.android.circleoflife.logging.serializing.LogSerializerImpl;
 
 /**
  * This project follows the Singleton pattern.<br>
@@ -12,10 +13,10 @@ public final class Application {
     /**
      * {@link LogSerializer} works with the Singleton pattern.
      * @return the only existing instance of {@link LogSerializer}
-     * @see LogSerializer#getInstance()
+     * @see LogSerializerImpl#getInstance()
      */
     public static LogSerializer getLogSerializer() {
-        return LogSerializer.getInstance();
+        return LogSerializerImpl.getInstance();
     }
 
 }
