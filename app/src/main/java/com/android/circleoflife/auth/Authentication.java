@@ -15,28 +15,32 @@ public interface Authentication {
      * If this is true, there will be no communication with the server! ever!<br>
      * Note that enabling it later could not work in some cases.
      * @return whether or not server-syncing is enabled. true means not.
+     * @throws AuthenticationFailedException if user is not logged in
      */
-    boolean localOnly();
+    boolean localOnly() throws AuthenticationFailedException;
 
     /**
      * Does nothing is {@link Authentication#localOnly()} is set to false or if currently not authenticated.
      * @return true if enabling was successful.
+     * @throws AuthenticationFailedException if user is not logged in
      */
-    boolean enableServerSide();
+    boolean enableServerSide() throws AuthenticationFailedException;
 
     /**
      * Getter for username. Returns null if currently not authenticated<br>
      * Username contains only lowercase letters, digits and underscores
      * @return returns username
+     * @throws AuthenticationFailedException if user is not logged in
      */
-    String getUserName();
+    String getUserName() throws AuthenticationFailedException;
 
     /**
      * Returns the displayed version of the userName.
      * @return displayed version of userName
      * @see Authentication#usernameToDisplayedVersion(String)
+     * @throws AuthenticationFailedException if user is not logged in
      */
-    default String getDisplayedUsername() {
+    default String getDisplayedUsername() throws AuthenticationFailedException {
         return usernameToDisplayedVersion(getUserName());
     }
 
@@ -63,14 +67,16 @@ public interface Authentication {
     /**
      * Getter for password hash. PasswordHash makes use of timeStampOfAccountCreation. Returns null if currently not authenticated.
      * @return returns password hash
+     * @throws AuthenticationFailedException if user is not logged in
      */
-    String getPasswordHash();
+    String getPasswordHash() throws AuthenticationFailedException;
 
     /**
      * Returns timestamp of account creation. can't be changed.
      * @return timestamp of account creation.
+     * @throws AuthenticationFailedException if user is not logged in
      */
-    Date getTimeStampOfAccountCreation();
+    Date getTimeStampOfAccountCreation() throws AuthenticationFailedException;
 
     /**
      * Used in {@link com.android.circleoflife.client_communication.SyncProtocol SyncProtocol} for the authentication.<br>
@@ -79,8 +85,9 @@ public interface Authentication {
      *     "auth[userName|passwordHash]"
      * </code>
      * @return String containing username and password hash
+     * @throws AuthenticationFailedException if user is not logged in
      */
-    String getAuthenticationString();
+    String getAuthenticationString() throws AuthenticationFailedException;
 
     /**
      * Returns authenticated status for user username
@@ -97,8 +104,9 @@ public interface Authentication {
      * @param userName userName for authentication
      * @param password password for authentication
      * @return true or false whether or not the user is authenticated now.
+     * @throws AuthenticationFailedException if user is not logged in
      */
-    boolean login(String userName, String password);
+    boolean login(String userName, String password) throws AuthenticationFailedException;
 
     /**
      * After this method is called the no user will be authenticated.
