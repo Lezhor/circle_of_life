@@ -1,0 +1,21 @@
+package com.android.circleoflife;
+
+import com.android.circleoflife.logging.serializing.LogSerializer;
+
+/**
+ * This project follows the Singleton pattern.<br>
+ * Every Class which allows only one existing instance is accessed from this class.<br>
+ * This way every component can access each other component easily
+ */
+public final class Application {
+
+    /**
+     * {@link LogSerializer} works with the Singleton pattern.
+     * @return the only existing instance of {@link LogSerializer}
+     * @see LogSerializer#getInstance()
+     */
+    public static LogSerializer getLogSerializer() {
+        return LogSerializer.getInstance();
+    }
+
+}
