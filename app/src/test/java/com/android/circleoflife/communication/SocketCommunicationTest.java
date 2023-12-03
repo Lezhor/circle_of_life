@@ -46,13 +46,13 @@ public class SocketCommunicationTest {
     @Test
     public void testConnectToServerNoServer() {
         System.out.println("Testing ConnectToServer No Server");
-        SocketCommunication com = new SocketCommunication("localhost", PORT);
+        SocketCommunicationImpl com = new SocketCommunicationImpl("localhost", PORT);
         assertThrows(IOException.class, com::connectToServer);
     }
 
     /**
-     * Server setup. Checks {@link SocketCommunication#connectToServer()}, {@link SocketCommunication#connected()}
-     * and {@link SocketCommunication#disconnectFromServer()} methods.<br>
+     * Server setup. Checks {@link SocketCommunicationImpl#connectToServer()}, {@link SocketCommunicationImpl#connected()}
+     * and {@link SocketCommunicationImpl#disconnectFromServer()} methods.<br>
      * Also retrieves Input- and OutputStreams from SocketCommunication and from Server-Thread and checks if they are connected (by sending bytes back and forth)
      */
     @Test
@@ -60,7 +60,7 @@ public class SocketCommunicationTest {
         System.out.println("Testing ServerConnection");
         setUp();
         serverThread.start();
-        SocketCommunication com = new SocketCommunication("localhost", PORT);
+        SocketCommunicationImpl com = new SocketCommunicationImpl("localhost", PORT);
         assertFalse(com.connected());
         try {
             com.connectToServer();
@@ -78,7 +78,7 @@ public class SocketCommunicationTest {
         assertFalse(com.connected());
     }
 
-    private void checkInputAndOutputStreams(SocketCommunication com) {
+    private void checkInputAndOutputStreams(SocketCommunicationImpl com) {
         InputStream clientIS = com.getInputStream();
         OutputStream clientOS = com.getOutputStream();
         assertNotNull(clientIS);

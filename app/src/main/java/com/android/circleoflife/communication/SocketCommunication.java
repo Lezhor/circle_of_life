@@ -3,117 +3,63 @@ package com.android.circleoflife.communication;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.Socket;
-import java.net.UnknownHostException;
 
 /**
- * SocketCommunication used in {@link SyncProtocolEngine}
+ * SocketCommunication used in {@link SyncProtocolEngine}<br>
+ * @see com.android.circleoflife.Application#
  */
-class SocketCommunication {
+public interface SocketCommunication {
 
     /**
-     * Default IP adress
-     */
-    public static String SERVER_IP = "192.168.188.70";
-
-    /**
-     * Default port
-     */
-    public static int PORT = 7777;
-
-    private final String serverIP;
-    private final int port;
-
-    private Socket socket;
-
-
-    /**
-     * Constructor for SocketCommunication
-     * @param serverIP new value for serverIP
-     * @param port new value for port
-     */
-    public SocketCommunication(String serverIP, int port) {
-        this.serverIP = serverIP;
-        this.port = port;
-    }
-
-    /**
-     * Default Constructor for te SocketCommunication
-     */
-    public SocketCommunication() {
-        this(SERVER_IP, PORT);
-    }
-
-    /**
-     * Connects to Server with Server IP and Port which are static final values.<br>
+     * Connects to Server with Server IP and Port.<br>
      * Doesn't even try to connect if socket is not null
      * @throws IOException if connecting to server fails.
      */
-    public void connectToServer() throws IOException {
-        if (!connected()) {
-            try {
-                socket = new Socket(serverIP, port);
-            } catch (UnknownHostException e) {
-                throw new IOException("Host unknown");
-            }
-        }
+    void connectToServer(String ip, int port) throws IOException;
+
+    /**
+     * Connects to Server with Server IP and Port which aer defined in this class.<br>
+     * Doesn't even try to connect if socket is not null
+     * @throws IOException if connecting to server fails.
+     * @see SocketCommunication#getServerIP()
+     * @see SocketCommunication#getPort()
+     */
+    default void connectToServer() throws IOException {
+        connectToServer(getServerIP(), getPort());
     }
 
     /**
-     * Disconnects from server. After this method is called the socket attribute is always null.
+     * Disconnects from server.
      */
-    public void disconnectFromServer() {
-        if (connected()) {
-            try {
-                socket.close();
-            } catch (IOException ignored) {
-            } finally {
-                socket = null;
-            }
-        }
-    }
+    void disconnectFromServer() throws IOException;
 
     /**
      * checks if the socket is connected to the server
      * @return true if the socket is connected.
      */
-    public boolean connected() {
-        if (socket == null) {
-            return false;
-        }
-        if (socket.isConnected()) {
-            return true;
-        } else {
-            socket = null;
-            return false;
-        }
-    }
+    boolean connected();
 
     /**
-     * Returns inputstream of the socket. If there is no connection (socket is null) returns null;
+     * Returns inputstream of the socket. If there is no connection returns null;
      * @return InputStream of the socket.
      */
-    public InputStream getInputStream()  {
-        if (connected()) {
-            try {
-                return socket.getInputStream();
-            } catch (NullPointerException | IOException ignored) {
-            }
-        }
-        return null;
-    }
+    InputStream getInputStream();
 
     /**
-     * Returns OutputStream of the socket. If there is no connection (socket is null) returns null;
+     * Returns OutputStream of the socket. If there is no connection returns null;
      * @return OutputStream of the socket.
      */
-    public OutputStream getOutputStream() {
-        if (connected()) {
-            try {
-                return socket.getOutputStream();
-            } catch (NullPointerException | IOException ignored) {
-            }
-        }
-        return null;
-    }
+    OutputStream getOutputStream();
+
+    /**
+     * Getter for Server IP
+     * @return serverIP
+     */
+    String getServerIP();
+
+    /**
+     * Getter for port
+     * @return port
+     */
+    int getPort();
 }
