@@ -34,7 +34,7 @@ public interface SocketCommunication {
     /**
      * Disconnects from server.
      */
-    void disconnectFromServer() throws IOException;
+    void disconnectFromServer();
 
     /**
      * checks if the socket is connected to the server
