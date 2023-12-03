@@ -1,4 +1,4 @@
-package com.android.circleoflife.client_communication;
+package com.android.circleoflife.communication.pdus;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +8,7 @@ import java.io.OutputStream;
  * The interface for the PDUs.<br><br>
  * Each of the PDUs implements this PDU
  */
-interface PDU {
+public interface PDU {
 
     /**
      * Every PDU has a unique ID which is an integer from 1 to 7

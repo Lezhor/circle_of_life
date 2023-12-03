@@ -1,4 +1,4 @@
-package com.android.circleoflife.client_communication;
+package com.android.circleoflife.communication.pdus;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -6,11 +6,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Send from server to client in case the authentication was not successful
+ * PDU the server sends to client if authentication succeeded. has no data block
  */
-public class AuthNotVerifiedPDU implements PDU {
+public class AuthVerifiedPDU implements PDU {
 
-    final static int ID = 3;
+    public final static int ID = 2;
 
     @Override
     public int getID() {
@@ -33,8 +33,8 @@ public class AuthNotVerifiedPDU implements PDU {
      * @param is Inputstream
      * @return deserialized PDU
      */
-    public static AuthNotVerifiedPDU fromInputStream(InputStream is) throws IOException {
-        AuthNotVerifiedPDU pdu = new AuthNotVerifiedPDU();
+    public static AuthVerifiedPDU fromInputStream(InputStream is) throws IOException {
+        AuthVerifiedPDU pdu = new AuthVerifiedPDU();
         pdu.deserialize(is);
         return pdu;
     }

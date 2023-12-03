@@ -1,5 +1,6 @@
 package com.android.circleoflife.logging.serializing;
 
+import com.android.circleoflife.communication.pdus.SendLogsPDU;
 import com.android.circleoflife.logging.model.Log;
 
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.io.OutputStream;
 
 /**
  * LogSerializer can serialize and deserialize {@link Log logs} from and to IOStreams.<br>
- * It is used in the {@link com.android.circleoflife.client_communication.SendLogsPDU SendLogsPDU}.
+ * It is used in the {@link SendLogsPDU SendLogsPDU}.
  */
 public class LogSerializerImpl implements LogSerializer {
 

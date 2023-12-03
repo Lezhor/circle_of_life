@@ -1,4 +1,4 @@
-package com.android.circleoflife.client_communication;
+package com.android.circleoflife.communication;
 
 import static org.junit.Assert.*;
 

@@ -1,4 +1,4 @@
-package com.android.circleoflife.client_communication;
+package com.android.circleoflife.communication.pdus;
 
 import com.android.circleoflife.auth.Authentication;
 import com.android.circleoflife.auth.AuthenticationFailedException;
@@ -15,9 +15,9 @@ import java.io.OutputStream;
  *
  * @see Authentication#getAuthenticationString()
  */
-class SendAuthPDU implements PDU {
+public class SendAuthPDU implements PDU {
 
-    final static int ID = 1;
+    public final static int ID = 1;
 
     private String authString;
 

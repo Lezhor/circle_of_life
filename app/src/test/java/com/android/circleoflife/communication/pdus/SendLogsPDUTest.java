@@ -1,7 +1,9 @@
-package com.android.circleoflife.client_communication;
+package com.android.circleoflife.communication.pdus;
 
 import static org.junit.Assert.*;
 
+import com.android.circleoflife.communication.pdus.PDU;
+import com.android.circleoflife.communication.pdus.SendLogsPDU;
 import com.android.circleoflife.logging.model.Log;
 
 import org.junit.Before;

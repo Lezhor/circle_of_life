@@ -1,4 +1,4 @@
-package com.android.circleoflife.client_communication;
+package com.android.circleoflife.communication.pdus;
 
 import com.android.circleoflife.Application;
 import com.android.circleoflife.logging.model.Log;
@@ -17,7 +17,7 @@ import java.io.OutputStream;
  */
 public class SendLogsPDU implements PDU {
 
-    final static int ID = 4;
+    public final static int ID = 4;
 
     private Log[] logArray;
 
@@ -38,9 +38,9 @@ public class SendLogsPDU implements PDU {
         DataOutputStream dos = new DataOutputStream(os);
         dos.writeInt(getID());
         dos.writeInt(logArray.length);
-        LogSerializer serializer = Application.getLogSerializer();
+        LogSerializer logSerializer = Application.getLogSerializer();
         for (Log log : logArray) {
-            serializer.serialize(os, log);
+            logSerializer.serialize(os, log);
         }
     }
 
@@ -49,9 +49,9 @@ public class SendLogsPDU implements PDU {
         DataInputStream dis = new DataInputStream(is);
         int logCount = dis.readInt();
         Log[] logs = new Log[logCount];
-        LogSerializer serializer = Application.getLogSerializer();
+        LogSerializer logSerializer = Application.getLogSerializer();
         for (int i = 0; i < logs.length; i++) {
-            logs[i] = serializer.deserialize(is);
+            logs[i] = logSerializer.deserialize(is);
         }
         this.logArray = logs;
     }

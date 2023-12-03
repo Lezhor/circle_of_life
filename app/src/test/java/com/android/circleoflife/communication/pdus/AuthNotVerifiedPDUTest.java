@@ -1,6 +1,9 @@
-package com.android.circleoflife.client_communication;
+package com.android.circleoflife.communication.pdus;
 
 import static org.junit.Assert.*;
+
+import com.android.circleoflife.communication.pdus.AuthNotVerifiedPDU;
+import com.android.circleoflife.communication.pdus.PDU;
 
 import org.junit.Test;
 
@@ -11,9 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Tests {@link AuthVerifiedPDU}
+ * Tests {@link AuthNotVerifiedPDU}
  */
-public class AuthVerifiedPDUTest {
+public class AuthNotVerifiedPDUTest {
 
     /**
      * Tests serialize() method by serializing to ByteArrayOutputStream and then checking
@@ -21,10 +24,10 @@ public class AuthVerifiedPDUTest {
      */
     @Test
     public void testSerialize() {
-        System.out.println("Testing AuthVerifiedPDU Serializing");
+        System.out.println("Testing AuthNotVerifiedPDU Serializing");
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            AuthVerifiedPDU pdu = new AuthVerifiedPDU();
+            AuthNotVerifiedPDU pdu = new AuthNotVerifiedPDU();
             pdu.serialize(os);
             assertEquals(4, os.size());
             InputStream is = new ByteArrayInputStream(os.toByteArray());
@@ -41,11 +44,11 @@ public class AuthVerifiedPDUTest {
      */
     @Test
     public void testDeserialize() {
-        System.out.println("Testing AuthVerifiedPDU Deserializing");
+        System.out.println("Testing AuthNotVerifiedPDU Deserializing");
         try {
             InputStream is = new ByteArrayInputStream(new byte[0]);
-            PDU pdu = AuthVerifiedPDU.fromInputStream(is);
-            assertEquals(AuthVerifiedPDU.ID, pdu.getID());
+            PDU pdu = AuthNotVerifiedPDU.fromInputStream(is);
+            assertEquals(AuthNotVerifiedPDU.ID, pdu.getID());
         } catch (IOException e) {
             fail();
         }

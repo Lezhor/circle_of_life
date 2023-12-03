@@ -1,4 +1,4 @@
-package com.android.circleoflife.client_communication;
+package com.android.circleoflife.communication;
 
 import java.io.IOException;
 import java.io.InputStream;

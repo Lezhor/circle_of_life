@@ -1,6 +1,8 @@
-package com.android.circleoflife.client_communication;
+package com.android.circleoflife.communication.pdus;
 
 import static org.junit.Assert.*;
+
+import com.android.circleoflife.communication.pdus.SendInstructionsPDU;
 
 import org.junit.Before;
 import org.junit.Test;

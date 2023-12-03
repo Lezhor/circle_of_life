@@ -1,4 +1,4 @@
-package com.android.circleoflife.client_communication;
+package com.android.circleoflife.communication.pdus;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -12,7 +12,7 @@ import java.io.OutputStream;
  */
 public class SendInstructionsPDU implements PDU {
 
-    final static int ID = 5;
+    public final static int ID = 5;
 
     private String[] instructions;
 

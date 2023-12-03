@@ -1,9 +1,10 @@
-package com.android.circleoflife.client_communication;
+package com.android.circleoflife.communication.pdus;
 
 import static org.junit.Assert.*;
 
 import com.android.circleoflife.auth.Authentication;
 import com.android.circleoflife.auth.AuthenticationFailedException;
+import com.android.circleoflife.communication.pdus.SendAuthPDU;
 
 import org.junit.Before;
 import org.junit.Test;
