@@ -25,7 +25,7 @@ public class SendAuthPDU implements PDU {
      * Creates a pdu with the authString
      * @param auth needed authentication
      */
-    SendAuthPDU(Authentication auth) throws AuthenticationFailedException {
+    public SendAuthPDU(Authentication auth) throws AuthenticationFailedException {
         this.authString = auth.getAuthenticationString();
     }
 

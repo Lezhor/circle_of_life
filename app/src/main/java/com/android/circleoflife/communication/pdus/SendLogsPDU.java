@@ -24,7 +24,7 @@ public class SendLogsPDU implements PDU {
     /**
      * Creates a pdu with logs - Note: There is no way to edit the logs later
      */
-    SendLogsPDU(DBLog... logs) {
+    public SendLogsPDU(DBLog... logs) {
         this.logArray = logs;
     }
 

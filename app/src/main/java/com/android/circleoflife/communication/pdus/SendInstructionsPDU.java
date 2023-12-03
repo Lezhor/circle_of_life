@@ -19,7 +19,7 @@ public class SendInstructionsPDU implements PDU {
     /**
      * Creates a pdu with logs - Note: There is no way to edit the logs later
      */
-    SendInstructionsPDU(String... instructions) {
+    public SendInstructionsPDU(String... instructions) {
         this.instructions = instructions;
     }
 
