@@ -13,7 +13,7 @@ import com.android.circleoflife.logging.serializing.LogSerializerImpl;
 public final class Application {
 
     /**
-     * {@link LogSerializer} works with the Singleton pattern.
+     * {@link LogSerializer} follows the Singleton pattern.
      * @return the only existing instance of {@link LogSerializer}
      * @see LogSerializerImpl#getInstance()
      */
@@ -21,6 +21,11 @@ public final class Application {
         return LogSerializerImpl.getInstance();
     }
 
+    /**
+     * {@link SyncProtocol} follows the Singleton pattern.
+     * @return the only existing instance of {@link SyncProtocol}
+     * @see SyncProtocolEngine#getInstance()
+     */
     public static SyncProtocol getSyncProtocol() {
         return SyncProtocolEngine.getInstance();
     }
