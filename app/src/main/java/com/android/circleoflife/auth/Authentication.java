@@ -1,12 +1,14 @@
 package com.android.circleoflife.auth;
 
+import com.android.circleoflife.communication.protocols.SyncProtocol;
+
 import java.io.IOException;
 import java.util.Date;
 
 /**
  * This is where the authentication happens. Every script can get the Username but not the password (only its hash value).<br>
  * At any time any script can check whether a user is currently authenticated (logged in) or not.<br>
- * The {@link com.android.circleoflife.communication.SyncProtocol SyncProtocol} also uses the authentication for server-sync
+ * The {@link SyncProtocol SyncProtocol} also uses the authentication for server-sync
  * @version 1.0
  */
 public interface Authentication {
@@ -79,7 +81,7 @@ public interface Authentication {
     Date getTimeStampOfAccountCreation() throws AuthenticationFailedException;
 
     /**
-     * Used in {@link com.android.circleoflife.communication.SyncProtocol SyncProtocol} for the authentication.<br>
+     * Used in {@link SyncProtocol SyncProtocol} for the authentication.<br>
      * Authentication String can look like this:<br>
      * <code>
      *     "auth[userName|passwordHash]"

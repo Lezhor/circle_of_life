@@ -2,8 +2,8 @@ package com.android.circleoflife;
 
 import com.android.circleoflife.communication.socket_communication.SocketCommunication;
 import com.android.circleoflife.communication.socket_communication.SocketCommunicationImpl;
-import com.android.circleoflife.communication.SyncProtocol;
-import com.android.circleoflife.communication.SyncProtocolEngine;
+import com.android.circleoflife.communication.protocols.SyncProtocol;
+import com.android.circleoflife.communication.protocols.SyncProtocolEngine;
 import com.android.circleoflife.logging.serializing.LogSerializer;
 import com.android.circleoflife.logging.serializing.LogSerializerImpl;
 

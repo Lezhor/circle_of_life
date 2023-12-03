@@ -1,8 +1,6 @@
-package com.android.circleoflife.communication;
+package com.android.circleoflife.communication.socket_communication;
 
 import static org.junit.Assert.*;
-
-import com.android.circleoflife.communication.socket_communication.SocketCommunicationImpl;
 
 import org.junit.Test;
 

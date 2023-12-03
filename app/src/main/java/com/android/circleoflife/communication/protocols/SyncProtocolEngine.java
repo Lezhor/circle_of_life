@@ -1,4 +1,4 @@
-package com.android.circleoflife.communication;
+package com.android.circleoflife.communication.protocols;
 
 import com.android.circleoflife.Application;
 
