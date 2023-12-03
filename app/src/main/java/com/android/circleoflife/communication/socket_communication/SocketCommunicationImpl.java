@@ -1,4 +1,6 @@
-package com.android.circleoflife.communication;
+package com.android.circleoflife.communication.socket_communication;
+
+import com.android.circleoflife.communication.SyncProtocolEngine;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -2,6 +2,8 @@ package com.android.circleoflife.communication;
 
 import static org.junit.Assert.*;
 
+import com.android.circleoflife.communication.socket_communication.SocketCommunicationImpl;
+
 import org.junit.Test;
 
 import java.io.IOException;
@@ -13,7 +15,7 @@ import java.net.Socket;
 /**
  * Tests the Socket communication by creating a Server Thread and connecting to it (localhost)
  */
-public class SocketCommunicationTest {
+public class SocketCommunicationImplTest {
 
     public int PORT = 7777;
 
