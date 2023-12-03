@@ -6,7 +6,7 @@ import java.util.Date;
  * via this interface the sync protocol session can be started.
  * Upon starting there is no control over the Sync-Protocol
  */
-public interface SyncProtocol {
+public interface SyncProtocol extends Protocol {
 
     /**
      * Calling this method kicks off the communication with the server
@@ -19,17 +19,5 @@ public interface SyncProtocol {
      * @return timestamp of last successful sync
      */
     Date getLastSuccessfulSyncDate();
-
-    /**
-     * Returns the current Protocol Name
-     * @return protocol name
-     */
-    String getProtocolName();
-
-    /**
-     * Get current version of the syncProtocol
-     * @return version of this protocol
-     */
-    String getVersion();
 
 }
