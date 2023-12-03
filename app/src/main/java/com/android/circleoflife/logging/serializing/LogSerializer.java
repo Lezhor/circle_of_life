@@ -1,14 +1,14 @@
 package com.android.circleoflife.logging.serializing;
 
 import com.android.circleoflife.communication.pdus.SendLogsPDU;
-import com.android.circleoflife.logging.model.Log;
+import com.android.circleoflife.logging.model.DBLog;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * LogSerializer can serialize and deserialize {@link Log logs} from and to IOStreams.<br>
+ * LogSerializer can serialize and deserialize {@link DBLog logs} from and to IOStreams.<br>
  * It is used in the {@link SendLogsPDU SendLogsPDU}.
  */
 public interface LogSerializer {
@@ -19,7 +19,7 @@ public interface LogSerializer {
      * @param log log to be serialized
      * @throws IOException if serializing fails
      */
-    public void serialize(OutputStream os, Log log) throws IOException;
+    public void serialize(OutputStream os, DBLog log) throws IOException;
 
     /**
      * deserializes log from InputStream
@@ -27,6 +27,6 @@ public interface LogSerializer {
      * @return log to be serialized
      * @throws IOException if deserializing fails
      */
-    public Log deserialize(InputStream is) throws IOException;
+    public DBLog deserialize(InputStream is) throws IOException;
 
 }

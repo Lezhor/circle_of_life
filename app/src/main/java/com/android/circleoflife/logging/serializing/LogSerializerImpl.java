@@ -1,14 +1,14 @@
 package com.android.circleoflife.logging.serializing;
 
 import com.android.circleoflife.communication.pdus.SendLogsPDU;
-import com.android.circleoflife.logging.model.Log;
+import com.android.circleoflife.logging.model.DBLog;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * LogSerializer can serialize and deserialize {@link Log logs} from and to IOStreams.<br>
+ * LogSerializer can serialize and deserialize {@link DBLog logs} from and to IOStreams.<br>
  * It is used in the {@link SendLogsPDU SendLogsPDU}.
  */
 public class LogSerializerImpl implements LogSerializer {
@@ -30,14 +30,14 @@ public class LogSerializerImpl implements LogSerializer {
     private LogSerializerImpl() {}
 
     @Override
-    public void serialize(OutputStream os, Log log) throws IOException {
+    public void serialize(OutputStream os, DBLog log) throws IOException {
         // TODO: 02.12.2023 serialize logs
     }
 
     @Override
-    public Log deserialize(InputStream is) throws IOException {
+    public DBLog deserialize(InputStream is) throws IOException {
         // TODO: 02.12.2023 deserialize logs
-        return new Log("Log|max_mustermann|" + System.currentTimeMillis());
+        return new DBLog("Log|max_mustermann|" + System.currentTimeMillis());
     }
 
 }

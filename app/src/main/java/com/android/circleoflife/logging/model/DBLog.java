@@ -6,17 +6,17 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Log {
+public class DBLog {
 
     private final Date date;
     private final String user;
     private final List<Entry> entryList;
 
-    public Log(Authentication auth) throws AuthenticationFailedException {
+    public DBLog(Authentication auth) throws AuthenticationFailedException {
         this(auth.getUserName(), new Date());
     }
 
-    private Log(String username, Date date) {
+    private DBLog(String username, Date date) {
         user = username;
         this.date = date;
         entryList = new LinkedList<>();
@@ -27,7 +27,7 @@ public class Log {
      * @param logHeader logHeader
      * @throws IllegalArgumentException if logHeader is wrong
      */
-    public Log(String logHeader) throws IllegalArgumentException {
+    public DBLog(String logHeader) throws IllegalArgumentException {
         // TODO: 02.12.2023 Create Log from Header
         this("", new Date());
     }

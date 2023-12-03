@@ -2,9 +2,7 @@ package com.android.circleoflife.communication.pdus;
 
 import static org.junit.Assert.*;
 
-import com.android.circleoflife.communication.pdus.PDU;
-import com.android.circleoflife.communication.pdus.SendLogsPDU;
-import com.android.circleoflife.logging.model.Log;
+import com.android.circleoflife.logging.model.DBLog;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,11 +17,11 @@ import java.io.InputStream;
  * Tests {@link SendLogsPDU}
  */
 public class SendLogsPDUTest {
-    Log[] logArray;
+    DBLog[] logArray;
 
     @Before
     public void setUp() {
-        logArray = new Log[3];
+        logArray = new DBLog[3];
         // TODO: 03.12.2023 Test SendLogsPDU Setup
     }
 
