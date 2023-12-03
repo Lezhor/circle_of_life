@@ -1,5 +1,7 @@
 package com.android.circleoflife;
 
+import com.android.circleoflife.communication.SyncProtocol;
+import com.android.circleoflife.communication.SyncProtocolEngine;
 import com.android.circleoflife.logging.serializing.LogSerializer;
 import com.android.circleoflife.logging.serializing.LogSerializerImpl;
 
@@ -17,6 +19,10 @@ public final class Application {
      */
     public static LogSerializer getLogSerializer() {
         return LogSerializerImpl.getInstance();
+    }
+
+    public static SyncProtocol getSyncProtocol() {
+        return SyncProtocolEngine.getInstance();
     }
 
 }
