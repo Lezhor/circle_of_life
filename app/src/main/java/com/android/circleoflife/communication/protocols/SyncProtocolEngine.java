@@ -7,7 +7,7 @@ import com.android.circleoflife.auth.Authentication;
 import com.android.circleoflife.auth.AuthenticationFailedException;
 import com.android.circleoflife.communication.pdus.*;
 import com.android.circleoflife.communication.socket_communication.SocketCommunication;
-import com.android.circleoflife.database.DatabaseController;
+import com.android.circleoflife.database.control.DatabaseController;
 import com.android.circleoflife.logging.model.DBLog;
 
 import java.io.IOException;

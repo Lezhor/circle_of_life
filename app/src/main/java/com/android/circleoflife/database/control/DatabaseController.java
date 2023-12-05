@@ -1,4 +1,4 @@
-package com.android.circleoflife.database;
+package com.android.circleoflife.database.control;
 
 import com.android.circleoflife.auth.Authentication;
 import com.android.circleoflife.logging.model.DBLog;

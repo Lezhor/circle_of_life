@@ -1,7 +1,7 @@
 package com.android.circleoflife.communication.protocols;
 
 import com.android.circleoflife.auth.Authentication;
-import com.android.circleoflife.database.DatabaseController;
+import com.android.circleoflife.database.control.DatabaseController;
 import com.android.circleoflife.logging.model.DBLog;
 
 import java.util.Date;
