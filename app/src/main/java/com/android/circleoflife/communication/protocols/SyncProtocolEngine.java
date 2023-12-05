@@ -28,16 +28,19 @@ import java.util.Date;
  */
 public class SyncProtocolEngine implements SyncProtocol {
 
-    private static SyncProtocolEngine instance;
+    private static volatile SyncProtocol instance;
 
     /**
      * Returns the only existing instance of this class
      *
      * @return instance of this class
      */
-    public static SyncProtocolEngine getInstance() {
+    public static SyncProtocol getInstance() {
         if (instance == null) {
-            instance = new SyncProtocolEngine();
+            synchronized (SyncProtocolEngine.class) {
+                if (instance == null)
+                    instance = new SyncProtocolEngine();
+            }
         }
         return instance;
     }

@@ -13,21 +13,26 @@ import java.io.OutputStream;
  */
 public class LogSerializerImpl implements LogSerializer {
 
-    private static LogSerializer instance;
+    private static volatile LogSerializer instance;
 
     /**
      * Follows the singleton pattern:<br>
      * Returns the only existing instance of this class
+     *
      * @return instance of this class
      */
     public static LogSerializer getInstance() {
         if (instance == null) {
-            instance = new LogSerializerImpl();
+            synchronized (LogSerializerImpl.class) {
+                if (instance == null)
+                    instance = new LogSerializerImpl();
+            }
         }
         return instance;
     }
 
-    private LogSerializerImpl() {}
+    private LogSerializerImpl() {
+    }
 
     @Override
     public void serialize(OutputStream os, DBLog log) throws IOException {
