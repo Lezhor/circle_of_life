@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Circle of Life</string>
+
+
+    <!-- used if value is not set -->
+    <string name="no_string" translatable="false">NULL</string>
+
+    <string-array name="days_of_week">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
 </resources>

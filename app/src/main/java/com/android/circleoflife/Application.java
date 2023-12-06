@@ -1,5 +1,8 @@
 package com.android.circleoflife;
 
+import android.content.Context;
+import android.content.res.Resources;
+
 import com.android.circleoflife.auth.Authentication;
 import com.android.circleoflife.communication.socket_communication.SocketCommunication;
 import com.android.circleoflife.communication.socket_communication.SocketCommunicationImpl;
@@ -7,6 +10,8 @@ import com.android.circleoflife.communication.protocols.SyncProtocol;
 import com.android.circleoflife.communication.protocols.SyncProtocolEngine;
 import com.android.circleoflife.logging.serializing.LogSerializer;
 import com.android.circleoflife.logging.serializing.LogSerializerImpl;
+
+import java.util.Objects;
 
 /**
  * This project follows the Singleton pattern.<br>
@@ -26,6 +31,8 @@ public final class Application {
      * Port the server listens on
      */
     public final static int PORT = 7777;
+
+    private static Context applicationContext;
 
     /**
      * {@link LogSerializer} follows the Singleton pattern.
@@ -60,5 +67,23 @@ public final class Application {
     public Authentication getAuthentication() {
         // TODO: 03.12.2023 AuthenticationImpl singleton instance
         return null;
+    }
+
+    /**
+     * Returns system resources. useful to access e.g. String from strings.xml:<br>
+     * Can be used like this:
+     * <pre>
+     *     {@code String s = Application.getResources()
+     *     .getString(R.string.my_string);}
+     * </pre>
+     * This resource Object does NOT contain data from
+     * @return System resources
+     */
+    public static Resources getResources() {
+        return Objects.requireNonNull(applicationContext).getResources();
+    }
+
+    public static void setApplicationContext(Context context) {
+        applicationContext = context.getApplicationContext();
     }
 }
