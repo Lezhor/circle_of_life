@@ -5,7 +5,10 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.android.circleoflife.database.validators.StringValidator;
+
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity(tableName = "users")
 public class User {
@@ -23,17 +26,14 @@ public class User {
     @ColumnInfo(name = "creation_time")
     private LocalDateTime timeOfCreation;
 
-    // TODO: 06.12.2023 Create Constructor for User Model
-
     @Ignore
     public User() {
-
     }
 
     public User(String username, String password, LocalDateTime timeOfCreation) throws IllegalArgumentException {
-        this.username = username;
-        this.password = password;
-        this.timeOfCreation = timeOfCreation;
+        setUsername(username);
+        setPassword(password);
+        setTimeOfCreation(timeOfCreation);
     }
 
     public int getId() {
@@ -49,15 +49,15 @@ public class User {
     }
 
     public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+        this.username = StringValidator.validateUsername(username);
     }
 
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = StringValidator.validatePassword(password);
     }
 
     public LocalDateTime getTimeOfCreation() {
@@ -65,6 +65,6 @@ public class User {
     }
 
     public void setTimeOfCreation(LocalDateTime timeOfCreation) {
-        this.timeOfCreation = timeOfCreation;
+        this.timeOfCreation = Objects.requireNonNull(timeOfCreation);
     }
 }
