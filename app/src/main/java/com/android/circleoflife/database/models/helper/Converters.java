@@ -18,7 +18,7 @@ public class Converters {
      * @see LocalDateTime#parse(CharSequence)
      */
     @TypeConverter
-    LocalDateTime dateFromString(String str) {
+    public LocalDateTime dateFromString(String str) {
         return LocalDateTime.parse(str);
     }
 
@@ -29,7 +29,7 @@ public class Converters {
      * @see LocalDateTime#toString()
      */
     @TypeConverter
-    String stringFromDate(LocalDateTime time) {
+    public String stringFromDate(LocalDateTime time) {
         return time.toString();
     }
 
