@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f3c76bdc60130ec1b614acd78c33582d",
+    "identityHash": "852a10cfba2005a4edf877340b786849",
     "entities": [
       {
         "tableName": "users",
@@ -44,7 +44,7 @@
       },
       {
         "tableName": "categories",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`category_name` TEXT NOT NULL, `uid` INTEGER NOT NULL, `parent_category` TEXT DEFAULT NULL, PRIMARY KEY(`uid`, `category_name`), FOREIGN KEY(`uid`, `parent_category`) REFERENCES `categories`(`uid`, `category_name`) ON UPDATE CASCADE ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`category_name` TEXT NOT NULL, `uid` INTEGER NOT NULL, `parent_category` TEXT DEFAULT NULL, PRIMARY KEY(`uid`, `category_name`), FOREIGN KEY(`uid`, `parent_category`) REFERENCES `categories`(`uid`, `category_name`) ON UPDATE CASCADE ON DELETE SET NULL , FOREIGN KEY(`uid`) REFERENCES `users`(`uid`) ON UPDATE CASCADE ON DELETE RESTRICT )",
         "fields": [
           {
             "fieldPath": "name",
@@ -107,6 +107,17 @@
             "referencedColumns": [
               "uid",
               "category_name"
+            ]
+          },
+          {
+            "table": "users",
+            "onDelete": "RESTRICT",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "uid"
+            ],
+            "referencedColumns": [
+              "uid"
             ]
           }
         ]
@@ -195,7 +206,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f3c76bdc60130ec1b614acd78c33582d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '852a10cfba2005a4edf877340b786849')"
     ]
   }
 }

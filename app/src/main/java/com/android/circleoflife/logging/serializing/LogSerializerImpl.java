@@ -45,4 +45,16 @@ public class LogSerializerImpl implements LogSerializer {
         return new DBLog("Log|max_mustermann|" + System.currentTimeMillis());
     }
 
+    @Override
+    public String dbLogToString(DBLog log) {
+        // TODO: 06.12.2023 Implement LogToString (maybe by calling DBLog.toString())
+        return null;
+    }
+
+    @Override
+    public DBLog stringToDBLog(String str) {
+        // TODO: 06.12.2023 Implement StringToLog (maybe by calling a method in DBLog)
+        return null;
+    }
+
 }
