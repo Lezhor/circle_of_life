@@ -28,6 +28,20 @@ public final class StringValidator {
         return password;
     }
 
+    /**
+     * Validates string for specific length. Succeeds if Strings length is at least length
+     * @param str string
+     * @param length length
+     * @return unchanged str if string is at least length characters long
+     * @throws IllegalArgumentException if str is shorter than length
+     */
+    public static String validateStringMinLength(String str, int length) throws IllegalArgumentException {
+        if (!stringHasMinLength(str, length)) {
+            throw new IllegalArgumentException("String is too short");
+        }
+        return str;
+    }
+
 
 
 
