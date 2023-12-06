@@ -1,4 +1,4 @@
-package com.android.circleoflife.database.models.helper;
+package com.android.circleoflife.database.models.type_converters;
 
 import static org.junit.Assert.*;
 
@@ -10,25 +10,25 @@ import java.time.LocalDateTime;
 /**
  * Tests if converting back and forth works with no problem
  */
-public class ConvertersTest {
+public class LocalDateTimeConverterTest {
 
 
-    Converters converters;
+    LocalDateTimeConverter localDateTimeConverter;
     @Before
     public void setUp() {
-        converters = new Converters();
+        localDateTimeConverter = new LocalDateTimeConverter();
     }
 
     @Test
     public void testConvertTimeToStringAndBack() {
         LocalDateTime time = LocalDateTime.of(2020, 3, 20, 13, 23, 48, 458352);
-        assertEquals(time, converters.dateFromString(converters.stringFromDate(time)));
+        assertEquals(time, localDateTimeConverter.dateFromString(localDateTimeConverter.stringFromDate(time)));
     }
 
     @Test
     public void testConvertStringToTimeAndBack() {
         String time = "2023-12-05T12:26:37.084397600";
-        assertEquals(time, converters.stringFromDate(converters.dateFromString(time)));
+        assertEquals(time, localDateTimeConverter.stringFromDate(localDateTimeConverter.dateFromString(time)));
     }
 
 

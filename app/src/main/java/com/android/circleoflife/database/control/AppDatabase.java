@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 import com.android.circleoflife.database.models.*;
-import com.android.circleoflife.database.models.helper.Converters;
+import com.android.circleoflife.database.models.type_converters.LocalDateTimeConverter;
 
 @Database(
         entities = {
@@ -19,7 +19,7 @@ import com.android.circleoflife.database.models.helper.Converters;
         version = 1,
         exportSchema = true
 )
-@TypeConverters({Converters.class}) // TODO: 06.12.2023 Add Log Converter
+@TypeConverters({LocalDateTimeConverter.class}) // TODO: 06.12.2023 Add Log Converter
 public abstract class AppDatabase extends RoomDatabase {
     public abstract AppDao getDao();
 }

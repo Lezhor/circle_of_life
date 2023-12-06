@@ -1,4 +1,4 @@
-package com.android.circleoflife.database.models.helper;
+package com.android.circleoflife.database.models.type_converters;
 
 import androidx.room.TypeConverter;
 
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
  * The most important feature of this converter is: When you plug output of a method in the other method you land where you started. Both ways.<br>
  * Used in {@link com.android.circleoflife.database.control.AppDatabase AppDatabase}
  */
-public class Converters {
+public class LocalDateTimeConverter {
 
     /**
      * Converts String to LocalDateTime
@@ -32,7 +32,5 @@ public class Converters {
     public String stringFromDate(LocalDateTime time) {
         return time.toString();
     }
-
-    // TODO: 05.12.2023 Make a Converter for DBLog
 
 }
