@@ -21,13 +21,22 @@ import com.android.circleoflife.database.validators.StringValidator;
                 @Index(value = {"uid", "category_name"}, unique = true),
                 @Index(value = {"uid", "parent_category"})
         },
-        foreignKeys = {@ForeignKey(
-                entity = Category.class,
-                parentColumns = {"uid", "category_name"},
-                childColumns = {"uid", "parent_category"},
-                onUpdate = ForeignKey.CASCADE,
-                onDelete = ForeignKey.SET_NULL
-        )},
+        foreignKeys = {
+                @ForeignKey(
+                        entity = Category.class,
+                        parentColumns = {"uid", "category_name"},
+                        childColumns = {"uid", "parent_category"},
+                        onUpdate = ForeignKey.CASCADE,
+                        onDelete = ForeignKey.SET_NULL
+                ),
+                @ForeignKey(
+                        entity = User.class,
+                        parentColumns = "uid",
+                        childColumns = "uid",
+                        onUpdate = ForeignKey.CASCADE,
+                        onDelete = ForeignKey.RESTRICT
+                )
+        },
         inheritSuperIndices = true
 )
 public class Category {
