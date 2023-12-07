@@ -11,30 +11,29 @@ import com.android.circleoflife.database.validators.StringValidator;
 
 /**
  * This Model-Class is an Entry for room-database. It represents the table `categories`<br>
- * Its primary key is `uid, categoryname`, and it has a foreign key `uid, parent_category`
+ * Its primary key is `uid, category_name`, and it has a foreign key `uid, parent_category`
  * pointing to the same table `categories`
  */
 @Entity(
         tableName = "categories",
-        primaryKeys = {"uid", "category_name"},
         indices = {
                 @Index(value = {"uid", "category_name"}, unique = true),
                 @Index(value = {"uid", "parent_category"})
         },
+        primaryKeys = {"uid", "category_name"},
         foreignKeys = {
-                @ForeignKey(
-                        entity = Category.class,
-                        parentColumns = {"uid", "category_name"},
-                        childColumns = {"uid", "parent_category"},
-                        onUpdate = ForeignKey.CASCADE,
-                        onDelete = ForeignKey.SET_NULL
-                ),
                 @ForeignKey(
                         entity = User.class,
                         parentColumns = "uid",
                         childColumns = "uid",
                         onUpdate = ForeignKey.CASCADE,
                         onDelete = ForeignKey.RESTRICT
+                ),
+                @ForeignKey(
+                        entity = Category.class,
+                        parentColumns = {"uid", "category_name"},
+                        childColumns = {"uid", "parent_category"},
+                        onUpdate = ForeignKey.CASCADE
                 )
         },
         inheritSuperIndices = true
