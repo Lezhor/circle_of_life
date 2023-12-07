@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "66fbc17231c01c1667cec68c09a0c2cc",
+    "identityHash": "28238c689238053280b477a254e15a65",
     "entities": [
       {
         "tableName": "users",
@@ -321,11 +321,65 @@
       },
       {
         "tableName": "accomplishments",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`a_id` INTEGER NOT NULL, `uid` INTEGER NOT NULL, `cycle` TEXT, `todo` TEXT, `name` TEXT, `description` TEXT, `productiveness` INTEGER NOT NULL, `date` TEXT NOT NULL, `timestamp` TEXT, `duration` INTEGER NOT NULL, PRIMARY KEY(`uid`, `a_id`), FOREIGN KEY(`uid`) REFERENCES `users`(`uid`) ON UPDATE CASCADE ON DELETE RESTRICT , FOREIGN KEY(`uid`, `cycle`) REFERENCES `cycles`(`uid`, `cycle_name`) ON UPDATE CASCADE ON DELETE NO ACTION , FOREIGN KEY(`uid`, `todo`) REFERENCES `todos`(`uid`, `todo_name`) ON UPDATE CASCADE ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
-            "columnName": "id",
+            "columnName": "a_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cycle",
+            "columnName": "cycle",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "todo",
+            "columnName": "todo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "productiveness",
+            "columnName": "productiveness",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "durationMillis",
+            "columnName": "duration",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -333,11 +387,81 @@
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "id"
+            "uid",
+            "a_id"
           ]
         },
-        "indices": [],
-        "foreignKeys": []
+        "indices": [
+          {
+            "name": "index_accomplishments_uid_a_id",
+            "unique": true,
+            "columnNames": [
+              "uid",
+              "a_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_accomplishments_uid_a_id` ON `${TABLE_NAME}` (`uid`, `a_id`)"
+          },
+          {
+            "name": "index_accomplishments_uid_cycle",
+            "unique": false,
+            "columnNames": [
+              "uid",
+              "cycle"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_accomplishments_uid_cycle` ON `${TABLE_NAME}` (`uid`, `cycle`)"
+          },
+          {
+            "name": "index_accomplishments_uid_todo",
+            "unique": false,
+            "columnNames": [
+              "uid",
+              "todo"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_accomplishments_uid_todo` ON `${TABLE_NAME}` (`uid`, `todo`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "users",
+            "onDelete": "RESTRICT",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "uid"
+            ],
+            "referencedColumns": [
+              "uid"
+            ]
+          },
+          {
+            "table": "cycles",
+            "onDelete": "NO ACTION",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "uid",
+              "cycle"
+            ],
+            "referencedColumns": [
+              "uid",
+              "cycle_name"
+            ]
+          },
+          {
+            "table": "todos",
+            "onDelete": "NO ACTION",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "uid",
+              "todo"
+            ],
+            "referencedColumns": [
+              "uid",
+              "todo_name"
+            ]
+          }
+        ]
       },
       {
         "tableName": "logs",
@@ -363,7 +487,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '66fbc17231c01c1667cec68c09a0c2cc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '28238c689238053280b477a254e15a65')"
     ]
   }
 }

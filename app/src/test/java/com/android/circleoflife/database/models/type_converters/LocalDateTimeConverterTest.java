@@ -22,13 +22,13 @@ public class LocalDateTimeConverterTest {
     @Test
     public void testConvertTimeToStringAndBack() {
         LocalDateTime time = LocalDateTime.of(2020, 3, 20, 13, 23, 48, 458352);
-        assertEquals(time, localDateTimeConverter.dateFromString(localDateTimeConverter.stringFromDate(time)));
+        assertEquals(time, localDateTimeConverter.localDateTimeFromString(localDateTimeConverter.localDateTimeToString(time)));
     }
 
     @Test
     public void testConvertStringToTimeAndBack() {
         String time = "2023-12-05T12:26:37.084397600";
-        assertEquals(time, localDateTimeConverter.stringFromDate(localDateTimeConverter.dateFromString(time)));
+        assertEquals(time, localDateTimeConverter.localDateTimeToString(localDateTimeConverter.localDateTimeFromString(time)));
     }
 
 
