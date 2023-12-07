@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "57028ed8fefaed07914a8c3ce24d811e",
+    "identityHash": "66fbc17231c01c1667cec68c09a0c2cc",
     "entities": [
       {
         "tableName": "users",
@@ -222,23 +222,102 @@
       },
       {
         "tableName": "todos",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`todo_name` TEXT NOT NULL, `uid` INTEGER NOT NULL, `category` TEXT DEFAULT NULL, `productiveness` INTEGER NOT NULL, `done` INTEGER NOT NULL, `due_date` TEXT DEFAULT NULL, PRIMARY KEY(`uid`, `todo_name`), FOREIGN KEY(`uid`) REFERENCES `users`(`uid`) ON UPDATE CASCADE ON DELETE RESTRICT , FOREIGN KEY(`uid`, `category`) REFERENCES `categories`(`uid`, `category_name`) ON UPDATE CASCADE ON DELETE NO ACTION )",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "name",
+            "columnName": "todo_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userID",
+            "columnName": "uid",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "category",
+            "columnName": "category",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "NULL"
+          },
+          {
+            "fieldPath": "productive",
+            "columnName": "productiveness",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "done",
+            "columnName": "done",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dueDate",
+            "columnName": "due_date",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "NULL"
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
-            "id"
+            "uid",
+            "todo_name"
           ]
         },
-        "indices": [],
-        "foreignKeys": []
+        "indices": [
+          {
+            "name": "index_todos_uid_todo_name",
+            "unique": true,
+            "columnNames": [
+              "uid",
+              "todo_name"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_todos_uid_todo_name` ON `${TABLE_NAME}` (`uid`, `todo_name`)"
+          },
+          {
+            "name": "index_todos_uid_category",
+            "unique": false,
+            "columnNames": [
+              "uid",
+              "category"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_todos_uid_category` ON `${TABLE_NAME}` (`uid`, `category`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "users",
+            "onDelete": "RESTRICT",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "uid"
+            ],
+            "referencedColumns": [
+              "uid"
+            ]
+          },
+          {
+            "table": "categories",
+            "onDelete": "NO ACTION",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "uid",
+              "category"
+            ],
+            "referencedColumns": [
+              "uid",
+              "category_name"
+            ]
+          }
+        ]
       },
       {
         "tableName": "accomplishments",
@@ -284,7 +363,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '57028ed8fefaed07914a8c3ce24d811e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '66fbc17231c01c1667cec68c09a0c2cc')"
     ]
   }
 }

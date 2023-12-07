@@ -48,6 +48,7 @@ public class Cycle {
     @ColumnInfo(name = "uid")
     private int userID;
 
+    @Nullable
     @ColumnInfo(name = "category", defaultValue = "NULL")
     private String category;
 
@@ -104,11 +105,12 @@ public class Cycle {
         this.userID = userID;
     }
 
+    @Nullable
     public String getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(@Nullable String category) {
         this.category = category;
     }
 

@@ -47,6 +47,7 @@ public class Category {
     @ColumnInfo(name = "uid")
     private int userID;
 
+    @Nullable
     @ColumnInfo(name = "parent_category", defaultValue = "NULL")
     private String parent;
 
@@ -73,11 +74,12 @@ public class Category {
         this.userID = userID;
     }
 
+    @Nullable
     public String getParent() {
         return parent;
     }
 
-    public void setParent(String parent) {
+    public void setParent(@Nullable String parent) {
         this.parent = parent;
     }
 }
