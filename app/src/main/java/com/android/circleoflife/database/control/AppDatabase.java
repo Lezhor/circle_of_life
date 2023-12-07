@@ -14,7 +14,7 @@ import com.android.circleoflife.database.models.type_converters.*;
                 Cycle.class,
                 Todo.class,
                 Accomplishment.class,
-                LogModel.class
+                LogEntity.class
         },
         version = 1
 )

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "28238c689238053280b477a254e15a65",
+    "identityHash": "f6a7d2fbd2d82a2020d4f13b92a51514",
     "entities": [
       {
         "tableName": "users",
@@ -465,29 +465,65 @@
       },
       {
         "tableName": "logs",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER NOT NULL, `time` TEXT NOT NULL, `content` TEXT NOT NULL, PRIMARY KEY(`uid`, `time`), FOREIGN KEY(`uid`) REFERENCES `users`(`uid`) ON UPDATE CASCADE ON DELETE RESTRICT )",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "uid",
+            "columnName": "uid",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "log",
+            "columnName": "content",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
-            "id"
+            "uid",
+            "time"
           ]
         },
-        "indices": [],
-        "foreignKeys": []
+        "indices": [
+          {
+            "name": "index_logs_uid_time",
+            "unique": true,
+            "columnNames": [
+              "uid",
+              "time"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_logs_uid_time` ON `${TABLE_NAME}` (`uid`, `time`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "users",
+            "onDelete": "RESTRICT",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "uid"
+            ],
+            "referencedColumns": [
+              "uid"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '28238c689238053280b477a254e15a65')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f6a7d2fbd2d82a2020d4f13b92a51514')"
     ]
   }
 }

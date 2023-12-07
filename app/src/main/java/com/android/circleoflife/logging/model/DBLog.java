@@ -2,23 +2,24 @@ package com.android.circleoflife.logging.model;
 import com.android.circleoflife.auth.Authentication;
 import com.android.circleoflife.auth.AuthenticationFailedException;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 public class DBLog {
 
-    private final Date date;
-    private final String user;
+    private final LocalDateTime timeOfCreation;
+    private final String user; // TODO: 08.12.2023 Change to User Object
     private final List<Entry> entryList;
 
     public DBLog(Authentication auth) throws AuthenticationFailedException {
-        this(auth.getUserName(), new Date());
+        this(auth.getUserName(), LocalDateTime.now());
     }
 
-    private DBLog(String username, Date date) {
+    private DBLog(String username, LocalDateTime timeOfCreation) {
         user = username;
-        this.date = date;
+        this.timeOfCreation = timeOfCreation;
         entryList = new LinkedList<>();
     }
 
@@ -29,13 +30,22 @@ public class DBLog {
      */
     public DBLog(String logHeader) throws IllegalArgumentException {
         // TODO: 02.12.2023 Create Log from Header
-        this("", new Date());
+        this("", LocalDateTime.now());
     }
 
     public String getLogHeader() {
         // TODO: 02.12.2023 Generate Log Header
-        return "Log|" + user + "|" + date.getTime();
+        return "Log|" + user + "|" + timeOfCreation.toString();
     }
+
+    /**
+     * returns time of creation
+     * @return time of creation
+     */
+    public LocalDateTime getTimeOfCreation() {
+        return timeOfCreation;
+    }
+
 
 
     /**
@@ -44,7 +54,7 @@ public class DBLog {
     public static class Entry implements Comparable<Entry> {
 
         // TODO: 02.12.2023 Implement Log.Entry
-        private Date timeStamp;
+        private LocalDateTime timeStamp;
 
         private String table;
 
