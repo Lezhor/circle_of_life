@@ -1,6 +1,7 @@
 package com.android.circleoflife.database.models.additional;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.R;
@@ -35,7 +36,24 @@ public class CycleFrequency {
     @Override
     public String toString() {
         // TODO: 06.12.2023 String Representation of Frequency - e.g. "every day", "every monday" etc.
-        return CycleFrequency.countDaysAWeek(this) + " days a week";
+        return Arrays.stream(CycleFrequency.MASKS_DAYS_ALL).boxed().map(CycleFrequency::getDayString).reduce("Frequency{ ", (a, b) -> a + b + "; ") + "}";
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof CycleFrequency that) {
+            return this.value == that.value;
+        } else {
+            return false;
+        }
+    }
+
+    public String toBinaryString() {
+        return Integer.toBinaryString(value);
+    }
+
+    public static CycleFrequency fromBinaryString(String binary) throws NumberFormatException {
+        return new CycleFrequency(Integer.parseInt(binary, 2));
     }
 
     public static int countDaysAWeek(CycleFrequency frequency) {
@@ -57,7 +75,7 @@ public class CycleFrequency {
      * @param mask daymask. e.gl {@link CycleFrequency#MASK_THURSDAY}
      * @return String from {@link App#getResources() SystemResources}.getString()
      */
-    public static String getString(int mask) {
+    public static String getDayString(int mask) {
         if (Arrays.stream(MASKS_DAYS_ALL).noneMatch(day -> mask == day)) {
             return "";
         }
