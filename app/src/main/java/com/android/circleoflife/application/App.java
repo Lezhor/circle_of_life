@@ -11,8 +11,6 @@ import com.android.circleoflife.communication.protocols.SyncProtocolEngine;
 import com.android.circleoflife.logging.serializing.LogSerializer;
 import com.android.circleoflife.logging.serializing.LogSerializerImpl;
 
-import java.util.Objects;
-
 /**
  * This project follows the Singleton pattern.<br>
  * Every Class which allows only one existing instance is accessed from this class.<br>
@@ -32,7 +30,9 @@ public final class App {
      */
     public final static int PORT = 7777;
 
-    private static Context applicationContext;
+    private static Context getApplicationContext() {
+        return ApplicationObject.getInstance().getApplicationContext();
+    }
 
     /**
      * {@link LogSerializer} follows the Singleton pattern.
@@ -73,17 +73,13 @@ public final class App {
      * Returns system resources. useful to access e.g. String from strings.xml:<br>
      * Can be used like this:
      * <pre>
-     *     {@code String s = Application.getResources()
+     *     {@code String s = App.getResources()
      *     .getString(R.string.my_string);}
      * </pre>
      * This resource Object does NOT contain data from
      * @return System resources
      */
     public static Resources getResources() {
-        return Objects.requireNonNull(applicationContext).getResources();
-    }
-
-    public static void setApplicationContext(Context context) {
-        applicationContext = context.getApplicationContext();
+        return getApplicationContext().getResources();
     }
 }
