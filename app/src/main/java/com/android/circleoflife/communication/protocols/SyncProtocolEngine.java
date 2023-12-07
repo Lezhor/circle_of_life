@@ -2,7 +2,7 @@ package com.android.circleoflife.communication.protocols;
 
 import android.util.Log;
 
-import com.android.circleoflife.Application;
+import com.android.circleoflife.application.App;
 import com.android.circleoflife.auth.Authentication;
 import com.android.circleoflife.auth.AuthenticationFailedException;
 import com.android.circleoflife.communication.pdus.*;
@@ -23,7 +23,7 @@ import java.util.Date;
  * Follows the singleton pattern.
  *
  * @see SyncProtocolEngine#sync(Authentication, DBLog[], DatabaseController)
- * @see Application#getSyncProtocol()
+ * @see App#getSyncProtocol()
  * @see SyncProtocol
  */
 public class SyncProtocolEngine implements SyncProtocol {
@@ -60,7 +60,7 @@ public class SyncProtocolEngine implements SyncProtocol {
     public boolean sync(Authentication auth, DBLog[] logs, DatabaseController dbController) {
         boolean successful = true;
         Log.d("SyncProtocolEngine", "Begin syncing...");
-        SocketCommunication com = Application.openCommunicationSessionWithServer();
+        SocketCommunication com = App.openCommunicationSessionWithServer();
         try {
             com.connectToServer();
         } catch (IOException e) {

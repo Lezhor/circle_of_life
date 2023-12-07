@@ -1,4 +1,4 @@
-package com.android.circleoflife;
+package com.android.circleoflife.application;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -18,7 +18,7 @@ import java.util.Objects;
  * Every Class which allows only one existing instance is accessed from this class.<br>
  * This way every component can access each other component easily
  */
-public final class Application {
+public final class App {
 
     // TODO: 03.12.2023 SERVER connection data can't just be saevd in final attributes! Change!
 

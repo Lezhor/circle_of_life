@@ -2,7 +2,7 @@ package com.android.circleoflife.database.models.type_converters;
 
 import androidx.room.TypeConverter;
 
-import com.android.circleoflife.Application;
+import com.android.circleoflife.application.App;
 import com.android.circleoflife.logging.model.DBLog;
 
 /**
@@ -20,7 +20,7 @@ public class DBLogConverter {
      */
     @TypeConverter
     public String dbLogToString(DBLog log) {
-        return Application.getLogSerializer().dbLogToString(log);
+        return App.getLogSerializer().dbLogToString(log);
     }
 
     /**
@@ -31,7 +31,7 @@ public class DBLogConverter {
      */
     @TypeConverter
     public DBLog stringToDBLog(String str) {
-        return Application.getLogSerializer().stringToDBLog(str);
+        return App.getLogSerializer().stringToDBLog(str);
     }
 
 }

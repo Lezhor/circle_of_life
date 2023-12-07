@@ -1,6 +1,6 @@
 package com.android.circleoflife.communication.pdus;
 
-import com.android.circleoflife.Application;
+import com.android.circleoflife.application.App;
 import com.android.circleoflife.logging.model.DBLog;
 import com.android.circleoflife.logging.serializing.LogSerializer;
 
@@ -38,7 +38,7 @@ public class SendLogsPDU implements PDU {
         DataOutputStream dos = new DataOutputStream(os);
         dos.writeInt(getID());
         dos.writeInt(logArray.length);
-        LogSerializer logSerializer = Application.getLogSerializer();
+        LogSerializer logSerializer = App.getLogSerializer();
         for (DBLog log : logArray) {
             logSerializer.serialize(os, log);
         }
@@ -49,7 +49,7 @@ public class SendLogsPDU implements PDU {
         DataInputStream dis = new DataInputStream(is);
         int logCount = dis.readInt();
         DBLog[] logs = new DBLog[logCount];
-        LogSerializer logSerializer = Application.getLogSerializer();
+        LogSerializer logSerializer = App.getLogSerializer();
         for (int i = 0; i < logs.length; i++) {
             logs[i] = logSerializer.deserialize(is);
         }

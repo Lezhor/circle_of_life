@@ -1,6 +1,6 @@
 package com.android.circleoflife.communication.socket_communication;
 
-import com.android.circleoflife.Application;
+import com.android.circleoflife.application.App;
 import com.android.circleoflife.communication.protocols.SyncProtocolEngine;
 
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.io.OutputStream;
 
 /**
  * SocketCommunication used in {@link SyncProtocolEngine}<br>
- * @see Application#openCommunicationSessionWithServer()
+ * @see App#openCommunicationSessionWithServer()
  */
 public interface SocketCommunication {
 

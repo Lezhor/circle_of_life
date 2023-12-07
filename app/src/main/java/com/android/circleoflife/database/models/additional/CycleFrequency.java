@@ -2,7 +2,7 @@ package com.android.circleoflife.database.models.additional;
 
 import androidx.annotation.NonNull;
 
-import com.android.circleoflife.Application;
+import com.android.circleoflife.application.App;
 import com.android.circleoflife.R;
 
 import java.util.Arrays;
@@ -55,13 +55,13 @@ public class CycleFrequency {
     /**
      * Returns string representation of dayMask
      * @param mask daymask. e.gl {@link CycleFrequency#MASK_THURSDAY}
-     * @return String from {@link Application#getResources() SystemResources}.getString()
+     * @return String from {@link App#getResources() SystemResources}.getString()
      */
     public static String getString(int mask) {
         if (Arrays.stream(MASKS_DAYS_ALL).noneMatch(day -> mask == day)) {
             return "";
         }
-        String[] days_of_week = Application.getResources().getStringArray(R.array.days_of_week);
+        String[] days_of_week = App.getResources().getStringArray(R.array.days_of_week);
         return switch (mask) {
             case MASK_MONDAY -> days_of_week[0];
             case MASK_TUESDAY -> days_of_week[1];
@@ -70,7 +70,7 @@ public class CycleFrequency {
             case MASK_FRIDAY -> days_of_week[4];
             case MASK_SATURDAY -> days_of_week[5];
             case MASK_SUNDAY -> days_of_week[6];
-            default -> Application.getResources().getString(R.string.no_string);
+            default -> App.getResources().getString(R.string.no_string);
         };
     }
 
