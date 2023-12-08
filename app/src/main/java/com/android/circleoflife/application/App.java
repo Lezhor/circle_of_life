@@ -8,6 +8,8 @@ import com.android.circleoflife.communication.socket_communication.SocketCommuni
 import com.android.circleoflife.communication.socket_communication.SocketCommunicationImpl;
 import com.android.circleoflife.communication.protocols.SyncProtocol;
 import com.android.circleoflife.communication.protocols.SyncProtocolEngine;
+import com.android.circleoflife.database.control.DatabaseController;
+import com.android.circleoflife.database.control.DatabaseControllerImpl;
 import com.android.circleoflife.logging.control.DBLogger;
 import com.android.circleoflife.logging.control.DBLoggerImpl;
 import com.android.circleoflife.logging.serializing.LogSerializer;
@@ -83,6 +85,15 @@ public final class App {
      */
     public static DBLogger getDBLoggerInstance() {
         return DBLoggerImpl.getInstance();
+    }
+
+    /**
+     * singleton principle.
+     * @return only existing instance of {@link DatabaseController}
+     * @see DatabaseControllerImpl
+     */
+    public static DatabaseController getDatabaseController() {
+        return DatabaseControllerImpl.getInstance();
     }
 
     /**
