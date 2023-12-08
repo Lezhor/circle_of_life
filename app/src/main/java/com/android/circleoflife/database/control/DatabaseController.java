@@ -8,11 +8,11 @@ import com.android.circleoflife.communication.protocols.SyncProtocol;
 public interface DatabaseController {
 
 
-    /**
-     * Used in {@link SyncProtocol#sync(Authentication, DBLog[], DatabaseController)}
-     * @param instructions instructions to be executed
-     */
-    void executeSQLQueries(String[] instructions);
+    // Methods for getting data (No need for logs)
+
+    // Methods for changing data - todo write logs!
+
+
 
 
 }

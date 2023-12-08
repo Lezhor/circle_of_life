@@ -11,18 +11,21 @@ import com.android.circleoflife.database.control.DatabaseController;
 import com.android.circleoflife.logging.model.DBLog;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of interface {@link SyncProtocol}.<br>
- * Implements {@link SyncProtocolEngine#sync(Authentication, DBLog[], DatabaseController)} and {@link SyncProtocolEngine#getLastSuccessfulSyncDate()}<br><br>
+ * Implements {@link SyncProtocolEngine#sync(Authentication, DBLog[], List)} and {@link SyncProtocolEngine#getLastSuccessfulSyncDate()}<br><br>
  * <code>
  * PROTOCOL_NAME = "COL_SyncProt";<br>
  * VERSION = "v1.0";<br><br>
  * </code>
  * Follows the singleton pattern.
  *
- * @see SyncProtocolEngine#sync(Authentication, DBLog[], DatabaseController)
+ * @see SyncProtocolEngine#sync(Authentication, DBLog[], List)
  * @see App#getSyncProtocol()
  * @see SyncProtocol
  */
@@ -57,7 +60,7 @@ public class SyncProtocolEngine implements SyncProtocol {
     public static String VERSION = "v1.0";
 
     @Override
-    public boolean sync(Authentication auth, DBLog[] logs, DatabaseController dbController) {
+    public boolean sync(Authentication auth, DBLog[] logs, List<String> outSQLQueries) {
         boolean successful = true;
         Log.d("SyncProtocolEngine", "Begin syncing...");
         SocketCommunication com = App.openCommunicationSessionWithServer();
@@ -93,7 +96,7 @@ public class SyncProtocolEngine implements SyncProtocol {
             SendInstructionsPDU instructionsPDU = serializer.deserialize(SendInstructionsPDU.class);
             String[] instructions = instructionsPDU.getInstructions();
             Log.d("SyncProtocolEngine", "4) Received InstructionsPDU with " + instructions.length + " instructions.");
-            dbController.executeSQLQueries(instructions);
+            outSQLQueries.addAll(Arrays.stream(instructions).collect(Collectors.toSet()));
 
             // Step 5:
             SyncSuccessfulPDU syncSuccessfulPDU = new SyncSuccessfulPDU();
