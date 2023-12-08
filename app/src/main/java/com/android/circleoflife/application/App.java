@@ -30,7 +30,12 @@ public final class App {
      */
     public final static int PORT = 7777;
 
-    private static Context getApplicationContext() {
+    /**
+     * Returns Application Context.<br>
+     * If ApplicationObject is not set yet this method will wait. So it is recommended to use this method in a separate Thread.
+     * @return Application context
+     */
+    public static Context getApplicationContext() {
         return ApplicationObject.getInstance().getApplicationContext();
     }
 
