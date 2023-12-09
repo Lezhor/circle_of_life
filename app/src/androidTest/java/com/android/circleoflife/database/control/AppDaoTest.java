@@ -72,6 +72,7 @@ public class AppDaoTest {
     @Test
     public void testDatabaseAccess() {
         try {
+
             User user = new User("john_lennon", "blub123", LocalDateTime.now());
             dao.addUser(user);
             LiveData<User> liveData = dao.getUser("john_lennon");
@@ -86,7 +87,7 @@ public class AppDaoTest {
     }
 
     @Test
-    public void testLiveDataKeepTrackOfDatabase() {
+    public void testLiveDataKeepTrackOfDatabaseChanges() {
         try {
             User user = new User("hello_there", "blab123", LocalDateTime.now());
             dao.addUser(user);
