@@ -1,5 +1,7 @@
 package com.android.circleoflife.database.control;
 
+import android.content.Context;
+
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -38,12 +40,12 @@ public abstract class AppDatabase extends RoomDatabase {
      * Singleton getInstance() method.
      * @return only existing instance of AppDatabase
      */
-    static AppDatabase getInstance() {
+    static AppDatabase getInstance(Context applicationContext) {
         if (instance == null) {
             synchronized (AppDatabase.class) {
                 if (instance == null) {
                     instance = Room.databaseBuilder(
-                                    App.getApplicationContext(),
+                                    applicationContext.getApplicationContext(),
                                     AppDatabase.class,
                                     DATABASE_NAME
                             )

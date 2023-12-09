@@ -1,5 +1,7 @@
 package com.android.circleoflife.database.control;
 
+import com.android.circleoflife.application.App;
+
 public class DatabaseControllerImpl implements DatabaseController {
 
     private static volatile DatabaseController instance;
@@ -13,6 +15,10 @@ public class DatabaseControllerImpl implements DatabaseController {
             }
         }
         return instance;
+    }
+
+    private AppDatabase getDatabase() {
+        return AppDatabase.getInstance(App.getApplicationContext());
     }
 
 }
