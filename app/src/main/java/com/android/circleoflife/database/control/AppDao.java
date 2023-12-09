@@ -6,10 +6,8 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Ignore;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.RawQuery;
-import androidx.room.Transaction;
 import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
@@ -36,10 +34,10 @@ interface AppDao {
     void deleteUser(User user);
 
     @Query("SELECT * FROM users WHERE uid = :uid")
-    User getUser(int uid);
+    LiveData<User> getUser(int uid);
 
     @Query("SELECT * FROM users WHERE username LIKE :username LIMIT 1")
-    User getUser(String username);
+    LiveData<User> getUser(String username);
 
 
     // --------------------------------   Category Methods   --------------------------------------
@@ -54,35 +52,35 @@ interface AppDao {
     void deleteCategory(Category category);
 
     @Query("SELECT * FROM categories WHERE uid = :userID ORDER BY category_name")
-    List<Category> getAllCategories(int userID);
+    LiveData<List<Category>> getAllCategories(int userID);
 
-    @Transaction
-    default List<Category> getAllCategories(User user) {
+    @Ignore
+    default LiveData<List<Category>> getAllCategories(User user) {
         return getAllCategories(user.getId());
     }
 
     @Query("SELECT * FROM categories WHERE uid = :userID AND parent_category = NULL ORDER BY category_name")
-    List<Category> getRootCategories(int userID);
+    LiveData<List<Category>> getRootCategories(int userID);
 
-    @Transaction
-    default List<Category> getRootCategories(User user) {
+    @Ignore
+    default LiveData<List<Category>> getRootCategories(User user) {
         return getRootCategories(user.getId());
     }
 
     @Nullable
     @Query("SELECT c1.uid, c1.category_name, c1.parent_category FROM categories AS c1 JOIN categories AS c2 ON c1.uid = c2.uid AND c1.category_name LIKE c2.parent_category AND c2.uid = :userID AND c2.category_name LIKE :categoryName LIMIT 1")
-    Category getCategoryParent(int userID, String categoryName);
+    LiveData<Category> getCategoryParent(int userID, String categoryName);
 
-    @Transaction
-    default Category getParent(Category category) {
+    @Ignore
+    default LiveData<Category> getParent(Category category) {
         return getCategoryParent(category.getUserID(), category.getName());
     }
 
     @Query("SELECT c1.uid, c1.category_name, c1.parent_category FROM categories AS c1 JOIN categories AS c2 ON c1.uid = c2.uid AND c1.parent_category LIKE c2.category_name AND c2.uid = :userID AND c2.category_name LIKE :categoryName ORDER BY c1.category_name")
-    List<Category> getChildCategories(int userID, String categoryName);
+    LiveData<List<Category>> getChildCategories(int userID, String categoryName);
 
-    @Transaction
-    default List<Category> getChildCategories(Category category) {
+    @Ignore
+    default LiveData<List<Category>> getChildCategories(Category category) {
         return getChildCategories(category.getUserID(), category.getName());
     }
 
@@ -134,7 +132,6 @@ interface AppDao {
 
     @Delete
     void deleteLog(LogEntity log);
-
 
 
 }

@@ -2,7 +2,6 @@ package com.android.circleoflife.database.models;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.android.circleoflife.database.validators.StringValidator;
@@ -25,10 +24,6 @@ public class User {
 
     @ColumnInfo(name = "creation_time")
     private LocalDateTime timeOfCreation;
-
-    @Ignore
-    public User() {
-    }
 
     public User(String username, String password, LocalDateTime timeOfCreation) throws IllegalArgumentException {
         setUsername(username);
