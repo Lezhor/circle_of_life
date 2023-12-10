@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.LiveData;
@@ -14,6 +12,7 @@ import androidx.room.Room;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.android.circleoflife.database.control.daos.UserDao;
 import com.android.circleoflife.database.models.User;
 
 import org.junit.After;
@@ -33,7 +32,7 @@ public class AppDaoTest {
     @Rule public TestRule rule = new InstantTaskExecutorRule();
 
     private AppDatabase database;
-    private AppDao dao;
+    private UserDao userDao;
 
     private static final String dbDebug = "DB: ";
 
@@ -44,7 +43,7 @@ public class AppDaoTest {
         database = Room.inMemoryDatabaseBuilder(context, AppDatabase.class)
                 .allowMainThreadQueries()
                 .build();
-        dao = database.getDao();
+        userDao = database.getUserDao();
         System.out.println(dbDebug + "Database Setup finished!");
     }
 
@@ -79,8 +78,8 @@ public class AppDaoTest {
         try {
 
             User user = new User("john_lennon", "blub123", LocalDateTime.now());
-            dao.addUser(user);
-            LiveData<User> liveData = dao.getUser("john_lennon");
+            userDao.insert(user);
+            LiveData<User> liveData = userDao.getUser("john_lennon");
             User retrievedUser = getOrAwaitValue(liveData);
             assertEquals(user.getUsername(), retrievedUser.getUsername());
             assertEquals(user.getPassword(), retrievedUser.getPassword());
@@ -95,10 +94,10 @@ public class AppDaoTest {
     public void testLiveDataKeepTrackOfDatabaseChanges() {
         try {
             User user = new User("hello_there", "blab123", LocalDateTime.now());
-            dao.addUser(user);
-            LiveData<User> liveData = dao.getUser("hello_there");
+            userDao.insert(user);
+            LiveData<User> liveData = userDao.getUser("hello_there");
             user.setPassword("huhuhu");
-            dao.updateUser(user);
+            userDao.update(user);
 
             User retrievedUser = getOrAwaitValue(liveData);
             assertEquals(user.getUsername(), retrievedUser.getUsername());
