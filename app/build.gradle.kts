@@ -45,6 +45,7 @@ android {
 dependencies {
     val lifecycle_version = "2.6.2"
     val room_version = "2.6.1";
+    val arch_version = "2.2.0"
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
@@ -59,6 +60,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-livedata:$lifecycle_version")
     annotationProcessor("androidx.lifecycle:lifecycle-compiler:$lifecycle_version")
+
+    androidTestImplementation("androidx.arch.core:core-testing:$arch_version")
 
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")

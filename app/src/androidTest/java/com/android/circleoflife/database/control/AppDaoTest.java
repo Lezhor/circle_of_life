@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.room.Room;
@@ -17,7 +18,9 @@ import com.android.circleoflife.database.models.User;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
 import java.time.LocalDateTime;
@@ -26,6 +29,8 @@ import java.util.concurrent.TimeUnit;
 
 @RunWith(AndroidJUnit4.class)
 public class AppDaoTest {
+
+    @Rule public TestRule rule = new InstantTaskExecutorRule();
 
     private AppDatabase database;
     private AppDao dao;
@@ -60,7 +65,7 @@ public class AppDaoTest {
                 liveData.removeObserver(this);
             }
         };
-        new Handler(Looper.getMainLooper()).post(() -> liveData.observeForever(observer));
+        liveData.observeForever(observer);
         System.out.println("Waiting.....");
         //noinspection ResultOfMethodCallIgnored
         latch.await(2, TimeUnit.SECONDS);
