@@ -5,9 +5,12 @@ import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 
 import com.android.circleoflife.database.validators.StringValidator;
+
+import java.util.Objects;
 
 /**
  * This Model-Class is an Entry for room-database. It represents the table `categories`<br>
@@ -81,5 +84,14 @@ public class Category {
 
     public void setParent(@Nullable String parent) {
         this.parent = parent;
+    }
+
+    @Ignore
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof Category that) {
+            return this.name.equals(that.name) && this.userID == that.userID && Objects.equals(this.parent, that.parent);
+        }
+        return false;
     }
 }
