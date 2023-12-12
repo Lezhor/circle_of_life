@@ -7,6 +7,8 @@ import androidx.room.Ignore;
 import androidx.room.Query;
 
 import com.android.circleoflife.database.models.Category;
+import com.android.circleoflife.database.models.Cycle;
+import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.database.models.User;
 
 import java.util.List;
@@ -50,5 +52,20 @@ public interface CategoryDao extends BaseDao<Category> {
 
     // TODO: 10.12.2023 Method: getCycles(), getTodos
 
+    @Query("SELECT cycles.* FROM (SELECT * FROM categories WHERE uid = :userID AND category_name LIKE :categoryName) AS c JOIN cycles ON c.uid = cycles.uid AND c.category_name LIKE cycles.category ORDER BY cycles.cycle_name")
+    LiveData<List<Cycle>> getCycles(int userID, String categoryName);
 
+    @Ignore
+    default LiveData<List<Cycle>> getCycles(Category category) {
+        return getCycles(category.getUserID(), category.getName());
+    }
+
+
+    @Query("SELECT todos.* FROM (SELECT * FROM categories WHERE uid = :userID AND category_name LIKE :categoryName) AS c JOIN todos ON c.uid = todos.uid AND c.category_name LIKE todos.category ORDER BY todos.todo_name")
+    LiveData<List<Todo>> getTodos(int userID, String categoryName);
+
+    @Ignore
+    default LiveData<List<Todo>> getTodos(Category category) {
+        return getTodos(category.getUserID(), category.getName());
+    }
 }

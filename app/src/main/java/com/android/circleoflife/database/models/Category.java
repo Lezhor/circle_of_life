@@ -10,8 +10,6 @@ import androidx.room.Index;
 
 import com.android.circleoflife.database.validators.StringValidator;
 
-import java.util.Objects;
-
 /**
  * This Model-Class is an Entry for room-database. It represents the table `categories`<br>
  * Its primary key is `uid, category_name`, and it has a foreign key `uid, parent_category`
@@ -91,7 +89,7 @@ public class Category {
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj instanceof Category that) {
-            return this.name.equals(that.name) && this.userID == that.userID && Objects.equals(this.parent, that.parent);
+            return this.name.equals(that.name) && this.userID == that.userID;
         }
         return false;
     }

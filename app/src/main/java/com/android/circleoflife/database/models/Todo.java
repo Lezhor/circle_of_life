@@ -131,4 +131,12 @@ public class Todo {
     public void setDueDate(@Nullable LocalDateTime dueDate) {
         this.dueDate = dueDate;
     }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof Todo that) {
+            return this.userID == that.userID && this.name.equals(that.name);
+        }
+        return false;
+    }
 }

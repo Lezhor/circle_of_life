@@ -137,4 +137,12 @@ public class Cycle {
     public void setArchived(boolean archived) {
         this.archived = archived;
     }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof Cycle that) {
+            return this.userID == that.userID && this.name.equals(that.name);
+        }
+        return false;
+    }
 }

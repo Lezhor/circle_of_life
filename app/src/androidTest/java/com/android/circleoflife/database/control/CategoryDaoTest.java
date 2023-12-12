@@ -11,7 +11,10 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.android.circleoflife.database.control.daos.CategoryDao;
 import com.android.circleoflife.database.models.Category;
+import com.android.circleoflife.database.models.Cycle;
+import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.database.models.User;
+import com.android.circleoflife.database.models.additional.CycleFrequency;
 
 import org.junit.After;
 import org.junit.Before;
@@ -23,6 +26,7 @@ import org.junit.runner.RunWith;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @RunWith(AndroidJUnit4.class)
 public class CategoryDaoTest {
@@ -140,4 +144,49 @@ public class CategoryDaoTest {
                 children.toArray(Category[]::new)
         );
     }
+
+    @Test
+    public void testGetCycles() throws InterruptedException {
+        Category current = categories[7];
+        Cycle[] cycles = new Cycle[]{
+                new Cycle("Valbonesi", user.getId(), current.getName(), 1, CycleFrequency.fromBinaryString("11010110")),
+                new Cycle("Chopin", user.getId(), current.getName(), 1, CycleFrequency.fromBinaryString("10001001")),
+                new Cycle("Own Music", user.getId(), current.getParent(), 1, CycleFrequency.fromBinaryString("10100000")),
+        };
+        database.getCycleDao().insert(cycles);
+
+        LiveData<List<Cycle>> cycleLiveData = dao.getCycles(current);
+        List<Cycle> retrievedCycles = getOrAwaitValue(cycleLiveData);
+
+        for (Cycle cycle : cycles) {
+            if (Objects.equals(cycle.getCategory(), current.getName())) {
+                assertTrue(retrievedCycles.contains(cycle));
+            } else {
+                assertFalse(retrievedCycles.contains(cycle));
+            }
+        }
+    }
+
+    @Test
+    public void testGetTodos() throws InterruptedException {
+        Category current = categories[0];
+        Todo[] todos = new Todo[]{
+                new Todo("Study for Exam", user.getId(), current.getName(), 1, LocalDateTime.of(2023, 3, 5, 23, 59)),
+                new Todo("Do nothing", user.getId(), null, -1, true, LocalDateTime.now()),
+                new Todo("Do Math Homework", user.getId(), current.getName(), 1),
+        };
+        database.getTodoDao().insert(todos);
+
+        LiveData<List<Todo>> todosLiveData = dao.getTodos(current);
+        List<Todo> retrievedTodos = getOrAwaitValue(todosLiveData);
+
+        for (Todo todo : todos) {
+            if (Objects.equals(todo.getCategory(), current.getName())) {
+                assertTrue(retrievedTodos.contains(todo));
+            } else {
+                assertFalse(retrievedTodos.contains(todo));
+            }
+        }
+    }
+
 }

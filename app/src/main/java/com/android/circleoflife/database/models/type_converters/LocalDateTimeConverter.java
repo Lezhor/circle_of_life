@@ -1,5 +1,6 @@
 package com.android.circleoflife.database.models.type_converters;
 
+import androidx.annotation.Nullable;
 import androidx.room.TypeConverter;
 
 import java.time.LocalDate;
@@ -21,7 +22,11 @@ public class LocalDateTimeConverter {
      */
     @TypeConverter
     public LocalDateTime localDateTimeFromString(String str) {
-        return LocalDateTime.parse(str);
+        if (str == null) {
+            return null;
+        } else {
+            return LocalDateTime.parse(str);
+        }
     }
 
     /**
@@ -30,9 +35,14 @@ public class LocalDateTimeConverter {
      * @return String representation
      * @see LocalDateTime#toString()
      */
+    @Nullable
     @TypeConverter
-    public String localDateTimeToString(LocalDateTime time) {
-        return time.toString();
+    public String localDateTimeToString(@Nullable LocalDateTime time) {
+        if (time == null) {
+            return null;
+        } else {
+            return time.toString();
+        }
     }
 
     /**
