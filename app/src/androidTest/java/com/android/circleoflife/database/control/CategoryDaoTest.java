@@ -21,6 +21,7 @@ import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
@@ -55,6 +56,7 @@ public class CategoryDaoTest {
                 new Category("Android FrondEnd", user.getId(), "Android Project"),
                 new Category("Android BackEnd", user.getId(), "Android Project"),
         };
+        dao.insert(categories);
     }
 
     @After
@@ -63,8 +65,7 @@ public class CategoryDaoTest {
     }
 
     @Test
-    public void testInsertAndGetCategories() throws InterruptedException {
-        dao.insert(categories);
+    public void testGetCategories() throws InterruptedException {
         LiveData<List<Category>> categoryLiveData = dao.getAllCategories(user);
         List<Category> retrievedCategories = getOrAwaitValue(categoryLiveData);
         for (Category category : categories) {
@@ -73,7 +74,44 @@ public class CategoryDaoTest {
     }
 
     @Test
-    public void getRootCategories() {
+    public void testGetCategoriesWithMultipleUsers() throws InterruptedException {
+        User secondUser = new User("mario_3", "password", LocalDateTime.now());
+        database.getUserDao().insert(secondUser);
+        Category[] categories2 = new Category[]{
+                new Category("Temp1", secondUser.getId(), null),
+                new Category("Temp2", secondUser.getId(), null),
+                new Category("Temp3", secondUser.getId(), "Temp2")
+        };
+        dao.insert(categories2);
+
+        LiveData<List<Category>> categoryLiveData1 = dao.getAllCategories(user);
+        List<Category> retrievedCategories1 = getOrAwaitValue(categoryLiveData1);
+
+        LiveData<List<Category>> categoryLiveData2 = dao.getAllCategories(secondUser);
+        List<Category> retrievedCategories2 = getOrAwaitValue(categoryLiveData2);
+
+        for (Category category : categories) {
+            assertTrue(retrievedCategories1.contains(category));
+            assertFalse(retrievedCategories2.contains(category));
+        }
+        for (Category category : categories2) {
+            assertFalse(retrievedCategories1.contains(category));
+            assertTrue(retrievedCategories2.contains(category));
+        }
+    }
+
+    @Test
+    public void getRootCategories() throws InterruptedException {
+        LiveData<List<Category>> categoryLiveData = dao.getRootCategories(user);
+        List<Category> retrievedCategories = getOrAwaitValue(categoryLiveData);
+        assertEquals(Arrays.stream(categories).filter(c -> c.getParent() == null).count(), retrievedCategories.size());
+        for (Category category : categories) {
+            if (category.getParent() == null) {
+                assertTrue(retrievedCategories.contains(category));
+            } else {
+                assertFalse(retrievedCategories.contains(category));
+            }
+        }
     }
 
     @Test
