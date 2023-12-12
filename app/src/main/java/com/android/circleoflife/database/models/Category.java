@@ -83,7 +83,8 @@ public class Category {
     }
 
     public void setParent(@Nullable String parent) {
-        this.parent = parent;
+        if (!this.name.equals(parent))
+            this.parent = parent;
     }
 
     @Ignore

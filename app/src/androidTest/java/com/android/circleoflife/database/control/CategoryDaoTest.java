@@ -34,7 +34,7 @@ public class CategoryDaoTest {
     private CategoryDao dao;
     private Category[] categories;
     private User user;
-
+    private final Category wrongCategory = new Category("NOT A CATEGORY", 1010101, null);
 
     @Before
     public void setUp() {
@@ -53,10 +53,15 @@ public class CategoryDaoTest {
                 new Category("English", user.getId(), "Languages"),
                 new Category("Piano", user.getId(), "Music"),
                 new Category("Classic", user.getId(), "Piano"),
-                new Category("Android FrondEnd", user.getId(), "Android Project"),
                 new Category("Android BackEnd", user.getId(), "Android Project"),
+                new Category("Android FrondEnd", user.getId(), "Android Project"),
+                new Category("Duolingo", user.getId(), "日本語"),
         };
         dao.insert(categories);
+        User temp = new User("unnamed_user", "no_password", LocalDateTime.of(2000, 1, 1, 0, 0, 0));
+        temp.setId(wrongCategory.getUserID());
+        database.getUserDao().insert(temp);
+        dao.insert(wrongCategory);
     }
 
     @After
@@ -76,6 +81,7 @@ public class CategoryDaoTest {
     @Test
     public void testGetCategoriesWithMultipleUsers() throws InterruptedException {
         User secondUser = new User("mario_3", "password", LocalDateTime.now());
+        secondUser.setId(100);
         database.getUserDao().insert(secondUser);
         Category[] categories2 = new Category[]{
                 new Category("Temp1", secondUser.getId(), null),
@@ -98,6 +104,8 @@ public class CategoryDaoTest {
             assertFalse(retrievedCategories1.contains(category));
             assertTrue(retrievedCategories2.contains(category));
         }
+        assertFalse(retrievedCategories1.contains(wrongCategory));
+        assertFalse(retrievedCategories2.contains(wrongCategory));
     }
 
     @Test
@@ -112,13 +120,24 @@ public class CategoryDaoTest {
                 assertFalse(retrievedCategories.contains(category));
             }
         }
+        assertFalse(retrievedCategories.contains(wrongCategory));
     }
 
     @Test
-    public void getParent() {
+    public void getParent() throws InterruptedException {
+        LiveData<Category> parentLiveData = dao.getParent(categories[11]);
+        Category parent = getOrAwaitValue(parentLiveData);
+        assertEquals(categories[5], parent);
     }
 
     @Test
-    public void getChildCategories() {
+    public void getChildCategories() throws InterruptedException {
+        Category parent = categories[4];
+        LiveData<List<Category>> childLiveData = dao.getChildCategories(parent);
+        List<Category> children = getOrAwaitValue(childLiveData);
+        assertArrayEquals(
+                Arrays.stream(categories).filter(c -> c.getParent() != null && c.getParent().equals(parent.getName())).toArray(Category[]::new),
+                children.toArray(Category[]::new)
+        );
     }
 }
