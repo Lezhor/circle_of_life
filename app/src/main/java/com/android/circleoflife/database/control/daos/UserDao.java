@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Query;
 
-import com.android.circleoflife.database.control.daos.BaseDao;
 import com.android.circleoflife.database.models.User;
 
 @Dao
