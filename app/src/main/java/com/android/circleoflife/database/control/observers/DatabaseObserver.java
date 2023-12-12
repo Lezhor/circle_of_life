@@ -2,16 +2,12 @@ package com.android.circleoflife.database.control.observers;
 
 import com.android.circleoflife.database.models.*;
 
-import java.util.Collection;
-
 public interface DatabaseObserver {
 
-    // TODO: 10.12.2023 Change onInsert(Collection<T>) to be default and called varargs method
+    boolean isActive();
 
     // Users
     void onInsertUsers(User... user);
-
-    void onInsertUsers(Collection<User> user);
 
     void onUpdateUser(User user);
 
@@ -21,8 +17,6 @@ public interface DatabaseObserver {
     // Categories
     void onInsertCategories(Category... categories);
 
-    void onInsertCategories(Collection<Category> categories);
-
     void onUpdateCategory(Category category);
 
     void onDeleteCategory(Category category);
@@ -30,8 +24,6 @@ public interface DatabaseObserver {
 
     // Cycles
     void onInsertCycles(Cycle... cycles);
-
-    void onInsertCycles(Collection<Cycle> cycles);
 
     void onUpdateCycle(Cycle cycle);
 
@@ -41,8 +33,6 @@ public interface DatabaseObserver {
     // To Do
     void onInsertTodos(Todo... todos);
 
-    void onInsertTodos(Collection<Todo> todos);
-
     void onUpdateTodo(Todo todo);
 
     void onDeleteTodo(Todo todo);
@@ -50,8 +40,6 @@ public interface DatabaseObserver {
 
     // Accomplishment
     void onInsertAccomplishment(Accomplishment... accomplishments);
-
-    void onInsertAccomplishment(Collection<Accomplishment> accomplishments);
 
     void onUpdateAccomplishment(Accomplishment accomplishment);
 

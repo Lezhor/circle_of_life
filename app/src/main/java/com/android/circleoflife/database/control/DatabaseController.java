@@ -1,14 +1,7 @@
 package com.android.circleoflife.database.control;
 
-import com.android.circleoflife.auth.Authentication;
 import com.android.circleoflife.database.control.observers.DatabaseObserver;
-import com.android.circleoflife.database.models.Accomplishment;
-import com.android.circleoflife.database.models.Category;
-import com.android.circleoflife.database.models.Cycle;
-import com.android.circleoflife.database.models.Todo;
-import com.android.circleoflife.database.models.User;
-import com.android.circleoflife.logging.model.DBLog;
-import com.android.circleoflife.communication.protocols.SyncProtocol;
+import com.android.circleoflife.database.models.*;
 
 import java.util.Collection;
 
@@ -24,9 +17,11 @@ public interface DatabaseController {
     // TODO: 10.12.2023 Get methods (from DAOs)
 
     // Users
-    void insertUsers(User... user);
+    void insertUsers(User... users);
 
-    void insertUsers(Collection<User> user);
+    default void insertUsers(Collection<User> users) {
+        insertUsers(users.stream().toArray(User[]::new));
+    }
 
     void updateUser(User user);
 
@@ -36,7 +31,9 @@ public interface DatabaseController {
     // Categories
     void insertCategories(Category... categories);
 
-    void insertCategories(Collection<Category> categories);
+    default void insertCategories(Collection<Category> categories) {
+        insertCategories(categories.stream().toArray(Category[]::new));
+    }
 
     void updateCategory(Category category);
 
@@ -46,7 +43,9 @@ public interface DatabaseController {
     // Cycles
     void insertCycles(Cycle... cycles);
 
-    void insertCycles(Collection<Cycle> cycles);
+    default void insertCycles(Collection<Cycle> cycles) {
+        insertCycles(cycles.stream().toArray(Cycle[]::new));
+    }
 
     void updateCycle(Cycle cycle);
 
@@ -56,7 +55,9 @@ public interface DatabaseController {
     // To Do
     void insertTodos(Todo... todos);
 
-    void insertTodos(Collection<Todo> todos);
+    default void insertTodos(Collection<Todo> todos) {
+        insertTodos(todos.stream().toArray(Todo[]::new));
+    }
 
     void updateTodo(Todo todo);
 
@@ -66,7 +67,9 @@ public interface DatabaseController {
     // Accomplishment
     void insertAccomplishment(Accomplishment... accomplishments);
 
-    void insertAccomplishment(Collection<Accomplishment> accomplishments);
+    default void insertAccomplishment(Collection<Accomplishment> accomplishments) {
+        insertAccomplishment(accomplishments.stream().toArray(Accomplishment[]::new));
+    }
 
     void updateAccomplishment(Accomplishment accomplishment);
 

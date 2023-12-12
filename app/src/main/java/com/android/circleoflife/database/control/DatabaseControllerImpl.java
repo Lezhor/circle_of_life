@@ -2,11 +2,7 @@ package com.android.circleoflife.database.control;
 
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.control.observers.DatabaseObserver;
-import com.android.circleoflife.database.models.Accomplishment;
-import com.android.circleoflife.database.models.Category;
-import com.android.circleoflife.database.models.Cycle;
-import com.android.circleoflife.database.models.Todo;
-import com.android.circleoflife.database.models.User;
+import com.android.circleoflife.database.models.*;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -48,24 +44,14 @@ public class DatabaseControllerImpl implements DatabaseController {
 
     private void triggerObservers(Consumer<DatabaseObserver> observedMethod) {
         observers.stream()
-                //.filter() // TODO - Filter for active?
+                .filter(DatabaseObserver::isActive)
                 .forEach(observedMethod);
     }
 
     @Override
-    public void insertUsers(User... user) {
-        if (user.length == 1) {
-            db.getUserDao().insert(user[0]);
-        } else {
-            db.getUserDao().insertAll(user);
-        }
-        triggerObservers(o -> o.onInsertUsers(user));
-    }
-
-    @Override
-    public void insertUsers(Collection<User> user) {
-        db.getUserDao().insertAll(user);
-        triggerObservers(o -> o.onInsertUsers(user));
+    public void insertUsers(User... users) {
+        db.getUserDao().insert(users);
+        triggerObservers(o -> o.onInsertUsers(users));
     }
 
     @Override
@@ -82,81 +68,73 @@ public class DatabaseControllerImpl implements DatabaseController {
 
     @Override
     public void insertCategories(Category... categories) {
-
-    }
-
-    @Override
-    public void insertCategories(Collection<Category> categories) {
-
+        db.getCategoryDao().insert(categories);
+        triggerObservers(o -> o.onInsertCategories(categories));
     }
 
     @Override
     public void updateCategory(Category category) {
-
+        db.getCategoryDao().update(category);
+        triggerObservers(o -> o.onUpdateCategory(category));
     }
 
     @Override
     public void deleteCategory(Category category) {
-
+        db.getCategoryDao().delete(category);
+        triggerObservers(o -> o.onDeleteCategory(category));
     }
 
     @Override
     public void insertCycles(Cycle... cycles) {
-
-    }
-
-    @Override
-    public void insertCycles(Collection<Cycle> cycles) {
-
+        db.getCycleDao().insert(cycles);
+        triggerObservers(o -> o.onInsertCycles(cycles));
     }
 
     @Override
     public void updateCycle(Cycle cycle) {
-
+        db.getCycleDao().update(cycle);
+        triggerObservers(o -> o.onUpdateCycle(cycle));
     }
 
     @Override
     public void deleteCycle(Cycle cycle) {
-
+        db.getCycleDao().delete(cycle);
+        triggerObservers(o -> o.onDeleteCycle(cycle));
     }
 
     @Override
     public void insertTodos(Todo... todos) {
-
-    }
-
-    @Override
-    public void insertTodos(Collection<Todo> todos) {
-
+        db.getTodoDao().insert(todos);
+        triggerObservers(o -> o.onInsertTodos(todos));
     }
 
     @Override
     public void updateTodo(Todo todo) {
-
+        db.getTodoDao().update(todo);
+        triggerObservers(o -> o.onUpdateTodo(todo));
     }
 
     @Override
     public void deleteTodo(Todo todo) {
-
+        db.getTodoDao().delete(todo);
+        triggerObservers(o -> o.onDeleteTodo(todo));
     }
 
     @Override
     public void insertAccomplishment(Accomplishment... accomplishments) {
-
-    }
-
-    @Override
-    public void insertAccomplishment(Collection<Accomplishment> accomplishments) {
-
+        db.getAccomplishmentDao().insert(accomplishments);
+        triggerObservers(o -> o.onInsertAccomplishment(accomplishments));
     }
 
     @Override
     public void updateAccomplishment(Accomplishment accomplishment) {
-
+        db.getAccomplishmentDao().update(accomplishment);
+        triggerObservers(o -> o.onUpdateAccomplishment(accomplishment));
     }
 
     @Override
     public void deleteAccomplishment(Accomplishment accomplishment) {
-
+        db.getAccomplishmentDao().delete(accomplishment);
+        triggerObservers(o -> o.onDeleteAccomplishment(accomplishment));
     }
 }
