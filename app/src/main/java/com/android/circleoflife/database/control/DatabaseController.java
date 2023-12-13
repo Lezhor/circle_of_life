@@ -1,9 +1,12 @@
 package com.android.circleoflife.database.control;
 
+import androidx.lifecycle.LiveData;
+
 import com.android.circleoflife.database.control.observers.DatabaseObserver;
 import com.android.circleoflife.database.models.*;
 
 import java.util.Collection;
+import java.util.List;
 
 // TODO: 03.12.2023 DATABASE CONTROLLER
 public interface DatabaseController {
@@ -38,6 +41,18 @@ public interface DatabaseController {
     void updateCategory(Category category);
 
     void deleteCategory(Category category);
+
+    LiveData<List<Category>> getAllCategories(User user);
+
+    LiveData<List<Category>> getRootCategories(User user);
+
+    LiveData<Category> getCategoryParent(Category category);
+
+    LiveData<List<Category>> getChildCategories(Category category);
+
+    LiveData<List<Cycle>> getCycles(Category category);
+
+    LiveData<List<Todo>> getTodos(Category category);
 
 
     // Cycles

@@ -1,11 +1,14 @@
 package com.android.circleoflife.database.control;
 
+import androidx.lifecycle.LiveData;
+
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.control.observers.DatabaseObserver;
 import com.android.circleoflife.database.models.*;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class DatabaseControllerImpl implements DatabaseController {
@@ -82,6 +85,36 @@ public class DatabaseControllerImpl implements DatabaseController {
     public void deleteCategory(Category category) {
         db.getCategoryDao().delete(category);
         triggerObservers(o -> o.onDeleteCategory(category));
+    }
+
+    @Override
+    public LiveData<List<Category>> getAllCategories(User user) {
+        return db.getCategoryDao().getAllCategories(user);
+    }
+
+    @Override
+    public LiveData<List<Category>> getRootCategories(User user) {
+        return db.getCategoryDao().getRootCategories(user);
+    }
+
+    @Override
+    public LiveData<Category> getCategoryParent(Category category) {
+        return db.getCategoryDao().getParent(category);
+    }
+
+    @Override
+    public LiveData<List<Category>> getChildCategories(Category category) {
+        return db.getCategoryDao().getChildCategories(category);
+    }
+
+    @Override
+    public LiveData<List<Cycle>> getCycles(Category category) {
+        return db.getCategoryDao().getCycles(category);
+    }
+
+    @Override
+    public LiveData<List<Todo>> getTodos(Category category) {
+        return db.getCategoryDao().getTodos(category);
     }
 
     @Override

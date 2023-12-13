@@ -50,7 +50,7 @@ public interface CategoryDao extends BaseDao<Category> {
         return getChildCategories(category.getUserID(), category.getName());
     }
 
-    // TODO: 10.12.2023 Method: getCycles(), getTodos
+    // Non-Category Methods
 
     @Query("SELECT cycles.* FROM (SELECT * FROM categories WHERE uid = :userID AND category_name LIKE :categoryName) AS c JOIN cycles ON c.uid = cycles.uid AND c.category_name LIKE cycles.category ORDER BY cycles.cycle_name")
     LiveData<List<Cycle>> getCycles(int userID, String categoryName);
