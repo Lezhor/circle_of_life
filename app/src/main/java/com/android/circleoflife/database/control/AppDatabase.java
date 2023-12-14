@@ -28,7 +28,7 @@ import com.android.circleoflife.database.models.type_converters.*;
                 Accomplishment.class,
                 LogEntity.class
         },
-        version = 1
+        version = 2
 )
 @TypeConverters({LocalDateTimeConverter.class, DBLogConverter.class, CycleFrequencyConverter.class, UUIDConverter.class})
 public abstract class AppDatabase extends RoomDatabase {

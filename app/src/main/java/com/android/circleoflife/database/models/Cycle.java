@@ -7,34 +7,33 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 import com.android.circleoflife.database.models.additional.CycleFrequency;
 import com.android.circleoflife.database.validators.IntegerValidator;
 
+import java.util.UUID;
+
 /**
- * This Model-Class is an Entry for room-database. It represents the table `cycles`<br>
- * Its primary key is `uid, cycle_name`, and it has a foreign key `uid, category`
- * pointing to table `categories`
+ * This Model-Class is an Entry for room-database. It represents the table `cycles`
  */
 @Entity(
         tableName = "cycles",
         indices = {
-                @Index(value = {"uid", "cycle_name"}, unique = true),
-                @Index(value = {"uid", "category"}),
+                @Index(value = {"userID", "categoryID"}),
         },
-        primaryKeys = {"uid", "cycle_name"},
         foreignKeys = {
                 @ForeignKey(
                         entity = User.class,
-                        parentColumns = "uid",
-                        childColumns = "uid",
+                        parentColumns = "userID",
+                        childColumns = "userID",
                         onUpdate = ForeignKey.CASCADE,
                         onDelete = ForeignKey.RESTRICT
                 ),
                 @ForeignKey(
                         entity = Category.class,
-                        parentColumns = {"uid", "category_name"},
-                        childColumns = {"uid", "category"},
+                        parentColumns = {"userID", "ID"},
+                        childColumns = {"userID", "categoryID"},
                         onUpdate = ForeignKey.CASCADE
                 )
         }
@@ -42,15 +41,21 @@ import com.android.circleoflife.database.validators.IntegerValidator;
 public class Cycle {
 
     @NonNull
+    @PrimaryKey
+    @ColumnInfo(name = "ID")
+    private UUID id;
+
+    @NonNull
+    @ColumnInfo(name = "userID")
+    private UUID userID;
+
+    @NonNull
     @ColumnInfo(name = "cycle_name")
     private String name;
 
-    @ColumnInfo(name = "uid")
-    private int userID;
-
     @Nullable
-    @ColumnInfo(name = "category", defaultValue = "NULL")
-    private String category;
+    @ColumnInfo(name = "categoryID", defaultValue = "NULL")
+    private UUID categoryID;
 
     /**
      * Value ranging from -1 to 1
@@ -68,19 +73,20 @@ public class Cycle {
      * Constructor for Cycle. Sets value archived to false.
      * @param name name
      * @param userID userID
-     * @param category category
+     * @param categoryID category
      * @param productiveness productiveness
      * @param frequency frequency
      */
     @Ignore
-    public Cycle(@NonNull String name, int userID, @Nullable String category, int productiveness, CycleFrequency frequency) {
-        this(name, userID, category, productiveness, frequency, false);
+    public Cycle(@NonNull UUID id, @NonNull String name, @NonNull UUID userID, @Nullable UUID categoryID, int productiveness, CycleFrequency frequency) {
+        this(id, name, userID, categoryID, productiveness, frequency, false);
     }
 
-    public Cycle(@NonNull String name, int userID, @Nullable String category, int productiveness, CycleFrequency frequency, boolean archived) {
+    public Cycle(@NonNull UUID id, @NonNull String name, @NonNull UUID userID, @Nullable UUID categoryID, int productiveness, CycleFrequency frequency, boolean archived) {
+        this.id = id;
         this.name = name;
         this.userID = userID;
-        this.category = category;
+        this.categoryID = categoryID;
         setProductiveness(productiveness);
         this.frequency = frequency;
         this.archived = archived;
@@ -97,21 +103,22 @@ public class Cycle {
         this.name = name;
     }
 
-    public int getUserID() {
+    @NonNull
+    public UUID getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(@NonNull UUID userID) {
         this.userID = userID;
     }
 
     @Nullable
-    public String getCategory() {
-        return category;
+    public UUID getCategory() {
+        return categoryID;
     }
 
-    public void setCategory(@Nullable String category) {
-        this.category = category;
+    public void setCategory(@Nullable UUID categoryID) {
+        this.categoryID = categoryID;
     }
 
     public int getProductiveness() {
@@ -141,8 +148,17 @@ public class Cycle {
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj instanceof Cycle that) {
-            return this.userID == that.userID && this.name.equals(that.name);
+            return this.userID.equals(that.userID) && this.id.equals(that.id);
         }
         return false;
+    }
+
+    @NonNull
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(@NonNull UUID id) {
+        this.id = id;
     }
 }

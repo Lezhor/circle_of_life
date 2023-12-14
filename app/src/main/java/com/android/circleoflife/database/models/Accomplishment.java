@@ -7,59 +7,63 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.UUID;
 
 /**
  * This Model-Class is an Entry for room-database. It represents the table `accomplishments`<br>
- * Its primary key is `uid, a_id`, and it has two foreign keys. One to the table `cycle` one to the table `todos`
+ * Its primary key is `userID, a_id`, and it has two foreign keys. One to the table `cycleID` one to the table `todos`
  */
 @Entity(
         tableName = "accomplishments",
         indices = {
-                @Index(value = {"uid", "a_id"}, unique = true),
-                @Index(value = {"uid", "cycle"}),
-                @Index(value = {"uid", "todo"}),
+                @Index(value = {"userID", "cycleID"}),
+                @Index(value = {"userID", "todoID"}),
         },
-        primaryKeys = {"uid", "a_id"},
         foreignKeys = {
                 @ForeignKey(
                         entity = User.class,
-                        parentColumns = "uid",
-                        childColumns = "uid",
+                        parentColumns = "userID",
+                        childColumns = "userID",
                         onUpdate = ForeignKey.CASCADE,
                         onDelete = ForeignKey.RESTRICT
                 ),
                 @ForeignKey(
                         entity = Cycle.class,
-                        parentColumns = {"uid", "cycle_name"},
-                        childColumns = {"uid", "cycle"},
+                        parentColumns = {"userID", "ID"},
+                        childColumns = {"userID", "cycleID"},
                         onUpdate = ForeignKey.CASCADE
                 ),
                 @ForeignKey(
                         entity = Todo.class,
-                        parentColumns = {"uid", "todo_name"},
-                        childColumns = {"uid", "todo"},
+                        parentColumns = {"userID", "ID"},
+                        childColumns = {"userID", "todoID"},
                         onUpdate = ForeignKey.CASCADE
                 )
         }
 )
 public class Accomplishment {
-    @ColumnInfo(name = "a_id")
-    private int id;
+    
+    @NonNull
+    @PrimaryKey
+    @ColumnInfo(name = "ID")
+    private UUID id;
 
-    @ColumnInfo(name = "uid")
-    private int uid;
+    @NonNull
+    @ColumnInfo(name = "userID")
+    private UUID userID;
 
     @Nullable
-    @ColumnInfo(name = "cycle")
-    private String cycle;
+    @ColumnInfo(name = "cycleID")
+    private UUID cycleID;
 
     @Nullable
-    @ColumnInfo(name = "todo")
-    private String todo;
+    @ColumnInfo(name = "todoID")
+    private UUID todoID;
 
     @Nullable
     @ColumnInfo(name = "name")
@@ -83,11 +87,11 @@ public class Accomplishment {
     @ColumnInfo(name = "duration")
     private long durationMillis;
 
-    public Accomplishment(int id, int uid, @Nullable String cycle, @Nullable String todo, @Nullable String name, @Nullable String description, int productiveness, @NonNull LocalDate date, @Nullable LocalTime timestamp, long durationMillis) {
+    public Accomplishment(@NonNull UUID id, @NonNull UUID userID, @Nullable UUID cycleID, @Nullable UUID todoID, @Nullable String name, @Nullable String description, int productiveness, @NonNull LocalDate date, @Nullable LocalTime timestamp, long durationMillis) {
         this.id = id;
-        this.uid = uid;
-        this.cycle = cycle;
-        this.todo = todo;
+        this.userID = userID;
+        this.cycleID = cycleID;
+        this.todoID = todoID;
         this.name = name;
         this.description = description;
         this.productiveness = productiveness;
@@ -105,38 +109,40 @@ public class Accomplishment {
         return LocalDateTime.of(date, timestamp != null ? timestamp : LocalTime.of(0, 0, 0));
     }
 
-    public int getId() {
+    @NonNull
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(@NonNull UUID id) {
         this.id = id;
     }
 
-    public int getUid() {
-        return uid;
+    @NonNull
+    public UUID getUserID() {
+        return userID;
     }
 
-    public void setUid(int uid) {
-        this.uid = uid;
-    }
-
-    @Nullable
-    public String getCycle() {
-        return cycle;
-    }
-
-    public void setCycle(@Nullable String cycle) {
-        this.cycle = cycle;
+    public void setUserID(@NonNull UUID userID) {
+        this.userID = userID;
     }
 
     @Nullable
-    public String getTodo() {
-        return todo;
+    public UUID getCycle() {
+        return cycleID;
     }
 
-    public void setTodo(@Nullable String todo) {
-        this.todo = todo;
+    public void setCycle(@Nullable UUID cycleID) {
+        this.cycleID = cycleID;
+    }
+
+    @Nullable
+    public UUID getTodo() {
+        return todoID;
+    }
+
+    public void setTodo(@Nullable UUID todoID) {
+        this.todoID = todoID;
     }
 
     @Nullable
@@ -194,7 +200,7 @@ public class Accomplishment {
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj instanceof Accomplishment that) {
-            return this.uid == that.uid && this.id == that.id;
+            return this.userID.equals(that.userID) && this.id.equals(that.id);
         }
         return false;
     }

@@ -7,33 +7,32 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 import com.android.circleoflife.database.validators.StringValidator;
 
+import java.util.UUID;
+
 /**
- * This Model-Class is an Entry for room-database. It represents the table `categories`<br>
- * Its primary key is `uid, category_name`, and it has a foreign key `uid, parent_category`
- * pointing to the same table `categories`
+ * This Model-Class is an Entry for room-database. It represents the table `categories`
  */
 @Entity(
         tableName = "categories",
         indices = {
-                @Index(value = {"uid", "category_name"}, unique = true),
-                @Index(value = {"uid", "parent_category"})
+                @Index(value = {"userID", "parentID"})
         },
-        primaryKeys = {"uid", "category_name"},
         foreignKeys = {
                 @ForeignKey(
                         entity = User.class,
-                        parentColumns = "uid",
-                        childColumns = "uid",
+                        parentColumns = "userID",
+                        childColumns = "userID",
                         onUpdate = ForeignKey.CASCADE,
                         onDelete = ForeignKey.RESTRICT
                 ),
                 @ForeignKey(
                         entity = Category.class,
-                        parentColumns = {"uid", "category_name"},
-                        childColumns = {"uid", "parent_category"},
+                        parentColumns = {"userID", "ID"},
+                        childColumns = {"userID", "parentID"},
                         onUpdate = ForeignKey.CASCADE
                 )
         },
@@ -42,20 +41,36 @@ import com.android.circleoflife.database.validators.StringValidator;
 public class Category {
 
     @NonNull
+    @PrimaryKey
+    @ColumnInfo(name = "ID")
+    private UUID id;
+
+    @NonNull
+    @ColumnInfo(name = "userID")
+    private UUID userID;
+
+    @NonNull
     @ColumnInfo(name = "category_name")
     private String name;
 
-    @ColumnInfo(name = "uid")
-    private int userID;
-
     @Nullable
-    @ColumnInfo(name = "parent_category", defaultValue = "NULL")
-    private String parent;
+    @ColumnInfo(name = "parentID", defaultValue = "NULL")
+    private UUID parentID;
 
-    public Category(String name, int userID, @Nullable String parent) {
+    public Category(@NonNull UUID id, String name, @NonNull UUID userID, @Nullable UUID parentID) {
+        this.id = id;
         this.name = StringValidator.validateStringMinLength(name, 1);
-        setUserID(userID);
-        setParent(parent);
+        this.userID = userID;
+        this.parentID = parentID;
+    }
+
+    @NonNull
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(@NonNull UUID id) {
+        this.id = id;
     }
 
     @NonNull
@@ -67,29 +82,30 @@ public class Category {
         this.name = name;
     }
 
-    public int getUserID() {
+    @NonNull
+    public UUID getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(@NonNull UUID userID) {
         this.userID = userID;
     }
 
     @Nullable
-    public String getParent() {
-        return parent;
+    public UUID getParent() {
+        return parentID;
     }
 
-    public void setParent(@Nullable String parent) {
-        if (!this.name.equals(parent))
-            this.parent = parent;
+    public void setParent(@Nullable UUID parent) {
+        if (!this.id.equals(parent))
+            this.parentID = parent;
     }
 
     @Ignore
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj instanceof Category that) {
-            return this.name.equals(that.name) && this.userID == that.userID;
+            return this.userID.equals(that.userID) && this.id.equals(that.id);
         }
         return false;
     }

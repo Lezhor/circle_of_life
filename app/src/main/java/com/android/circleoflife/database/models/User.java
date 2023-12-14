@@ -1,5 +1,6 @@
 package com.android.circleoflife.database.models;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -8,13 +9,15 @@ import com.android.circleoflife.database.validators.StringValidator;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity(tableName = "users")
 public class User {
 
+    @NonNull
     @PrimaryKey
-    @ColumnInfo(name = "uid")
-    private int id;
+    @ColumnInfo(name = "userID")
+    private UUID id;
 
     @ColumnInfo(name = "username")
     private String username;
@@ -25,17 +28,19 @@ public class User {
     @ColumnInfo(name = "creation_time")
     private LocalDateTime timeOfCreation;
 
-    public User(String username, String password, LocalDateTime timeOfCreation) throws IllegalArgumentException {
+    public User(@NonNull UUID userID, String username, String password, LocalDateTime timeOfCreation) throws IllegalArgumentException {
+        this.id = userID;
         setUsername(username);
         setPassword(password);
         setTimeOfCreation(timeOfCreation);
     }
 
-    public int getId() {
+    @NonNull
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(@NonNull UUID id) {
         this.id = id;
     }
 

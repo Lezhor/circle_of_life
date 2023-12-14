@@ -7,34 +7,32 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 
 /**
- * This Model-Class is an Entry for room-database. It represents the table `todos`<br>
- * Its primary key is `uid, todo_name`, and it has a foreign key `uid, category`
- * pointing to table `categories`
+ * This Model-Class is an Entry for room-database. It represents the table `todos`
  */
 @Entity(
         tableName = "todos",
         indices = {
-                @Index(value = {"uid", "todo_name"}, unique = true),
-                @Index(value = {"uid", "category"}),
+                @Index(value = {"userID", "categoryID"}),
         },
-        primaryKeys = {"uid", "todo_name"},
         foreignKeys = {
                 @ForeignKey(
                         entity = User.class,
-                        parentColumns = "uid",
-                        childColumns = "uid",
+                        parentColumns = "userID",
+                        childColumns = "userID",
                         onUpdate = ForeignKey.CASCADE,
                         onDelete = ForeignKey.RESTRICT
                 ),
                 @ForeignKey(
                         entity = Category.class,
-                        parentColumns = {"uid", "category_name"},
-                        childColumns = {"uid", "category"},
+                        parentColumns = {"userID", "ID"},
+                        childColumns = {"userID", "categoryID"},
                         onUpdate = ForeignKey.CASCADE
                 )
         }
@@ -42,15 +40,21 @@ import java.time.LocalDateTime;
 public class Todo {
 
     @NonNull
+    @PrimaryKey
+    @ColumnInfo(name = "ID")
+    private UUID id;
+
+    @NonNull
     @ColumnInfo(name = "todo_name")
     private String name;
 
-    @ColumnInfo(name = "uid")
-    private int userID;
+    @NonNull
+    @ColumnInfo(name = "userID")
+    private UUID userID;
 
     @Nullable
-    @ColumnInfo(name = "category", defaultValue = "NULL")
-    private String category;
+    @ColumnInfo(name = "categoryID", defaultValue = "NULL")
+    private UUID categoryID;
 
     @ColumnInfo(name = "productiveness")
     private int productive;
@@ -63,19 +67,20 @@ public class Todo {
     private LocalDateTime dueDate;
 
     @Ignore
-    public Todo(@NonNull String name, int userID, @Nullable String category, int productive) {
-        this(name, userID, category, productive, false, null);
+    public Todo(@NonNull UUID id, @NonNull String name, @NonNull UUID userID, @Nullable UUID categoryID, int productive) {
+        this(id, name, userID, categoryID, productive, false, null);
     }
 
     @Ignore
-    public Todo(@NonNull String name, int userID, @Nullable String category, int productive, @Nullable LocalDateTime dueDate) {
-        this(name, userID, category, productive, false, dueDate);
+    public Todo(@NonNull UUID id, @NonNull String name, @NonNull UUID userID, @Nullable UUID categoryID, int productive, @Nullable LocalDateTime dueDate) {
+        this(id, name, userID, categoryID, productive, false, dueDate);
     }
 
-    public Todo(@NonNull String name, int userID, @Nullable String category, int productive, boolean done, @Nullable LocalDateTime dueDate) {
+    public Todo(@NonNull UUID id, @NonNull String name, @NonNull UUID userID, @Nullable UUID categoryID, int productive, boolean done, @Nullable LocalDateTime dueDate) {
+        this.id = id;
         this.name = name;
         this.userID = userID;
-        this.category = category;
+        this.categoryID = categoryID;
         this.productive = productive;
         this.done = done;
         this.dueDate = dueDate;
@@ -90,21 +95,22 @@ public class Todo {
         this.name = name;
     }
 
-    public int getUserID() {
+    @NonNull
+    public UUID getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(@NonNull UUID userID) {
         this.userID = userID;
     }
 
     @Nullable
-    public String getCategory() {
-        return category;
+    public UUID getCategory() {
+        return categoryID;
     }
 
-    public void setCategory(@Nullable String category) {
-        this.category = category;
+    public void setCategory(@Nullable UUID categoryID) {
+        this.categoryID = categoryID;
     }
 
     public int getProductive() {
@@ -135,8 +141,17 @@ public class Todo {
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj instanceof Todo that) {
-            return this.userID == that.userID && this.name.equals(that.name);
+            return this.userID.equals(that.userID) && this.id.equals(that.id);
         }
         return false;
+    }
+
+    @NonNull
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(@NonNull UUID id) {
+        this.id = id;
     }
 }
