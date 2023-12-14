@@ -30,7 +30,7 @@ import com.android.circleoflife.database.models.type_converters.*;
         },
         version = 1
 )
-@TypeConverters({LocalDateTimeConverter.class, DBLogConverter.class, CycleFrequencyConverter.class})
+@TypeConverters({LocalDateTimeConverter.class, DBLogConverter.class, CycleFrequencyConverter.class, UUIDConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     abstract UserDao getUserDao();
     abstract CategoryDao getCategoryDao();
