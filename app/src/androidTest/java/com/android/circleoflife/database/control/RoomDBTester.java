@@ -42,17 +42,17 @@ public class RoomDBTester {
             new Category("Android FrondEnd", userIDs[0], "Android Project"),
             new Category("Duolingo", userIDs[0], "日本語"),
 
-            new Category("Homework", userIDs[1], "Uni"),
+            new Category("Education", userIDs[1], null),
             new Category("Uni", userIDs[1], "Education"),
+            new Category("Homework", userIDs[1], "Uni"),
             new Category("Sports", userIDs[1], null),
             new Category("Volleyball", userIDs[1], "Sports"),
-            new Category("Education", userIDs[1], null),
             new Category("Reading", userIDs[1], "Education"),
             new Category("Math", userIDs[1], "Education"),
 
             new Category("Cooking", userIDs[2], null),
-            new Category("アニメ", userIDs[2], "Movie-List"),
             new Category("Movie-List", userIDs[2], null),
+            new Category("アニメ", userIDs[2], "Movie-List"),
             new Category("Vacation", userIDs[2], null),
             new Category("Packing List", userIDs[2], "Vacation"),
     };
@@ -65,12 +65,14 @@ public class RoomDBTester {
             new Cycle("Learn a new Recipe", userIDs[2], "Cooking", 1, CycleFrequency.fromBinaryString("10000010")),
             new Cycle("Read TAOCP", userIDs[1], "Reading", 1, CycleFrequency.fromBinaryString("10000010")),
             new Cycle("Piano", userIDs[0], "Piano", 1, CycleFrequency.fromBinaryString("10100011")),
+            new Cycle("Piano", userIDs[2], "アニメ", 1, CycleFrequency.fromBinaryString("10001010")),
+            new Cycle("Do Nothing", userIDs[2], null, -1, CycleFrequency.fromBinaryString("11111111")),
     };
 
     public final Todo[] todos = new Todo[]{
             new Todo("Tent", userIDs[2], "Packing List", 0),
             new Todo("Learn Integrals", userIDs[1], "Math", 1),
-            new Todo("Read Wikipedia Article about Finland", userIDs[2], "Reading", 0),
+            new Todo("Read Wikipedia Article about Finland", userIDs[1], "Reading", 0),
             new Todo("Learn Chopin Waltz op. 64 C# Minor", userIDs[0], "Piano", 0),
             new Todo("Watch LOTR", userIDs[2], "Movie-List", 0),
             new Todo("Learn JavaScript", userIDs[0], "IT", 1),
@@ -86,6 +88,8 @@ public class RoomDBTester {
             new Accomplishment(5, userIDs[0], "Piano", null, "Played Piano", "Played everything once", 1, LocalDate.of(2023, 11, 30), LocalTime.of(17, 40), 5 * 60000),
             new Accomplishment(1, userIDs[1], null, "Learn Integrals", null, "Calculated one integral", 1, LocalDate.of(2023, 10, 31), LocalTime.of(22, 35), 20 * 60000),
             new Accomplishment(2, userIDs[1], null, null, "Travel", "To University", 0, LocalDate.of(2023, 11, 12), LocalTime.of(8, 35), 90 * 60000),
+            new Accomplishment(6, userIDs[0], null, null, "Help", "Helped dad with his stuff", 0, LocalDate.of(2023, 11, 24), LocalTime.of(13, 15), 40 * 60000),
+            new Accomplishment(1, userIDs[2], "Piano", null, null, "Learned one song", 0, LocalDate.of(2023, 12, 13), LocalTime.of(19, 50), 10 * 60000),
     };
 
 
@@ -95,8 +99,15 @@ public class RoomDBTester {
                 .build();
     }
 
-    public RoomDBTester(AppDatabase db) {
+    private final AppDatabase db;
+
+    public RoomDBTester(Context context) {
+        db = setUpMemoryDB(context);
         initDatabase(db);
+    }
+
+    public AppDatabase getDb() {
+        return db;
     }
 
     private void initDatabase(AppDatabase db) {

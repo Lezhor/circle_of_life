@@ -190,4 +190,12 @@ public class Accomplishment {
     public void setDurationMillis(long durationMillis) {
         this.durationMillis = durationMillis;
     }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof Accomplishment that) {
+            return this.uid == that.uid && this.id == that.id;
+        }
+        return false;
+    }
 }
