@@ -13,13 +13,13 @@ import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.Cycle;
 import com.android.circleoflife.database.models.User;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,13 +40,20 @@ public class CycleDaoTest {
         dao = db.getCycleDao();
     }
 
+    @After
+    public void tearDown() {
+        if (db != null)
+            db.close();
+    }
+
     @Test
     public void testGetAllCycles() throws InterruptedException {
         User user = tester.users[0];
         LiveData<List<Cycle>> cycleLiveData = dao.getAllCycles(user);
         List<Cycle> retrievedCycles = RoomDBTester.getOrAwaitValue(cycleLiveData);
-        for (Cycle cycle : tester.cycles) {
-            if (cycle.getUserID() == user.getId()) {
+
+        for (Cycle cycle : tester.getCycles()) {
+            if (cycle.getUserID().equals(user.getId())) {
                 assertTrue(retrievedCycles.contains(cycle));
             } else {
                 assertFalse(retrievedCycles.contains(cycle));
@@ -57,12 +64,13 @@ public class CycleDaoTest {
     @Test
     public void testGetCategory() throws InterruptedException {
         User user = tester.users[1];
-        Cycle cycle = Arrays.stream(tester.cycles).filter(c -> c.getUserID() == user.getId() && c.getName().equals("Read TAOCP")).reduce(null, (a, b) -> b);
+        Cycle cycle = tester.getCycle(user, "Read TAOCP");
         assertNotNull(cycle);
+
         LiveData<Category> categoryLiveData = dao.getCategory(cycle);
         Category retrievedCategory = RoomDBTester.getOrAwaitValue(categoryLiveData);
 
-        Category actualCategory = Arrays.stream(tester.categories).filter(c -> c.getUserID() == user.getId() && c.getName().equals("Reading")).reduce(null, (a, b) -> b);
+        Category actualCategory = tester.getCategory(user, "Reading");
 
         assertEquals(actualCategory, retrievedCategory);
     }
@@ -70,8 +78,9 @@ public class CycleDaoTest {
     @Test
     public void testGetCategoryNull() throws InterruptedException {
         User user = tester.users[2];
-        Cycle cycle = Arrays.stream(tester.cycles).filter(c -> c.getUserID() == user.getId() && c.getName().equals("Do Nothing")).reduce(null, (a, b) -> b);
+        Cycle cycle = tester.getCycle(user, "Do Nothing");
         assertNotNull(cycle);
+
         LiveData<Category> categoryLiveData = dao.getCategory(cycle);
         Category retrievedCategory = RoomDBTester.getOrAwaitValue(categoryLiveData);
 
@@ -81,12 +90,14 @@ public class CycleDaoTest {
     @Test
     public void testGetAccomplishments() throws InterruptedException {
         User user = tester.users[0];
-        Cycle cycle = Arrays.stream(tester.cycles).filter(c -> c.getUserID() == user.getId() && c.getName().equals("Piano")).reduce(null, (a, b) -> b);
+        Cycle cycle = tester.getCycle(user, "Piano");
         assertNotNull(cycle);
+
         LiveData<List<Accomplishment>> accomplishmentLiveData = dao.getAccomplishments(cycle);
         List<Accomplishment> retrievedAccomplishments = RoomDBTester.getOrAwaitValue(accomplishmentLiveData);
-        for (Accomplishment acc : tester.accomplishments) {
-            if (acc.getUid() == user.getId() && Objects.equals(acc.getCycle(), cycle.getName())) {
+
+        for (Accomplishment acc : tester.getAccomplishments()) {
+            if (acc.getUserID().equals(user.getId()) && Objects.equals(acc.getCycleID(), cycle.getId())) {
                 assertTrue(retrievedAccomplishments.contains(acc));
             } else {
                 assertFalse(retrievedAccomplishments.contains(acc));

@@ -22,6 +22,7 @@ import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @RunWith(AndroidJUnit4.class)
 public class AppDaoTest {
@@ -48,14 +49,14 @@ public class AppDaoTest {
     public void testDatabaseAccess() {
         try {
 
-            User user = new User("john_lennon", "blub123", LocalDateTime.now());
+            User user = new User(UUID.randomUUID(), "john_lennon", "blub123", LocalDateTime.now());
             userDao.insert(user);
             LiveData<User> liveData = userDao.getUser("john_lennon");
             User retrievedUser = getOrAwaitValue(liveData);
             assertEquals(user.getUsername(), retrievedUser.getUsername());
             assertEquals(user.getPassword(), retrievedUser.getPassword());
             assertEquals(user.getTimeOfCreation(), retrievedUser.getTimeOfCreation());
-            assertEquals(user.getId(), retrievedUser.getId());
+            assertEquals(user, retrievedUser);
         } catch (InterruptedException e) {
             fail(e.getMessage());
         }
@@ -64,13 +65,14 @@ public class AppDaoTest {
     @Test
     public void testLiveDataKeepTrackOfDatabaseChanges() {
         try {
-            User user = new User("hello_there", "blab123", LocalDateTime.now());
+            User user = new User(UUID.randomUUID(),"hello_there", "blab123", LocalDateTime.now());
             userDao.insert(user);
-            LiveData<User> liveData = userDao.getUser("hello_there");
+            LiveData<User> liveData = userDao.getUser(user.getId());
             user.setPassword("huhuhu");
             userDao.update(user);
 
             User retrievedUser = getOrAwaitValue(liveData);
+            assertEquals(user, retrievedUser);
             assertEquals(user.getUsername(), retrievedUser.getUsername());
             assertEquals(user.getPassword(), retrievedUser.getPassword());
             assertEquals(user.getTimeOfCreation(), retrievedUser.getTimeOfCreation());

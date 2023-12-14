@@ -1,6 +1,7 @@
 package com.android.circleoflife.database.models;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -66,5 +67,13 @@ public class User {
 
     public void setTimeOfCreation(LocalDateTime timeOfCreation) {
         this.timeOfCreation = Objects.requireNonNull(timeOfCreation);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof User that) {
+            return this.id.equals(that.id);
+        }
+        return false;
     }
 }
