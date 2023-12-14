@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.android.circleoflife.database.validators.StringValidator;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-@Entity(tableName = "users")
+@Entity(tableName = "users", indices = @Index(value = {"userID"}))
 public class User {
 
     @NonNull

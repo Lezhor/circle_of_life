@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.android.circleoflife.logging.model.DBLog;
@@ -19,6 +20,9 @@ import java.util.UUID;
  */
 @Entity(
         tableName = "logs",
+        indices = {
+                @Index(value = {"ID", "userID"})
+        },
         foreignKeys = {
                 @ForeignKey(
                         entity = User.class,
@@ -34,7 +38,7 @@ public class LogEntity {
 
     @NonNull
     @PrimaryKey
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = "ID")
     private UUID id;
 
     @NonNull
