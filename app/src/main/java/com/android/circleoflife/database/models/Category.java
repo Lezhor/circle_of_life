@@ -93,4 +93,10 @@ public class Category {
         }
         return false;
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Category[" + getName() + "]";
+    }
 }
