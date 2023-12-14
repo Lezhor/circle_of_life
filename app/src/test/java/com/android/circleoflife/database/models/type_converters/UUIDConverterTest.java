@@ -30,5 +30,14 @@ public class UUIDConverterTest {
         assertEquals(str, convertedString);
     }
 
+    @Test
+    public void testNullStringToUUID() {
+        assertNull(UUIDConverter.uuidFromString(null));
+    }
+
+    @Test
+    public void testNullUUIDToString() {
+        assertNull(UUIDConverter.uuidToString(null));
+    }
 
 }

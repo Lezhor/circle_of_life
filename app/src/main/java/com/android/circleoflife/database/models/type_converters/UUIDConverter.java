@@ -10,23 +10,24 @@ import java.util.UUID;
 public class UUIDConverter {
 
     /**
-     * Converts UUID to String
+     * Converts UUID to String. null maps to null
      * @param uuid uuid
      * @return String representation of uuid
      */
     @TypeConverter
     public static String uuidToString(UUID uuid) {
-        return uuid.toString();
+
+        return uuid == null ? null : uuid.toString();
     }
 
     /**
-     * Converts String to UUID
+     * Converts String to UUID. null maps to null
      * @param str string representation of uuid
      * @return uuid
      */
     @TypeConverter
     public static UUID uuidFromString(String str) {
-        return UUID.fromString(str);
+        return str == null ? null : UUID.fromString(str);
     }
 
 }
