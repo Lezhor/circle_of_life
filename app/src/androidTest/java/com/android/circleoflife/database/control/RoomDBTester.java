@@ -112,6 +112,7 @@ public class RoomDBTester {
             list.add(new Todo(UUID.randomUUID(), "Learn JavaScript", users[0].getId(), getCategory(users[0], "IT").getId(), 1));
             list.add(new Todo(UUID.randomUUID(), "Learn Python", users[0].getId(), getCategory(users[0], "IT").getId(), 1));
             list.add(new Todo(UUID.randomUUID(), "Spanish Homework", users[1].getId(), getCategory(users[1], "Homework").getId(), 1));
+            list.add(new Todo(UUID.randomUUID(), "Shopping", users[1].getId(), null, 0));
             todos = list.toArray(Todo[]::new);
         }
         return todos;
