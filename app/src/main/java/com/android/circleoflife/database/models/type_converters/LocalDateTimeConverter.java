@@ -53,6 +53,9 @@ public class LocalDateTimeConverter {
      */
     @TypeConverter
     public LocalDate localDateFromString(String str) {
+        if (str == null) {
+            return null;
+        }
         return LocalDate.parse(str);
     }
 
@@ -64,6 +67,9 @@ public class LocalDateTimeConverter {
      */
     @TypeConverter
     public String localDateToString(LocalDate date) {
+        if (date == null) {
+            return null;
+        }
         return date.toString();
     }
 
@@ -75,6 +81,9 @@ public class LocalDateTimeConverter {
      */
     @TypeConverter
     public LocalTime localTimeFromString(String str) {
+        if (str == null) {
+            return null;
+        }
         return LocalTime.parse(str);
     }
 
@@ -86,6 +95,9 @@ public class LocalDateTimeConverter {
      */
     @TypeConverter
     public String localDateToString(LocalTime time) {
+        if (time == null) {
+            return null;
+        }
         return time.toString();
     }
 
