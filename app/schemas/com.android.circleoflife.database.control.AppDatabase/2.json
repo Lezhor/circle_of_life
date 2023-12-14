@@ -1,0 +1,527 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "3e7c61355799f52d96e7e08710fc41fb",
+    "entities": [
+      {
+        "tableName": "users",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userID` TEXT NOT NULL, `username` TEXT, `password` TEXT, `creation_time` TEXT, PRIMARY KEY(`userID`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "userID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "password",
+            "columnName": "password",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timeOfCreation",
+            "columnName": "creation_time",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "userID"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "categories",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` TEXT NOT NULL, `userID` TEXT NOT NULL, `category_name` TEXT NOT NULL, `parentID` TEXT DEFAULT NULL, PRIMARY KEY(`ID`), FOREIGN KEY(`userID`) REFERENCES `users`(`userID`) ON UPDATE CASCADE ON DELETE RESTRICT , FOREIGN KEY(`userID`, `parentID`) REFERENCES `categories`(`userID`, `ID`) ON UPDATE CASCADE ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "ID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userID",
+            "columnName": "userID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "category_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "parentID",
+            "columnName": "parentID",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "NULL"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "ID"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_categories_userID_ID",
+            "unique": true,
+            "columnNames": [
+              "userID",
+              "ID"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_categories_userID_ID` ON `${TABLE_NAME}` (`userID`, `ID`)"
+          },
+          {
+            "name": "index_categories_userID_parentID",
+            "unique": false,
+            "columnNames": [
+              "userID",
+              "parentID"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_categories_userID_parentID` ON `${TABLE_NAME}` (`userID`, `parentID`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "users",
+            "onDelete": "RESTRICT",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "userID"
+            ],
+            "referencedColumns": [
+              "userID"
+            ]
+          },
+          {
+            "table": "categories",
+            "onDelete": "NO ACTION",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "userID",
+              "parentID"
+            ],
+            "referencedColumns": [
+              "userID",
+              "ID"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "cycles",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` TEXT NOT NULL, `userID` TEXT NOT NULL, `cycle_name` TEXT NOT NULL, `categoryID` TEXT DEFAULT NULL, `productiveness` INTEGER NOT NULL, `frequency` TEXT, `archived` INTEGER NOT NULL, PRIMARY KEY(`ID`), FOREIGN KEY(`userID`) REFERENCES `users`(`userID`) ON UPDATE CASCADE ON DELETE RESTRICT , FOREIGN KEY(`userID`, `categoryID`) REFERENCES `categories`(`userID`, `ID`) ON UPDATE CASCADE ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "ID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userID",
+            "columnName": "userID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "cycle_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "categoryID",
+            "columnName": "categoryID",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "NULL"
+          },
+          {
+            "fieldPath": "productiveness",
+            "columnName": "productiveness",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "frequency",
+            "columnName": "frequency",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "archived",
+            "columnName": "archived",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "ID"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_cycles_userID_ID",
+            "unique": true,
+            "columnNames": [
+              "userID",
+              "ID"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_cycles_userID_ID` ON `${TABLE_NAME}` (`userID`, `ID`)"
+          },
+          {
+            "name": "index_cycles_userID_categoryID",
+            "unique": false,
+            "columnNames": [
+              "userID",
+              "categoryID"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_cycles_userID_categoryID` ON `${TABLE_NAME}` (`userID`, `categoryID`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "users",
+            "onDelete": "RESTRICT",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "userID"
+            ],
+            "referencedColumns": [
+              "userID"
+            ]
+          },
+          {
+            "table": "categories",
+            "onDelete": "NO ACTION",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "userID",
+              "categoryID"
+            ],
+            "referencedColumns": [
+              "userID",
+              "ID"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "todos",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` TEXT NOT NULL, `todo_name` TEXT NOT NULL, `userID` TEXT NOT NULL, `categoryID` TEXT DEFAULT NULL, `productiveness` INTEGER NOT NULL, `done` INTEGER NOT NULL, `due_date` TEXT DEFAULT NULL, PRIMARY KEY(`ID`), FOREIGN KEY(`userID`) REFERENCES `users`(`userID`) ON UPDATE CASCADE ON DELETE RESTRICT , FOREIGN KEY(`userID`, `categoryID`) REFERENCES `categories`(`userID`, `ID`) ON UPDATE CASCADE ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "ID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "todo_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userID",
+            "columnName": "userID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "categoryID",
+            "columnName": "categoryID",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "NULL"
+          },
+          {
+            "fieldPath": "productive",
+            "columnName": "productiveness",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "done",
+            "columnName": "done",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dueDate",
+            "columnName": "due_date",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "NULL"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "ID"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_todos_userID_ID",
+            "unique": true,
+            "columnNames": [
+              "userID",
+              "ID"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_todos_userID_ID` ON `${TABLE_NAME}` (`userID`, `ID`)"
+          },
+          {
+            "name": "index_todos_userID_categoryID",
+            "unique": false,
+            "columnNames": [
+              "userID",
+              "categoryID"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_todos_userID_categoryID` ON `${TABLE_NAME}` (`userID`, `categoryID`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "users",
+            "onDelete": "RESTRICT",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "userID"
+            ],
+            "referencedColumns": [
+              "userID"
+            ]
+          },
+          {
+            "table": "categories",
+            "onDelete": "NO ACTION",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "userID",
+              "categoryID"
+            ],
+            "referencedColumns": [
+              "userID",
+              "ID"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "accomplishments",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` TEXT NOT NULL, `userID` TEXT NOT NULL, `cycleID` TEXT, `todoID` TEXT, `name` TEXT, `description` TEXT, `productiveness` INTEGER NOT NULL, `date` TEXT NOT NULL, `timestamp` TEXT, `duration` INTEGER NOT NULL, PRIMARY KEY(`ID`), FOREIGN KEY(`userID`) REFERENCES `users`(`userID`) ON UPDATE CASCADE ON DELETE RESTRICT , FOREIGN KEY(`userID`, `cycleID`) REFERENCES `cycles`(`userID`, `ID`) ON UPDATE CASCADE ON DELETE NO ACTION , FOREIGN KEY(`userID`, `todoID`) REFERENCES `todos`(`userID`, `ID`) ON UPDATE CASCADE ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "ID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userID",
+            "columnName": "userID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cycleID",
+            "columnName": "cycleID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "todoID",
+            "columnName": "todoID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "productiveness",
+            "columnName": "productiveness",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "durationMillis",
+            "columnName": "duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "ID"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_accomplishments_userID_cycleID",
+            "unique": false,
+            "columnNames": [
+              "userID",
+              "cycleID"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_accomplishments_userID_cycleID` ON `${TABLE_NAME}` (`userID`, `cycleID`)"
+          },
+          {
+            "name": "index_accomplishments_userID_todoID",
+            "unique": false,
+            "columnNames": [
+              "userID",
+              "todoID"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_accomplishments_userID_todoID` ON `${TABLE_NAME}` (`userID`, `todoID`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "users",
+            "onDelete": "RESTRICT",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "userID"
+            ],
+            "referencedColumns": [
+              "userID"
+            ]
+          },
+          {
+            "table": "cycles",
+            "onDelete": "NO ACTION",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "userID",
+              "cycleID"
+            ],
+            "referencedColumns": [
+              "userID",
+              "ID"
+            ]
+          },
+          {
+            "table": "todos",
+            "onDelete": "NO ACTION",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "userID",
+              "todoID"
+            ],
+            "referencedColumns": [
+              "userID",
+              "ID"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "logs",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `userID` TEXT NOT NULL, `timestamp` TEXT NOT NULL, `content` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`userID`) REFERENCES `users`(`userID`) ON UPDATE CASCADE ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userID",
+            "columnName": "userID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "log",
+            "columnName": "content",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "users",
+            "onDelete": "RESTRICT",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "userID"
+            ],
+            "referencedColumns": [
+              "userID"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3e7c61355799f52d96e7e08710fc41fb')"
+    ]
+  }
+}

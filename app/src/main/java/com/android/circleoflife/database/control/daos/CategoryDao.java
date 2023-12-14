@@ -12,21 +12,22 @@ import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.database.models.User;
 
 import java.util.List;
+import java.util.UUID;
 
 @Dao
 public interface CategoryDao extends BaseDao<Category> {
 
 
-    @Query("SELECT * FROM categories WHERE uid = :userID ORDER BY category_name")
-    LiveData<List<Category>> getAllCategories(int userID);
+    @Query("SELECT * FROM categories WHERE userID = :userID ORDER BY category_name")
+    LiveData<List<Category>> getAllCategories(UUID userID);
 
     @Ignore
     default LiveData<List<Category>> getAllCategories(User user) {
         return getAllCategories(user.getId());
     }
 
-    @Query("SELECT * FROM categories WHERE uid = :userID AND parent_category IS NULL ORDER BY category_name")
-    LiveData<List<Category>> getRootCategories(int userID);
+    @Query("SELECT * FROM categories WHERE userID = :userID AND parentID IS NULL ORDER BY category_name")
+    LiveData<List<Category>> getRootCategories(UUID userID);
 
     @Ignore
     default LiveData<List<Category>> getRootCategories(User user) {
@@ -34,16 +35,16 @@ public interface CategoryDao extends BaseDao<Category> {
     }
 
     @Nullable
-    @Query("SELECT c1.uid, c1.category_name, c1.parent_category FROM categories AS c1 JOIN categories AS c2 ON c1.uid = c2.uid AND c1.category_name LIKE c2.parent_category AND c2.uid = :userID AND c2.category_name LIKE :categoryName LIMIT 1")
-    LiveData<Category> getCategoryParent(int userID, String categoryName);
+    @Query("SELECT c1.* FROM categories AS c1 JOIN categories AS c2 ON c1.userID = c2.userID AND c1.ID = c2.parentID AND c2.userID = :userID AND c2.category_name LIKE :categoryName LIMIT 1")
+    LiveData<Category> getCategoryParent(UUID userID, String categoryName);
 
     @Ignore
     default LiveData<Category> getParent(Category category) {
         return getCategoryParent(category.getUserID(), category.getName());
     }
 
-    @Query("SELECT c1.uid, c1.category_name, c1.parent_category FROM categories AS c1 JOIN categories AS c2 ON c1.uid = c2.uid AND c1.parent_category LIKE c2.category_name AND c2.uid = :userID AND c2.category_name LIKE :categoryName ORDER BY c1.category_name")
-    LiveData<List<Category>> getChildCategories(int userID, String categoryName);
+    @Query("SELECT c1.* FROM categories AS c1 JOIN categories AS c2 ON c1.userID = c2.userID AND c1.parentID = c2.ID AND c2.userID = :userID AND c2.category_name LIKE :categoryName ORDER BY c1.category_name")
+    LiveData<List<Category>> getChildCategories(UUID userID, String categoryName);
 
     @Ignore
     default LiveData<List<Category>> getChildCategories(Category category) {
@@ -52,8 +53,8 @@ public interface CategoryDao extends BaseDao<Category> {
 
     // Non-Category Methods
 
-    @Query("SELECT cycles.* FROM (SELECT * FROM categories WHERE uid = :userID AND category_name LIKE :categoryName) AS c JOIN cycles ON c.uid = cycles.uid AND c.category_name LIKE cycles.category ORDER BY cycles.cycle_name")
-    LiveData<List<Cycle>> getCycles(int userID, String categoryName);
+    @Query("SELECT cycles.* FROM (SELECT * FROM categories WHERE userID = :userID AND category_name LIKE :categoryName) AS c JOIN cycles ON c.userID = cycles.userID AND c.ID = cycles.categoryID ORDER BY cycles.cycle_name")
+    LiveData<List<Cycle>> getCycles(UUID userID, String categoryName);
 
     @Ignore
     default LiveData<List<Cycle>> getCycles(Category category) {
@@ -61,8 +62,8 @@ public interface CategoryDao extends BaseDao<Category> {
     }
 
 
-    @Query("SELECT todos.* FROM (SELECT * FROM categories WHERE uid = :userID AND category_name LIKE :categoryName) AS c JOIN todos ON c.uid = todos.uid AND c.category_name LIKE todos.category ORDER BY todos.todo_name")
-    LiveData<List<Todo>> getTodos(int userID, String categoryName);
+    @Query("SELECT todos.* FROM (SELECT * FROM categories WHERE userID = :userID AND category_name LIKE :categoryName) AS c JOIN todos ON c.userID = todos.userID AND c.ID = todos.categoryID ORDER BY todos.todo_name")
+    LiveData<List<Todo>> getTodos(UUID userID, String categoryName);
 
     @Ignore
     default LiveData<List<Todo>> getTodos(Category category) {
