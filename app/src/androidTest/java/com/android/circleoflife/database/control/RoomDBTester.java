@@ -38,7 +38,7 @@ public class RoomDBTester {
             list.add(new Category(UUID.randomUUID(), "IT", users[0].getId(), null));
             list.add(new Category(UUID.randomUUID(), "Languages", users[0].getId(), null));
             list.add(new Category(UUID.randomUUID(), "Music", users[0].getId(), null));
-            list.add(new Category(UUID.randomUUID(), "Android Project", users[0].getId(), categories[1].getId()));
+            list.add(new Category(UUID.randomUUID(), "Android Project", users[0].getId(), list.get(2).getId()));
             list.add(new Category(UUID.randomUUID(), "日本語", users[0].getId(), list.get(2).getId()));
             list.add(new Category(UUID.randomUUID(), "English", users[0].getId(), list.get(2).getId()));
             list.add(new Category(UUID.randomUUID(), "Piano", users[0].getId(), list.get(3).getId()));
@@ -85,7 +85,7 @@ public class RoomDBTester {
             list.add(new Cycle(UUID.randomUUID(), "Learn a new Recipe", users[2].getId(), getCategory(users[2], "Cooking").getId(), 1, CycleFrequency.fromBinaryString("10000010")));
             list.add(new Cycle(UUID.randomUUID(), "Read TAOCP", users[1].getId(), getCategory(users[1], "Reading").getId(), 1, CycleFrequency.fromBinaryString("10000010")));
             list.add(new Cycle(UUID.randomUUID(), "Piano", users[0].getId(), getCategory(users[0], "Piano").getId(), 1, CycleFrequency.fromBinaryString("10100011")));
-            list.add(new Cycle(UUID.randomUUID(), "Piano", users[2].getId(), getCategory(users[0], "アニメ").getId(), 1, CycleFrequency.fromBinaryString("10001010")));
+            list.add(new Cycle(UUID.randomUUID(), "Piano", users[2].getId(), getCategory(users[2], "アニメ").getId(), 1, CycleFrequency.fromBinaryString("10001010")));
             list.add(new Cycle(UUID.randomUUID(), "Do Nothing", users[2].getId(), null, -1, CycleFrequency.fromBinaryString("11111111")));
             cycles = list.toArray(Cycle[]::new);
         }
