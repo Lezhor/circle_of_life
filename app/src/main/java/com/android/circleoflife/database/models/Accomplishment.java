@@ -128,20 +128,20 @@ public class Accomplishment {
     }
 
     @Nullable
-    public UUID getCycle() {
+    public UUID getCycleID() {
         return cycleID;
     }
 
-    public void setCycle(@Nullable UUID cycleID) {
+    public void setCycleID(@Nullable UUID cycleID) {
         this.cycleID = cycleID;
     }
 
     @Nullable
-    public UUID getTodo() {
+    public UUID getTodoID() {
         return todoID;
     }
 
-    public void setTodo(@Nullable UUID todoID) {
+    public void setTodoID(@Nullable UUID todoID) {
         this.todoID = todoID;
     }
 

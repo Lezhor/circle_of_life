@@ -19,6 +19,7 @@ import java.util.UUID;
 @Entity(
         tableName = "categories",
         indices = {
+                @Index(value = {"userID", "ID"}, unique = true),
                 @Index(value = {"userID", "parentID"})
         },
         foreignKeys = {
@@ -92,11 +93,11 @@ public class Category {
     }
 
     @Nullable
-    public UUID getParent() {
+    public UUID getParentID() {
         return parentID;
     }
 
-    public void setParent(@Nullable UUID parent) {
+    public void setParentID(@Nullable UUID parent) {
         if (!this.id.equals(parent))
             this.parentID = parent;
     }

@@ -28,8 +28,8 @@ public class User {
     @ColumnInfo(name = "creation_time")
     private LocalDateTime timeOfCreation;
 
-    public User(@NonNull UUID userID, String username, String password, LocalDateTime timeOfCreation) throws IllegalArgumentException {
-        this.id = userID;
+    public User(@NonNull UUID id, String username, String password, LocalDateTime timeOfCreation) throws IllegalArgumentException {
+        this.id = id;
         setUsername(username);
         setPassword(password);
         setTimeOfCreation(timeOfCreation);

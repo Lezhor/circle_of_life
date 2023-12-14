@@ -19,6 +19,7 @@ import java.util.UUID;
 @Entity(
         tableName = "todos",
         indices = {
+                @Index(value = {"userID", "ID"}, unique = true),
                 @Index(value = {"userID", "categoryID"}),
         },
         foreignKeys = {
@@ -105,11 +106,11 @@ public class Todo {
     }
 
     @Nullable
-    public UUID getCategory() {
+    public UUID getCategoryID() {
         return categoryID;
     }
 
-    public void setCategory(@Nullable UUID categoryID) {
+    public void setCategoryID(@Nullable UUID categoryID) {
         this.categoryID = categoryID;
     }
 

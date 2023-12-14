@@ -71,11 +71,11 @@ public class LogEntity {
     }
 
     @NonNull
-    public LocalDateTime getTime() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTime(@NonNull LocalDateTime timestamp) {
+    public void setTimestamp(@NonNull LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
