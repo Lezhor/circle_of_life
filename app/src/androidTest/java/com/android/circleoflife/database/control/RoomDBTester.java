@@ -139,6 +139,7 @@ public class RoomDBTester {
             list.add(new Accomplishment(UUID.randomUUID(), users[1].getId(), null, null, "Travel", "To University", 0, LocalDate.of(2023, 11, 12), LocalTime.of(8, 35), 90 * 60000));
             list.add(new Accomplishment(UUID.randomUUID(), users[0].getId(), null, null, "Help", "Helped dad with his stuff", 0, LocalDate.of(2023, 11, 24), LocalTime.of(13, 15), 40 * 60000));
             list.add(new Accomplishment(UUID.randomUUID(), users[2].getId(), getCycle(users[2], "Piano").getId(), null, null, "Learned one song", 0, LocalDate.of(2023, 12, 13), LocalTime.of(19, 50), 10 * 60000));
+            list.add(new Accomplishment(UUID.randomUUID(), users[0].getId(), getCycle(users[0], "Piano").getId(), null, "Played a concert", "Chopin and Beethoven", 1, LocalDate.of(2023, 11, 30), LocalTime.of(20, 0), 40 * 60000));
             accomplishments = list.toArray(Accomplishment[]::new);
         }
         return accomplishments;

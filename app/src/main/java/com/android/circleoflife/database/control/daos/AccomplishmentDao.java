@@ -23,7 +23,7 @@ public interface AccomplishmentDao extends BaseDao<Accomplishment> {
         return getAllAccomplishments(user.getId());
     }
 
-    @Query("SELECT * FROM accomplishments WHERE cycleID IN (SELECT * FROM cycles WHERE userID = :userID AND categoryID = :categoryID) OR todoID IN (SELECT * FROM todos WHERE userID = :userID AND categoryID = :categoryID) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM accomplishments WHERE cycleID IS NOT NULL AND cycleID IN (SELECT ID FROM cycles WHERE userID = :userID AND categoryID = :categoryID) OR todoID IS NOT NULL AND todoID IN (SELECT ID FROM todos WHERE userID = :userID AND categoryID = :categoryID) ORDER BY timestamp ASC")
     LiveData<List<Accomplishment>> getAllAccomplishments(UUID userID, UUID categoryID);
 
     @Ignore
@@ -32,7 +32,7 @@ public interface AccomplishmentDao extends BaseDao<Accomplishment> {
     }
 
     @Query("SELECT * FROM accomplishments WHERE userID = :userID AND timestamp >= :timestamp ORDER BY timestamp ASC")
-    LiveData<List<Accomplishment>> getAllAccomplishmentsAfterTimestamp(UUID userID, @NonNull LocalDateTime timestamp);
+    LiveData<List<Accomplishment>> getAllAccomplishmentsAfterTimestamp(UUID userID, LocalDateTime timestamp);
 
     @Ignore
     default LiveData<List<Accomplishment>> getAllAccomplishmentsAfterTimestamp(User user, @NonNull LocalDateTime timestamp) {
@@ -40,7 +40,7 @@ public interface AccomplishmentDao extends BaseDao<Accomplishment> {
     }
 
     @Query("SELECT * FROM accomplishments WHERE userID = :userID AND timestamp < :timestamp ORDER BY timestamp ASC")
-    LiveData<List<Accomplishment>> getAllAccomplishmentsBeforeTimestamp(UUID userID, @NonNull LocalDateTime timestamp);
+    LiveData<List<Accomplishment>> getAllAccomplishmentsBeforeTimestamp(UUID userID, LocalDateTime timestamp);
 
     @Ignore
     default LiveData<List<Accomplishment>> getAllAccomplishmentsBeforeTimestamp(User user, @NonNull LocalDateTime timestamp) {
@@ -48,7 +48,7 @@ public interface AccomplishmentDao extends BaseDao<Accomplishment> {
     }
 
     @Query("SELECT * FROM accomplishments WHERE userID = :userID AND timestamp >= :timestamp1 AND timestamp < :timestamp2 ORDER BY timestamp ASC")
-    LiveData<List<Accomplishment>> getAllAccomplishmentsBetweenTimestamps(UUID userID, @NonNull LocalDateTime timestamp1, @NonNull LocalDateTime timestamp2);
+    LiveData<List<Accomplishment>> getAllAccomplishmentsBetweenTimestamps(UUID userID, LocalDateTime timestamp1, LocalDateTime timestamp2);
 
     @Ignore
     default LiveData<List<Accomplishment>> getAllAccomplishmentsBetweenTimestamps(User user, LocalDateTime timestamp1, LocalDateTime timestamp2) {
