@@ -1,23 +1,39 @@
 package com.android.circleoflife.database.control;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.android.circleoflife.database.control.observers.DatabaseObserver;
 import com.android.circleoflife.database.models.*;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
-// TODO: 03.12.2023 DATABASE CONTROLLER
+/**
+ * This is the interface via which each component should communicate with the database.<br>
+ * It calls methods in the {@link AppDatabase} and also notifies any present {@link DatabaseObserver observers}
+ * if necessary.
+ */
 public interface DatabaseController {
 
     // Observer methods
-    
+
+    /**
+     * Adds a observer to the observer-list.<br>
+     * Upon adding any db-method which affects the database will trigger the corresponding method in the observer.<br>
+     * e.g. {@link DatabaseController#updateCategory(Category)} will trigger {@link DatabaseObserver#onUpdateCategory(Category)}
+     * @param observer observer
+     */
     void addObserver(DatabaseObserver observer);
 
+    /**
+     * Removes observer from observer-list
+     * @param observer observer
+     */
     void removeObserver(DatabaseObserver observer);
 
-    // TODO: 10.12.2023 Get methods (from DAOs)
 
     // Users
     void insertUsers(User... users);
@@ -29,6 +45,10 @@ public interface DatabaseController {
     void updateUser(User user);
 
     void deleteUser(User user);
+
+    LiveData<User> getUser(UUID userID);
+
+    LiveData<User> getUser(String username);
 
 
     // Categories
@@ -66,6 +86,12 @@ public interface DatabaseController {
 
     void deleteCycle(Cycle cycle);
 
+    LiveData<List<Cycle>> getAllCycles(User user);
+
+    LiveData<Category> getCategory(Cycle cycle);
+
+    LiveData<List<Accomplishment>> getAccomplishments(Cycle cycle);
+
 
     // To Do
     void insertTodos(Todo... todos);
@@ -77,6 +103,12 @@ public interface DatabaseController {
     void updateTodo(Todo todo);
 
     void deleteTodo(Todo todo);
+
+    LiveData<List<Todo>> getAllTodos(User user);
+
+    LiveData<Category> getCategory(Todo todo);
+
+    LiveData<List<Accomplishment>> getAccomplishments(Todo todo);
 
 
     // Accomplishment
@@ -90,7 +122,14 @@ public interface DatabaseController {
 
     void deleteAccomplishment(Accomplishment accomplishment);
 
+    LiveData<List<Accomplishment>> getAllAccomplishments(User user);
 
+    LiveData<List<Accomplishment>> getAllAccomplishments(Category category);
 
+    LiveData<List<Accomplishment>> getAllAccomplishmentsAfterTimestamp(User user, @NonNull LocalDateTime timestamp);
+
+    LiveData<List<Accomplishment>> getAllAccomplishmentsBeforeTimestamp(User user, @NonNull LocalDateTime timestamp);
+
+    LiveData<List<Accomplishment>> getAllAccomplishmentsBetweenTimestamps(User user, LocalDateTime timestamp1, LocalDateTime timestamp2);
 
 }

@@ -1,20 +1,30 @@
 package com.android.circleoflife.database.control;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.control.observers.DatabaseObserver;
 import com.android.circleoflife.database.models.*;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
+/**
+ * Implementation of the {@link DatabaseController}. Offers methods for communicating with the database
+ */
 public class DatabaseControllerImpl implements DatabaseController {
 
     private static volatile DatabaseController instance;
 
+    /**
+     * Singleton-pattern. At all times there is only one instance of this class
+     * @return only existing instance of this class
+     */
     public static DatabaseController getInstance() {
         if (instance == null) {
             synchronized (DatabaseControllerImpl.class) {
@@ -30,7 +40,7 @@ public class DatabaseControllerImpl implements DatabaseController {
 
     private final AppDatabase db;
 
-    public DatabaseControllerImpl() {
+    private DatabaseControllerImpl() {
         this.observers = new LinkedList<>();
         db = AppDatabase.getInstance(App.getApplicationContext());
     }
@@ -67,6 +77,16 @@ public class DatabaseControllerImpl implements DatabaseController {
     public void deleteUser(User user) {
         db.getUserDao().delete(user);
         triggerObservers(o -> o.onDeleteUser(user));
+    }
+
+    @Override
+    public LiveData<User> getUser(UUID userID) {
+        return db.getUserDao().getUser(userID);
+    }
+
+    @Override
+    public LiveData<User> getUser(String username) {
+        return db.getUserDao().getUser(username);
     }
 
     @Override
@@ -136,6 +156,21 @@ public class DatabaseControllerImpl implements DatabaseController {
     }
 
     @Override
+    public LiveData<List<Cycle>> getAllCycles(User user) {
+        return db.getCycleDao().getAllCycles(user);
+    }
+
+    @Override
+    public LiveData<Category> getCategory(Cycle cycle) {
+        return db.getCycleDao().getCategory(cycle);
+    }
+
+    @Override
+    public LiveData<List<Accomplishment>> getAccomplishments(Cycle cycle) {
+        return db.getCycleDao().getAccomplishments(cycle);
+    }
+
+    @Override
     public void insertTodos(Todo... todos) {
         db.getTodoDao().insert(todos);
         triggerObservers(o -> o.onInsertTodos(todos));
@@ -154,6 +189,21 @@ public class DatabaseControllerImpl implements DatabaseController {
     }
 
     @Override
+    public LiveData<List<Todo>> getAllTodos(User user) {
+        return db.getTodoDao().getAllTodos(user);
+    }
+
+    @Override
+    public LiveData<Category> getCategory(Todo todo) {
+        return db.getTodoDao().getCategory(todo);
+    }
+
+    @Override
+    public LiveData<List<Accomplishment>> getAccomplishments(Todo todo) {
+        return db.getTodoDao().getAccomplishments(todo);
+    }
+
+    @Override
     public void insertAccomplishment(Accomplishment... accomplishments) {
         db.getAccomplishmentDao().insert(accomplishments);
         triggerObservers(o -> o.onInsertAccomplishment(accomplishments));
@@ -169,5 +219,30 @@ public class DatabaseControllerImpl implements DatabaseController {
     public void deleteAccomplishment(Accomplishment accomplishment) {
         db.getAccomplishmentDao().delete(accomplishment);
         triggerObservers(o -> o.onDeleteAccomplishment(accomplishment));
+    }
+
+    @Override
+    public LiveData<List<Accomplishment>> getAllAccomplishments(User user) {
+        return db.getAccomplishmentDao().getAllAccomplishments(user);
+    }
+
+    @Override
+    public LiveData<List<Accomplishment>> getAllAccomplishments(Category category) {
+        return db.getAccomplishmentDao().getAllAccomplishments(category);
+    }
+
+    @Override
+    public LiveData<List<Accomplishment>> getAllAccomplishmentsAfterTimestamp(User user, @NonNull LocalDateTime timestamp) {
+        return db.getAccomplishmentDao().getAllAccomplishmentsAfterTimestamp(user, timestamp);
+    }
+
+    @Override
+    public LiveData<List<Accomplishment>> getAllAccomplishmentsBeforeTimestamp(User user, @NonNull LocalDateTime timestamp) {
+        return db.getAccomplishmentDao().getAllAccomplishmentsBeforeTimestamp(user, timestamp);
+    }
+
+    @Override
+    public LiveData<List<Accomplishment>> getAllAccomplishmentsBetweenTimestamps(User user, LocalDateTime timestamp1, LocalDateTime timestamp2) {
+        return db.getAccomplishmentDao().getAllAccomplishmentsBetweenTimestamps(user, timestamp1, timestamp2);
     }
 }
