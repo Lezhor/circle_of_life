@@ -41,7 +41,7 @@ public interface AccomplishmentDao extends BaseDao<Accomplishment> {
         return getAllAccomplishmentsAfterTimestamp(user.getId(), timestamp.toLocalDate(), timestamp.toLocalTime());
     }
 
-    @Query("SELECT * FROM accomplishments WHERE userID = :userID AND date < :date OR date = :date AND timestamp < :timestamp ORDER BY timestamp ASC")
+    @Query("SELECT * FROM accomplishments WHERE userID = :userID AND date < :date OR date = :date AND (timestamp IS NULL OR timestamp < :timestamp) ORDER BY timestamp ASC")
     LiveData<List<Accomplishment>> getAllAccomplishmentsBeforeTimestamp(UUID userID, LocalDate date, LocalTime timestamp);
 
     @Ignore
@@ -49,7 +49,7 @@ public interface AccomplishmentDao extends BaseDao<Accomplishment> {
         return getAllAccomplishmentsBeforeTimestamp(user.getId(), timestamp.toLocalDate(), timestamp.toLocalTime());
     }
 
-    @Query("SELECT * FROM accomplishments WHERE userID = :userID AND (date > :date1 OR date = :date1 AND timestamp >= :timestamp1) AND (date < :date2 OR date = :date2 AND timestamp < :timestamp2) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM accomplishments WHERE userID = :userID AND (date > :date1 OR date = :date1 AND (timestamp IS NULL OR timestamp >= :timestamp1)) AND (date < :date2 OR date = :date2 AND timestamp < :timestamp2) ORDER BY timestamp ASC")
     LiveData<List<Accomplishment>> getAllAccomplishmentsBetweenTimestamps(UUID userID, LocalDate date1, LocalTime timestamp1, LocalDate date2, LocalTime timestamp2);
 
     @Ignore
