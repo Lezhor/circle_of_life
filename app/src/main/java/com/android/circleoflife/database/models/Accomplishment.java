@@ -109,6 +109,12 @@ public class Accomplishment {
         return LocalDateTime.of(date, timestamp != null ? timestamp : LocalTime.of(0, 0, 0));
     }
 
+    @Ignore
+    public void setLocalDateTime(@NonNull LocalDateTime dateTime) {
+        this.date = dateTime.toLocalDate();
+        this.timestamp = dateTime.toLocalTime();
+    }
+
     @NonNull
     public UUID getId() {
         return id;
