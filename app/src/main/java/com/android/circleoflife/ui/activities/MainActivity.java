@@ -1,13 +1,13 @@
-package com.android.circleoflife;
+package com.android.circleoflife.ui.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
 
 import java.util.Arrays;
