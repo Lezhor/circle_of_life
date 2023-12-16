@@ -1,6 +1,7 @@
 package com.android.circleoflife.auth;
 
 import com.android.circleoflife.communication.protocols.SyncProtocol;
+import com.android.circleoflife.database.models.User;
 
 import java.io.IOException;
 import java.util.Date;
@@ -27,6 +28,12 @@ public interface Authentication {
      * @throws AuthenticationFailedException if user is not logged in
      */
     boolean enableServerSide() throws AuthenticationFailedException;
+
+    /**
+     * Returns logged in user and null if no user is currently authenticated
+     * @return user which is currently logged in
+     */
+    User getUser();
 
     /**
      * Getter for username. Returns null if currently not authenticated<br>

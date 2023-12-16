@@ -77,4 +77,10 @@ public class User {
         }
         return false;
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "User{" + username + "}";
+    }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import com.android.circleoflife.auth.Authentication;
+import com.android.circleoflife.auth.AuthenticationImpl;
 import com.android.circleoflife.communication.socket_communication.SocketCommunication;
 import com.android.circleoflife.communication.socket_communication.SocketCommunicationImpl;
 import com.android.circleoflife.communication.protocols.SyncProtocol;
@@ -73,9 +74,8 @@ public final class App {
      * {@link Authentication} follows the Singleton Pattern.
      * @return the only existing instance of {@link Authentication}
      */
-    public Authentication getAuthentication() {
-        // TODO: 03.12.2023 AuthenticationImpl singleton instance
-        return null;
+    public static Authentication getAuthentication() {
+        return AuthenticationImpl.getInstance();
     }
 
     /**
