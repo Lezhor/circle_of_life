@@ -36,6 +36,13 @@ public interface Authentication {
     User getUser();
 
     /**
+     * Waits until User is set! - This method should be called on a background thread
+     * @return user
+     * @throws InterruptedException if waiting was interrupted
+     */
+    User waitForUser() throws InterruptedException;
+
+    /**
      * Getter for username. Returns null if currently not authenticated<br>
      * Username contains only lowercase letters, digits and underscores
      * @return returns username

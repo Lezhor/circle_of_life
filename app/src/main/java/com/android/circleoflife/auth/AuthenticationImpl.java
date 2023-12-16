@@ -30,7 +30,7 @@ public class AuthenticationImpl implements Authentication {
 
     // TODO: 16.12.2023 Implement all methods!!
 
-    private User user;
+    private volatile User user;
 
     public AuthenticationImpl() {
         // TODO: 16.12.2023 Temp implementation!!!
@@ -38,7 +38,7 @@ public class AuthenticationImpl implements Authentication {
         liveData.observeForever(new Observer<>() {
             @Override
             public void onChanged(User user) {
-                AuthenticationImpl.this.user = user;
+                AuthenticationImpl.this.setUser(user);
                 liveData.removeObserver(this);
             }
         });
@@ -57,6 +57,23 @@ public class AuthenticationImpl implements Authentication {
     @Override
     public User getUser() {
         return user;
+    }
+
+    private void setUser(User user) {
+        this.user = user;
+        this.notifyAll();
+    }
+
+    @Override
+    public User waitForUser() throws InterruptedException {
+        if (user == null) {
+            synchronized (this) {
+                if (user == null) {
+                    this.wait();
+                }
+            }
+        }
+        return null;
     }
 
     @Override
