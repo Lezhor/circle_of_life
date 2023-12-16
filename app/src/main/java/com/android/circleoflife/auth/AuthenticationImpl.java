@@ -1,5 +1,8 @@
 package com.android.circleoflife.auth;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
@@ -35,13 +38,16 @@ public class AuthenticationImpl implements Authentication {
     public AuthenticationImpl() {
         // TODO: 16.12.2023 Temp implementation!!!
         LiveData<User> liveData = App.getDatabaseController().getUser("john_doe");
-        liveData.observeForever(new Observer<>() {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> liveData.observeForever(new Observer<>() {
             @Override
             public void onChanged(User user) {
-                AuthenticationImpl.this.setUser(user);
-                liveData.removeObserver(this);
+                if (user != null) {
+                    AuthenticationImpl.this.setUser(user);
+                    liveData.removeObserver(this);
+                }
             }
-        });
+        }));
     }
 
     @Override
@@ -61,7 +67,9 @@ public class AuthenticationImpl implements Authentication {
 
     private void setUser(User user) {
         this.user = user;
-        this.notifyAll();
+        synchronized (this) {
+            this.notifyAll();
+        }
     }
 
     @Override
@@ -73,7 +81,7 @@ public class AuthenticationImpl implements Authentication {
                 }
             }
         }
-        return null;
+        return user;
     }
 
     @Override

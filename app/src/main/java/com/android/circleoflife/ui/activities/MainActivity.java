@@ -2,13 +2,14 @@ package com.android.circleoflife.ui.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
+import com.android.circleoflife.ui.activities.categories.RootCategoriesActivity;
 
 import java.util.Arrays;
 
@@ -22,7 +23,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button button = findViewById(R.id.btn_getting_started);
-        button.setOnClickListener(v -> Toast.makeText(this, "under construction", Toast.LENGTH_SHORT).show());
+        button.setOnClickListener(v -> {
+            Intent intent = new Intent(this, RootCategoriesActivity.class);
+            startActivity(intent);
+        });
 
         Log.d(TAG, "temp: " + "Test");
         new Thread(() -> Log.d(TAG, "temp: " + Arrays.stream(App.getResources().getStringArray(R.array.days_of_week)).reduce("", (a, b) -> a + b + "; ")))
