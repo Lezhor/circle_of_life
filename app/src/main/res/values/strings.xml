@@ -5,6 +5,7 @@
     <!-- used if value is not set -->
     <string name="no_string" translatable="false">NULL</string>
     <string name="search">Search</string>
+    <string name="search_category_hint">Search Category…</string>
     <string name="add_category">Add Category</string>
 
     <string-array name="days_of_week">

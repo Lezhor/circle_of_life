@@ -2,6 +2,7 @@ package com.android.circleoflife.ui.activities.categories;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -23,12 +24,13 @@ import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.User;
+import com.android.circleoflife.ui.activities.SuperActivity;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class RootCategoriesActivity extends AppCompatActivity {
+public class RootCategoriesActivity extends SuperActivity {
     private static final String TAG = "RootCategoriesActivity";
 
 
@@ -61,20 +63,32 @@ public class RootCategoriesActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.categories_root_toolbar_menu, menu);
-        TypedValue typedValue = new TypedValue();
-        Resources.Theme theme = getTheme();
-        theme.resolveAttribute(android.R.attr.textColorPrimary, typedValue, true);
-        TypedArray arr = obtainStyledAttributes(typedValue.data, new int[]{android.R.attr.textColorSecondary});
-        int primaryColor = arr.getColor(0, -1);
-        for (int i = 0; i < menu.size(); i++) {
-            Drawable drawable = menu.getItem(i).getIcon();
-            if (drawable != null) {
-                drawable.mutate();
-                drawable.setColorFilter(primaryColor, PorterDuff.Mode.SRC_ATOP);
-            }
-        }
+        setUpMenu(menu, R.menu.categories_root_toolbar_menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search_button);
+        setUpSearchView((SearchView) searchItem.getActionView());
+
         return true;
+    }
+
+    private void setUpSearchView(SearchView searchView) {
+        if (searchView != null) {
+            searchView.setQueryHint(getString(R.string.search_category_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    // TODO: 19.12.2023 Remove (Temp)
+                    Toast.makeText(RootCategoriesActivity.this, "Query Submitted: " + query, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    // TODO: 19.12.2023 Notify RecyclerView if Query-Text changes
+                    return false;
+                }
+            });
+        }
     }
 
     @Override

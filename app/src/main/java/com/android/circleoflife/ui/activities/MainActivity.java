@@ -1,7 +1,5 @@
 package com.android.circleoflife.ui.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +11,7 @@ import com.android.circleoflife.ui.activities.categories.RootCategoriesActivity;
 
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends SuperActivity {
 
     private static final String TAG = "MainActivity";
 
@@ -21,6 +19,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
         Button button = findViewById(R.id.btn_getting_started);
         button.setOnClickListener(v -> {
