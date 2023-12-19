@@ -18,6 +18,7 @@
             android:exported="false" />
         <activity
             android:name=".ui.activities.MainActivity"
+            android:theme="@style/Theme.CircleOfLife.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

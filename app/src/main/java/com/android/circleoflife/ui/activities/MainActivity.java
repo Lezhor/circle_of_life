@@ -20,10 +20,6 @@ public class MainActivity extends SuperActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
-
         Button button = findViewById(R.id.btn_getting_started);
         button.setOnClickListener(v -> {
             Intent intent = new Intent(this, RootCategoriesActivity.class);
