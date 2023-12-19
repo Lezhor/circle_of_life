@@ -7,27 +7,10 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.categories.RootCategoriesActivity">
 
-    <!--
-    <androidx.appcompat.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/toolbar"
-        android:background="@color/md_theme_primary"
-        app:logo="@drawable/ic_folder"
-        app:title="Categories"
-        app:titleMarginStart="30dp"
-        app:titleTextColor="@color/md_theme_onPrimary"
-        android:theme="@style/Base.Theme.CircleOfLife"
-        app:popupTheme="@style/Theme.AppCompat.DayNight"
-        app:layout_constraintTop_toTopOf="parent" />
-        -->
-
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent" />
+        android:layout_height="match_parent"
+        tools:listitem="@layout/root_category_item" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
@@ -38,7 +21,9 @@
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_add" />
+        app:srcCompat="@drawable/ic_add"
+        app:maxImageSize="32dp"
+        android:contentDescription="@string/add_category"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
