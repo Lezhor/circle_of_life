@@ -17,6 +17,7 @@ import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.ui.other.EntityFilter;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -50,6 +51,7 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
     }
 
     public void setCategories(List<Category> categoryList) {
+        categoryList.sort(Comparator.comparing(c -> c.getName().toLowerCase()));
         boolean filtering = this.categoryList.size() > filteredList.size();
         synchronized (this.categoryList) {
             Log.d(TAG, "setCategories: " + categoryList.stream().map(Category::getName).reduce("Categories: ", (a, b) -> a + b + "; "));
@@ -71,32 +73,49 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
 
         List<Category> added = filteredList.stream().filter(c -> !this.filteredList.contains(c)).collect(Collectors.toList());
         List<Category> removed = this.filteredList.stream().filter(c -> !filteredList.contains(c)).collect(Collectors.toList());
-        Map<Category, Integer> addMap = added.stream()
-                .collect(Collectors.toMap(Function.identity(), c -> getAddIndex(this.filteredList, c)));
-        for (Map.Entry<Category, Integer> entry : addMap.entrySet().stream()
-                .peek(e -> e.setValue(-e.getValue()))
-                .sorted(Map.Entry.comparingByValue())
-                .peek(e -> e.setValue(-e.getValue()))
-                .collect(Collectors.toList())) {
-            synchronized (this.filteredList) {
-                Log.d(TAG, "setFilteredCategories: Add at index: " + entry.getValue());
-                this.filteredList.add(entry.getValue(), entry.getKey());
+        if (added.size() == 0 && removed.size() == 0) {
+            // maybe something changed
+            Log.d(TAG, "setFilteredCategories: no remove, no add, iterating....");
+            Log.d(TAG, this.filteredList.stream().map(Category::getName).reduce("old list: ", (a, b) -> a + b + "; "));
+            Log.d(TAG, filteredList.stream().map(Category::getName).reduce("new list: ", (a, b) -> a + b + "; "));
+            for (int i = 0; i < this.filteredList.size(); i++) {
+                if (this.filteredList.get(i).getId().equals(filteredList.get(i).getId())) {
+                    if (!this.filteredList.get(i).equalsAllParams(filteredList.get(i))) {
+                        Log.d(TAG, "setFilteredCategories: Found missmatch");
+                        this.filteredList.remove(i);
+                        this.filteredList.add(i, filteredList.get(i));
+                        notifyItemChanged(i);
+                    }
+                }
             }
-            notifyItemInserted(entry.getValue());
-        }
+        } else {
+            Map<Category, Integer> addMap = added.stream()
+                    .collect(Collectors.toMap(Function.identity(), c -> getAddIndex(this.filteredList, c)));
+            for (Map.Entry<Category, Integer> entry : addMap.entrySet().stream()
+                    .peek(e -> e.setValue(-e.getValue()))
+                    .sorted(Map.Entry.comparingByValue())
+                    .peek(e -> e.setValue(-e.getValue()))
+                    .collect(Collectors.toList())) {
+                synchronized (this.filteredList) {
+                    Log.d(TAG, "setFilteredCategories: Add at index: " + entry.getValue());
+                    this.filteredList.add(entry.getValue(), entry.getKey());
+                }
+                notifyItemInserted(entry.getValue());
+            }
 
-        Map<Category, Integer> removeMap = removed.stream()
-                .collect(Collectors.toMap(Function.identity(), c -> getRemoveIndex(this.filteredList, c)));
-        for (Map.Entry<Category, Integer> entry : removeMap.entrySet().stream()
-                .peek(e -> e.setValue(-e.getValue()))
-                .sorted(Map.Entry.comparingByValue())
-                .peek(e -> e.setValue(-e.getValue()))
-                .collect(Collectors.toList())) {
-            synchronized (this.filteredList) {
-                Log.d(TAG, "setFilteredCategories: Remove from index: " + entry.getValue());
-                this.filteredList.remove(entry.getKey());
+            Map<Category, Integer> removeMap = removed.stream()
+                    .collect(Collectors.toMap(Function.identity(), c -> getRemoveIndex(this.filteredList, c)));
+            for (Map.Entry<Category, Integer> entry : removeMap.entrySet().stream()
+                    .peek(e -> e.setValue(-e.getValue()))
+                    .sorted(Map.Entry.comparingByValue())
+                    .peek(e -> e.setValue(-e.getValue()))
+                    .collect(Collectors.toList())) {
+                synchronized (this.filteredList) {
+                    Log.d(TAG, "setFilteredCategories: Remove from index: " + entry.getValue());
+                    this.filteredList.remove(entry.getKey());
+                }
+                notifyItemRemoved(entry.getValue());
             }
-            notifyItemRemoved(entry.getValue());
         }
     }
 

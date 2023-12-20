@@ -30,7 +30,7 @@ public class EditCategoryDialog extends AppCompatDialogFragment {
     public EditCategoryDialog(Consumer<Category> submit, @NonNull Category category) {
         super();
         this.submit = submit;
-        this.category = category;
+        this.category = new Category(category);
     }
 
     @NonNull
