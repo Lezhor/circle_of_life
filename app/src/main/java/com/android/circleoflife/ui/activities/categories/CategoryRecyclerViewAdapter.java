@@ -65,6 +65,7 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
 
     @SuppressLint("NotifyDataSetChanged")
     private void setFilteredCategories(List<Category> filteredList) {
+        // TODO: 20.12.2023 Change this so that updating categories gets updated in RV
         if (this.filteredList.size() == 0) {
             this.filteredList.addAll(filteredList);
             notifyItemRangeInserted(0, filteredList.size());
