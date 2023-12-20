@@ -14,4 +14,10 @@
         android:title="@string/add_category"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/remove_first_category"
+        android:title="Remove First Category"
+        app:showAsAction="never"/>
+
+
 </menu>

@@ -2,6 +2,7 @@ package com.android.circleoflife.ui.viewmodels;
 
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -29,6 +30,11 @@ public class CategoryViewModel extends ViewModel {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Nullable
+    public User getUser() {
+        return user;
     }
 
     public void insert(Category category) {

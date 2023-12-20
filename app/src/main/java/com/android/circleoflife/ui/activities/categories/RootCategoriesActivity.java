@@ -1,34 +1,26 @@
 package com.android.circleoflife.ui.activities.categories;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.models.Category;
-import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.ui.activities.SuperActivity;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.UUID;
 
 public class RootCategoriesActivity extends SuperActivity {
     private static final String TAG = "RootCategoriesActivity";
@@ -36,29 +28,37 @@ public class RootCategoriesActivity extends SuperActivity {
 
     private CategoryViewModel categoryViewModel;
 
+    RecyclerView recyclerView;
+    CategoryRecyclerViewAdapter adapter;
+    FloatingActionButton fab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_root_categories);
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) {
+            Log.i(TAG, "onCreate: Actionbar is null!");
+        } else {
+            actionBar.setTitle(R.string.categories);
+        }
+
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
 
-        ExecutorService service = Executors.newSingleThreadExecutor();
-        service.execute(() -> {
-            try {
-                Log.d(TAG, "Waiting for user to authenticate");
-                User user = App.getAuthentication().waitForUser();
-                categoryViewModel.setUser(user);
-                Log.d(TAG, "retrieved authenticated User: " + user);
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(() -> categoryViewModel.getCurrentCategories().observe(this, categories -> Toast.makeText(this, categories.stream().map(Category::toString).reduce("Categories changed: ", (a, b) -> a + b + ";"), Toast.LENGTH_SHORT).show()));
-            } catch (InterruptedException e) {
-                Log.w(TAG, "Waiting for user authentication got interrupted!", e);
-            }
+        fab = findViewById(R.id.floatingActionButton);
+        fab.setOnClickListener(view -> addCategory("Lol Category"));
+
+        recyclerView = findViewById(R.id.recyclerView);
+        adapter = new CategoryRecyclerViewAdapter();
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+        executeInBackground(App.getAuthentication()::waitForUser, user -> {
+            categoryViewModel.setUser(user);
+            categoryViewModel.getCurrentCategories().observe(this, adapter::setCategories);
         });
-
-        //categoryViewModel.getCurrentCategories().observe(this, categories -> Toast.makeText(this, categories.stream().map(Category::toString).reduce("Categories changed: ", (a, b) -> a + b + ";"), Toast.LENGTH_SHORT).show());
-
     }
 
     @Override
@@ -84,8 +84,8 @@ public class RootCategoriesActivity extends SuperActivity {
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    // TODO: 19.12.2023 Notify RecyclerView if Query-Text changes
-                    return false;
+                    adapter.getFilter().filter(newText);
+                    return true;
                 }
             });
         }
@@ -97,8 +97,25 @@ public class RootCategoriesActivity extends SuperActivity {
         if (id == R.id.search_button) {
             Toast.makeText(this, "Searching...", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.add_category) {
-            Toast.makeText(this, "Creating new...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Creating new category", Toast.LENGTH_SHORT).show();
+            addCategory("My Category");
+        } else if (id == R.id.remove_first_category) {
+            Category category = adapter.getFilteredCategoryAtIndex(0);
+            if (category != null) {
+                Toast.makeText(this, "Deleting Category: " + category.getName(), Toast.LENGTH_SHORT).show();
+                categoryViewModel.delete(category);
+            } else {
+                Toast.makeText(this, "No Category found", Toast.LENGTH_SHORT).show();
+            }
         }
         return true;
+    }
+
+    private void addCategory(String categoryName) {
+        if (categoryViewModel.getUser() != null) {
+            categoryViewModel.insert(new Category(UUID.randomUUID(), categoryName, categoryViewModel.getUser().getId(), null));
+        } else {
+            Toast.makeText(this, "Can't create category - User not found", Toast.LENGTH_SHORT).show();
+        }
     }
 }

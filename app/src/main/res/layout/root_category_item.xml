@@ -6,20 +6,13 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="8dp"
     android:layout_marginStart="8dp"
-    android:layout_marginTop="8dp">
+    android:layout_marginTop="8dp"
+    app:cardCornerRadius="8dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp">
-
-        <TextView
-            android:id="@+id/root_category_item_priority"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
 
         <ImageView
             android:id="@+id/root_category_icon"
@@ -28,15 +21,14 @@
             app:srcCompat="@drawable/ic_folder"
             android:layout_alignParentStart="true"
             app:tint="@color/black"
-            android:layout_centerVertical="true"
-            />
+            android:layout_centerVertical="true"/>
 
         <TextView
             android:id="@+id/root_category_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_toStartOf="@id/root_category_item_priority"
+            android:layout_alignParentEnd="true"
             android:layout_toEndOf="@+id/root_category_icon"
             android:ellipsize="end"
             android:maxLines="1"
