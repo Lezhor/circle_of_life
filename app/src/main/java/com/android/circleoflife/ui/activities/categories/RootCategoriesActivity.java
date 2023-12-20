@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,11 +13,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.models.Category;
+import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.ui.activities.SuperActivity;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -45,21 +49,30 @@ public class RootCategoriesActivity extends SuperActivity {
             actionBar.setTitle(R.string.categories);
         }
 
-        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
-
         fab = findViewById(R.id.floatingActionButton);
-        fab.setOnClickListener(view -> addCategory("Lol Category"));
+        fab.setOnClickListener(view -> addCategory());
 
         recyclerView = findViewById(R.id.recyclerView);
         adapter = new CategoryRecyclerViewAdapter();
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        TextView invisText = findViewById(R.id.no_categories_created_yet);
 
-        executeInBackground(App.getAuthentication()::waitForUser, user -> {
-            categoryViewModel.setUser(user);
-            categoryViewModel.getCurrentCategories().observe(this, adapter::setCategories);
-        });
+        final User user = App.getAuthentication().getUser();
+        if (user != null) {
+            categoryViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
+                @NonNull
+                @Override
+                public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+                    return (T) new CategoryViewModel(user);
+                }
+            }).get(CategoryViewModel.class);
+            categoryViewModel.getCurrentCategories().observe(this, list -> {
+                invisText.setVisibility(list.size() == 0 ? View.VISIBLE : View.INVISIBLE);
+                adapter.setCategories(list);
+            });
+        }
     }
 
     @Override
@@ -99,7 +112,7 @@ public class RootCategoriesActivity extends SuperActivity {
             Toast.makeText(this, "Searching...", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.add_category) {
             Toast.makeText(this, "Creating new category", Toast.LENGTH_SHORT).show();
-            addCategory("My Category");
+            addCategory();
         } else if (id == R.id.remove_first_category) {
             Category category = adapter.getFilteredCategoryAtIndex(0);
             if (category != null) {
@@ -112,7 +125,7 @@ public class RootCategoriesActivity extends SuperActivity {
         return true;
     }
 
-    private void addCategory(String categoryName) {
+    private void addCategory() {
         if (categoryViewModel.getUser() != null) {
             openCreateCategoryDialog();
         } else {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
@@ -30,5 +31,12 @@ public class MainActivity extends SuperActivity {
         new Thread(() -> Log.d(TAG, "temp: " + Arrays.stream(App.getResources().getStringArray(R.array.days_of_week)).reduce("", (a, b) -> a + b + "; ")))
                 .start();
 
+        login();
     }
+
+    // TODO: 20.12.2023 TEMP - to be removed!
+    private void login() {
+        executeInBackground(App.getAuthentication()::waitForUser, user -> Toast.makeText(this, "Logged in: " + user, Toast.LENGTH_SHORT).show());
+    }
+
 }

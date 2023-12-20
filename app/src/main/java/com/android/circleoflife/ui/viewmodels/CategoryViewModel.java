@@ -19,22 +19,23 @@ public class CategoryViewModel extends ViewModel {
     private final CategoryRepository repository;
 
     private LiveData<List<Category>> categories;
-    private User user;
+    private final User user;
 
     private Category root;
 
-    public CategoryViewModel() {
+    public CategoryViewModel(User user) {
+        this.user = user;
         repository = new CategoryRepository(App.getDatabaseController());
         //categories = repository.getAllCategories(user);
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     @Nullable
     public User getUser() {
         return user;
+    }
+
+    public void setRoot(Category root) {
+        this.root = root;
     }
 
     public void insert(Category category) {
@@ -71,11 +72,5 @@ public class CategoryViewModel extends ViewModel {
         } else {
             return repository.getChildren(root);
         }
-    }
-
-    
-
-    public void setRoot(Category root) {
-        this.root = root;
     }
 }
