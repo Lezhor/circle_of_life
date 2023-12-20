@@ -59,6 +59,14 @@ public class Category {
     @ColumnInfo(name = "parentID", defaultValue = "NULL")
     private UUID parentID;
 
+    /**
+     * Constructor for cloning
+     * @param that other category
+     */
+    @Ignore
+    public Category(@NonNull Category that) {
+        this(that.id, that.name, that.userID, that.parentID);
+    }
     public Category(@NonNull UUID id, String name, @NonNull UUID userID, @Nullable UUID parentID) {
         this.id = id;
         this.name = StringValidator.validateStringMinLength(name, 1);
