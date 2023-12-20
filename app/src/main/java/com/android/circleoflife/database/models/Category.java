@@ -111,6 +111,11 @@ public class Category {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
     @NonNull
     @Override
     public String toString() {
