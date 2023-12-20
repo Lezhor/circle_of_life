@@ -19,6 +19,7 @@ import com.android.circleoflife.ui.other.EntityFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -154,14 +155,23 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
         public CategoryHolder(@NonNull View itemView, CategoryHolderInterface holderInterface, Function<Integer, Category> categoryFromPositionGetter) {
             super(itemView);
             title = itemView.findViewById(R.id.root_category_item);
-            itemView.setOnClickListener(view -> holderInterface.onItemClick(categoryFromPositionGetter.apply(getAdapterPosition())));
+            itemView.setOnClickListener(view -> onClick(holderInterface::onCategoryClicked, categoryFromPositionGetter));
+            itemView.setOnLongClickListener(view -> {onClick(holderInterface::onLongCategoryClicked, categoryFromPositionGetter); return true;});
+        }
+
+        private void onClick(Consumer<Category> onClickMethod, Function<Integer, Category> categoryFromPositionGetter) {
+            int pos = getAdapterPosition();
+            if (pos != RecyclerView.NO_POSITION) {
+                onClickMethod.accept(categoryFromPositionGetter.apply(pos));
+            }
         }
 
         /**
          * Used in every RecyclerView-Holder. onItemClick method is triggered the corresponding item is clicked.
          */
         public interface CategoryHolderInterface {
-            void onItemClick(Category category);
+            void onCategoryClicked(Category category);
+            void onLongCategoryClicked(Category category);
         }
     }
 }

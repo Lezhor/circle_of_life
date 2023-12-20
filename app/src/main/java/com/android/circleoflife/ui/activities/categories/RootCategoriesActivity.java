@@ -27,7 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.UUID;
 
-public class RootCategoriesActivity extends SuperActivity {
+public class RootCategoriesActivity extends SuperActivity implements CategoryRecyclerViewAdapter.CategoryHolder.CategoryHolderInterface {
     private static final String TAG = "RootCategoriesActivity";
 
 
@@ -53,7 +53,7 @@ public class RootCategoriesActivity extends SuperActivity {
         fab.setOnClickListener(view -> addCategory());
 
         recyclerView = findViewById(R.id.recyclerView);
-        adapter = new CategoryRecyclerViewAdapter(this::onCategoryClicked);
+        adapter = new CategoryRecyclerViewAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -125,11 +125,6 @@ public class RootCategoriesActivity extends SuperActivity {
         return true;
     }
 
-    private void onCategoryClicked(Category category) {
-        Log.d(TAG, "onCategoryClicked: Category clicked: " + category);
-        Toast.makeText(this, "Category clicked: " + category, Toast.LENGTH_SHORT).show();
-    }
-
     private void addCategory() {
         if (categoryViewModel.getUser() != null) {
             openCreateCategoryDialog();
@@ -146,5 +141,19 @@ public class RootCategoriesActivity extends SuperActivity {
     private void submitCreateCategoryDialog(String name, @Nullable String parent) {
         Log.d(TAG, "submitCreateCategoryDialog: " + name + ", " + parent);
         categoryViewModel.insert(new Category(UUID.randomUUID(), name, categoryViewModel.getUser().getId(), parent == null ? null : null /* TODO 20.12.23 Fetch Parent if not null */));
+    }
+
+    @Override
+    public void onCategoryClicked(Category category) {
+        Log.d(TAG, "onCategoryClicked: Category clicked: " + category);
+        Toast.makeText(this, "Category clicked: " + category, Toast.LENGTH_SHORT).show();
+        // TODO: 20.12.2023 Go to next activity
+    }
+
+    @Override
+    public void onLongCategoryClicked(Category category) {
+        Log.d(TAG, "Category long clicked: " + category);
+        Toast.makeText(this, "Category long clicked: " + category, Toast.LENGTH_SHORT).show();
+        // TODO: 20.12.2023 Open Edit Dialog
     }
 }
