@@ -1,6 +1,7 @@
 package com.android.circleoflife.ui.activities.categories;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModelProvider;
@@ -113,9 +114,19 @@ public class RootCategoriesActivity extends SuperActivity {
 
     private void addCategory(String categoryName) {
         if (categoryViewModel.getUser() != null) {
-            categoryViewModel.insert(new Category(UUID.randomUUID(), categoryName, categoryViewModel.getUser().getId(), null));
+            openCreateCategoryDialog();
         } else {
             Toast.makeText(this, "Can't create category - User not found", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void openCreateCategoryDialog() {
+        CreateCategoryDialog dialog = new CreateCategoryDialog(this::submitCreateCategoryDialog);
+        dialog.show(getSupportFragmentManager(), "create category dialog");
+    }
+
+    private void submitCreateCategoryDialog(String name, @Nullable String parent) {
+        Log.d(TAG, "submitCreateCategoryDialog: " + name + ", " + parent);
+        categoryViewModel.insert(new Category(UUID.randomUUID(), name, categoryViewModel.getUser().getId(), parent == null ? null : null /* TODO 20.12.23 Fetch Parent if not null */));
     }
 }

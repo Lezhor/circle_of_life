@@ -11,6 +11,14 @@
     <string name="categories">Categories</string>
     <string name="no_categories_created_yet">No Categories\ncreated yet</string>
 
+    <string name="category_dialog_name_hint">Name</string>
+    <string name="category_dialog_parent_hint">Parent</string>
+    <string name="category_dialog_no_parent">None</string>
+    <string name="category_dialog_title">Create new Category</string>
+
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_ok">OK</string>
+
     <string-array name="days_of_week">
         <item>Monday</item>
         <item>Tuesday</item>

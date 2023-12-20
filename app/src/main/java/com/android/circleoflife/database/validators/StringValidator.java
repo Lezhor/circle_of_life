@@ -5,6 +5,8 @@ package com.android.circleoflife.database.validators;
  */
 public final class StringValidator {
 
+    // TODO: 20.12.2023 Error-Messages should be fetched from strings.xml
+
     public static final int MIN_LENGTH_USERNAME = 6;
 
     public static String validateUsername(String username) throws IllegalArgumentException {
@@ -26,6 +28,26 @@ public final class StringValidator {
             throw new IllegalArgumentException("Password can't be empty");
         }
         return password;
+    }
+
+    public static void validateString(String str) throws IllegalArgumentException {
+        validateString(str, "String");
+    }
+
+    /**
+     * Validates a String<br>
+     * String counts as valid if it is not null and not empty.
+     * @param str string to be validated
+     * @param name name of the string e.g. user, category
+     * @throws IllegalArgumentException if str is null or empty
+     */
+    public static void validateString(String str, String name) throws IllegalArgumentException {
+        if (str == null) {
+            throw new IllegalArgumentException(name + " can't be null");
+        }
+        if (str.isEmpty()) {
+            throw new IllegalArgumentException(name + " can't be empty");
+        }
     }
 
     /**
