@@ -34,6 +34,12 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
     private final List<Category> categoryList = new ArrayList<>();
     private final List<Category> filteredList = new ArrayList<>();
 
+    private final CategoryHolder.CategoryHolderInterface holderInterface;
+
+    public CategoryRecyclerViewAdapter(@NonNull CategoryHolder.CategoryHolderInterface holderInterface) {
+        this.holderInterface = holderInterface;
+    }
+
     public Category getFilteredCategoryAtIndex(int index) {
         if (index >= 0 && index < filteredList.size()) {
             return filteredList.get(index);
@@ -111,7 +117,7 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
     public CategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.root_category_item, parent, false);
-        return new CategoryHolder(view);
+        return new CategoryHolder(view, holderInterface, this::getFilteredCategoryAtIndex);
     }
 
     @Override
@@ -145,9 +151,17 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
 
         private final TextView title;
 
-        public CategoryHolder(@NonNull View itemView) {
+        public CategoryHolder(@NonNull View itemView, CategoryHolderInterface holderInterface, Function<Integer, Category> categoryFromPositionGetter) {
             super(itemView);
             title = itemView.findViewById(R.id.root_category_item);
+            itemView.setOnClickListener(view -> holderInterface.onItemClick(categoryFromPositionGetter.apply(getAdapterPosition())));
+        }
+
+        /**
+         * Used in every RecyclerView-Holder. onItemClick method is triggered the corresponding item is clicked.
+         */
+        public interface CategoryHolderInterface {
+            void onItemClick(Category category);
         }
     }
 }

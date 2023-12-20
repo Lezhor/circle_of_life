@@ -53,7 +53,7 @@ public class RootCategoriesActivity extends SuperActivity {
         fab.setOnClickListener(view -> addCategory());
 
         recyclerView = findViewById(R.id.recyclerView);
-        adapter = new CategoryRecyclerViewAdapter();
+        adapter = new CategoryRecyclerViewAdapter(this::onCategoryClicked);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -123,6 +123,11 @@ public class RootCategoriesActivity extends SuperActivity {
             }
         }
         return true;
+    }
+
+    private void onCategoryClicked(Category category) {
+        Log.d(TAG, "onCategoryClicked: Category clicked: " + category);
+        Toast.makeText(this, "Category clicked: " + category, Toast.LENGTH_SHORT).show();
     }
 
     private void addCategory() {
