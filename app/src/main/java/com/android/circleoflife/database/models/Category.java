@@ -11,6 +11,7 @@ import androidx.room.PrimaryKey;
 
 import com.android.circleoflife.database.validators.StringValidator;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -109,6 +110,18 @@ public class Category {
             return this.userID.equals(that.userID) && this.id.equals(that.id);
         }
         return false;
+    }
+
+    /**
+     * Compares every attribute and returns true if all matching
+     * @param that category
+     * @return true if all attributes matching
+     */
+    public boolean equalsAllParams(Category that) {
+        return this.userID.equals(that.userID)
+                && this.id.equals(that.id)
+                && this.name.equals(that.name)
+                && Objects.equals(this.parentID, that.parentID);
     }
 
     @Override
