@@ -18,6 +18,8 @@
 
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_ok">OK</string>
+    <string name="category_dialog_edit_title">Edit Category</string>
+    <string name="category_dialog_edit_name_hint">New name</string>
 
     <string-array name="days_of_week">
         <item>Monday</item>

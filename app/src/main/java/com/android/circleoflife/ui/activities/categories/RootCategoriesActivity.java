@@ -135,7 +135,7 @@ public class RootCategoriesActivity extends SuperActivity implements CategoryRec
 
     private void openCreateCategoryDialog() {
         CreateCategoryDialog dialog = new CreateCategoryDialog(this::submitCreateCategoryDialog);
-        dialog.show(getSupportFragmentManager(), "create category dialog");
+        dialog.show(getSupportFragmentManager(), "create root category dialog");
     }
 
     private void submitCreateCategoryDialog(String name, @Nullable String parent) {
@@ -153,7 +153,7 @@ public class RootCategoriesActivity extends SuperActivity implements CategoryRec
     @Override
     public void onLongCategoryClicked(Category category) {
         Log.d(TAG, "Category long clicked: " + category);
-        Toast.makeText(this, "Category long clicked: " + category, Toast.LENGTH_SHORT).show();
-        // TODO: 20.12.2023 Open Edit Dialog
+        EditCategoryDialog dialog = new EditCategoryDialog(categoryViewModel::update, category);
+        dialog.show(getSupportFragmentManager(), "edit root category dialog");
     }
 }
