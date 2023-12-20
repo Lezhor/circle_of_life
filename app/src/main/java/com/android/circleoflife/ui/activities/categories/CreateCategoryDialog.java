@@ -21,7 +21,6 @@ import com.google.android.material.textfield.TextInputLayout;
 public class CreateCategoryDialog extends AppCompatDialogFragment {
 
     private TextInputLayout nameInput;
-    private TextInputLayout parentInput;
     private final OnResultSubmitListener submit;
 
     public CreateCategoryDialog(OnResultSubmitListener listener) {
@@ -50,7 +49,6 @@ public class CreateCategoryDialog extends AppCompatDialogFragment {
 
         nameInput = view.findViewById(R.id.category_create_dialog_name);
         nameInput.getEditText().requestFocus();
-        parentInput = view.findViewById(R.id.category_create_dialog_parent);
 
         Dialog result = builder.create();
         result.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -65,12 +63,8 @@ public class CreateCategoryDialog extends AppCompatDialogFragment {
             Button positiveButton = (Button) dialog.getButton(Dialog.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(v -> {
                 String nameString = nameInput.getEditText().getText().toString().trim();
-                String parentString = parentInput.getEditText().getText().toString().trim();
-                if (parentString.isEmpty() || parentString.equalsIgnoreCase("null")) {
-                    parentString = null;
-                }
                 if (TextInputLayoutValidator.validate(nameInput, StringValidator::validateString, "Category")) {
-                    submit.trigger(nameString, parentString);
+                    submit.trigger(nameString);
                     dialog.dismiss();
                 }
             });
@@ -80,6 +74,6 @@ public class CreateCategoryDialog extends AppCompatDialogFragment {
 
     @FunctionalInterface
     public interface OnResultSubmitListener {
-        void trigger(String name, @Nullable String parent);
+        void trigger(String name);
     }
 }

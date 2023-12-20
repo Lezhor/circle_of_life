@@ -41,7 +41,7 @@ public class EditCategoryDialog extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.category_create_dialog, null);
+        View view = inflater.inflate(R.layout.category_edit_dialog, null);
 
         builder.setView(view)
                 .setTitle(R.string.category_dialog_edit_title)
@@ -54,16 +54,14 @@ public class EditCategoryDialog extends AppCompatDialogFragment {
 
 
 
-        nameInput = view.findViewById(R.id.category_create_dialog_name);
+        nameInput = view.findViewById(R.id.category_edit_dialog_name);
         nameInput.setHint(R.string.category_dialog_edit_name_hint);
         EditText editText = nameInput.getEditText();
         editText.setText(category.getName());
         editText.setSelectAllOnFocus(true);
         editText.requestFocus();
 
-        //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-
-        parentInput = view.findViewById(R.id.category_create_dialog_parent);
+        parentInput = view.findViewById(R.id.category_edit_dialog_parent);
         if (category.getParentID() != null) {
             // parentInput.getEditText().setText("Not Null"); // TODO: 20.12.2023 set to old parent
         }

@@ -1,7 +1,6 @@
 package com.android.circleoflife.ui.activities.categories;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModel;
@@ -138,9 +137,9 @@ public class RootCategoriesActivity extends SuperActivity implements CategoryRec
         dialog.show(getSupportFragmentManager(), "create root category dialog");
     }
 
-    private void submitCreateCategoryDialog(String name, @Nullable String parent) {
-        Log.d(TAG, "submitCreateCategoryDialog: " + name + ", " + parent);
-        categoryViewModel.insert(new Category(UUID.randomUUID(), name, categoryViewModel.getUser().getId(), parent == null ? null : null /* TODO 20.12.23 Fetch Parent if not null */));
+    private void submitCreateCategoryDialog(String name) {
+        Log.d(TAG, "submitCreateCategoryDialog: " + name);
+        categoryViewModel.insert(new Category(UUID.randomUUID(), name, categoryViewModel.getUser().getId(), null));
     }
 
     @Override
