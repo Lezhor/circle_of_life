@@ -22,6 +22,12 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Recycler-View for displaying a list of categories.
+ * The categoryList-Attribute holds every single root-category
+ * The filteredList holds the categories which are actually displayed currently.<br>
+ * Filtering happens in the {@link CategoryRecyclerViewAdapter#getFilter()} method.
+ */
 public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRecyclerViewAdapter.CategoryHolder> implements Filterable {
     private static final String TAG = "CategoryRecyclerViewAdapter";
 
