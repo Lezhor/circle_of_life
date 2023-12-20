@@ -6,7 +6,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,14 +56,21 @@ public class EditCategoryDialog extends AppCompatDialogFragment {
 
         nameInput = view.findViewById(R.id.category_create_dialog_name);
         nameInput.setHint(R.string.category_dialog_edit_name_hint);
-        nameInput.getEditText().setText(category.getName());
-        nameInput.getEditText().requestFocus();
+        EditText editText = nameInput.getEditText();
+        editText.setText(category.getName());
+        editText.setSelectAllOnFocus(true);
+        editText.requestFocus();
+
+        //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
         parentInput = view.findViewById(R.id.category_create_dialog_parent);
         if (category.getParentID() != null) {
             // parentInput.getEditText().setText("Not Null"); // TODO: 20.12.2023 set to old parent
         }
 
-        return builder.create();
+        Dialog result = builder.create();
+        result.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        return result;
     }
 
     @Override

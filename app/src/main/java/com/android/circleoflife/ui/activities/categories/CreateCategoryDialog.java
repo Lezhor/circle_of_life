@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
@@ -48,9 +49,12 @@ public class CreateCategoryDialog extends AppCompatDialogFragment {
 
 
         nameInput = view.findViewById(R.id.category_create_dialog_name);
+        nameInput.getEditText().requestFocus();
         parentInput = view.findViewById(R.id.category_create_dialog_parent);
 
-        return builder.create();
+        Dialog result = builder.create();
+        result.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        return result;
     }
 
     @Override
