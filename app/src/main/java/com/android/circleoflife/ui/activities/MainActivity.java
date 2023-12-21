@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
-import com.android.circleoflife.ui.activities.categories.RootCategoriesActivity;
+import com.android.circleoflife.ui.activities.categories.root.RootCategoriesActivity;
 
 import java.util.Arrays;
 

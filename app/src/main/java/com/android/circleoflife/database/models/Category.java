@@ -1,5 +1,8 @@
 package com.android.circleoflife.database.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
@@ -9,8 +12,10 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.android.circleoflife.database.models.type_converters.UUIDConverter;
 import com.android.circleoflife.database.validators.StringValidator;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -40,7 +45,7 @@ import java.util.UUID;
         },
         inheritSuperIndices = true
 )
-public class Category {
+public class Category implements Parcelable {
 
     @NonNull
     @PrimaryKey
@@ -142,4 +147,45 @@ public class Category {
     public String toString() {
         return "Category[" + getName() + "]";
     }
+
+
+
+    // Parcelable:
+
+
+    @Ignore
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Ignore
+    @Override
+    public void writeToParcel(@NonNull Parcel out, int flags) {
+        out.writeString(UUIDConverter.uuidToString(getId()));
+        out.writeString(getName());
+        out.writeString(UUIDConverter.uuidToString(getUserID()));
+        out.writeString(UUIDConverter.uuidToString(getParentID()));
+    }
+
+    @Ignore
+    public static final Parcelable.Creator<Category> CREATOR = new Creator<>() {
+        @Override
+        public Category createFromParcel(Parcel in) {
+            UUID id  = UUIDConverter.uuidFromString(in.readString());
+            String name = in.readString();
+            UUID userID  = UUIDConverter.uuidFromString(in.readString());
+            UUID parentID  = UUIDConverter.uuidFromString(in.readString());
+            if (id != null && name != null && userID != null) {
+                return new Category(id, name, userID, parentID);
+            }
+            return null;
+        }
+
+        @Override
+        public Category[] newArray(int size) {
+            return new Category[size];
+        }
+    };
+
 }

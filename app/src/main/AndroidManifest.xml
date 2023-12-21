@@ -14,12 +14,16 @@
         android:theme="@style/Theme.CircleOfLife"
         tools:targetApi="31">
         <activity
-            android:name=".ui.activities.categories.RootCategoriesActivity"
+            android:name=".ui.activities.categories.not_root.CategoryActivity"
+            android:parentActivityName=".ui.activities.categories.not_root.CategoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.categories.root.RootCategoriesActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activities.MainActivity"
-            android:theme="@style/Theme.CircleOfLife.NoActionBar"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.CircleOfLife.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

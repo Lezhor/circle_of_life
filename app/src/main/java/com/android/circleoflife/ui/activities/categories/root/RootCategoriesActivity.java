@@ -1,4 +1,4 @@
-package com.android.circleoflife.ui.activities.categories;
+package com.android.circleoflife.ui.activities.categories.root;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -21,19 +22,22 @@ import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.ui.activities.SuperActivity;
+import com.android.circleoflife.ui.activities.categories.CreateCategoryDialog;
+import com.android.circleoflife.ui.activities.categories.EditCategoryDialog;
+import com.android.circleoflife.ui.activities.categories.not_root.CategoryActivity;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.UUID;
 
-public class RootCategoriesActivity extends SuperActivity implements CategoryRecyclerViewAdapter.CategoryHolder.CategoryHolderInterface {
+public class RootCategoriesActivity extends SuperActivity implements RootCategoryRecyclerViewAdapter.CategoryHolder.CategoryHolderInterface {
     private static final String TAG = "RootCategoriesActivity";
 
 
     private CategoryViewModel categoryViewModel;
 
     RecyclerView recyclerView;
-    CategoryRecyclerViewAdapter adapter;
+    RootCategoryRecyclerViewAdapter adapter;
     FloatingActionButton fab;
 
     @Override
@@ -52,7 +56,7 @@ public class RootCategoriesActivity extends SuperActivity implements CategoryRec
         fab.setOnClickListener(view -> addCategory());
 
         recyclerView = findViewById(R.id.recyclerView);
-        adapter = new CategoryRecyclerViewAdapter(this);
+        adapter = new RootCategoryRecyclerViewAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -72,6 +76,12 @@ public class RootCategoriesActivity extends SuperActivity implements CategoryRec
                 adapter.setCategories(list);
             });
         }
+    }
+
+    private void openCategoryActivity(Category category) {
+        Intent intent = new Intent(this, CategoryActivity.class);
+        intent.putExtra("category", category);
+        startActivity(intent);
     }
 
     @Override
@@ -145,8 +155,8 @@ public class RootCategoriesActivity extends SuperActivity implements CategoryRec
     @Override
     public void onCategoryClicked(Category category) {
         Log.d(TAG, "onCategoryClicked: Category clicked: " + category);
-        Toast.makeText(this, "Category clicked: " + category, Toast.LENGTH_SHORT).show();
-        // TODO: 20.12.2023 Go to next activity
+        //Toast.makeText(this, "Category clicked: " + category, Toast.LENGTH_SHORT).show();
+        openCategoryActivity(category);
     }
 
     @Override
