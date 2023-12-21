@@ -65,7 +65,6 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
 
     @SuppressLint("NotifyDataSetChanged")
     private void setFilteredCategories(List<Category> filteredList) {
-        // TODO: 20.12.2023 Change this so that updating categories gets updated in RV
         if (this.filteredList.size() == 0) {
             this.filteredList.addAll(filteredList);
             notifyItemRangeInserted(0, filteredList.size());
@@ -79,44 +78,51 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
             Log.d(TAG, "setFilteredCategories: no remove, no add, iterating....");
             Log.d(TAG, this.filteredList.stream().map(Category::getName).reduce("old list: ", (a, b) -> a + b + "; "));
             Log.d(TAG, filteredList.stream().map(Category::getName).reduce("new list: ", (a, b) -> a + b + "; "));
-            for (int i = 0; i < this.filteredList.size(); i++) {
-                if (this.filteredList.get(i).getId().equals(filteredList.get(i).getId())) {
-                    if (!this.filteredList.get(i).equalsAllParams(filteredList.get(i))) {
-                        Log.d(TAG, "setFilteredCategories: Found missmatch");
-                        this.filteredList.remove(i);
-                        this.filteredList.add(i, filteredList.get(i));
-                        notifyItemChanged(i);
+            for (int i = 0; i < filteredList.size(); i++) {
+                if (this.filteredList.contains(filteredList.get(i))) {
+                    int index = this.filteredList.indexOf(filteredList.get(i));
+                    if (!this.filteredList.get(index).equalsAllParams(filteredList.get(i))) {
+                        if (i == index) {
+                            this.filteredList.remove(index);
+                            this.filteredList.add(index, filteredList.get(i));
+                            notifyItemChanged(index);
+                        } else {
+                            this.filteredList.remove(index);
+                            notifyItemRemoved(index);
+                            int newIndex = getAddIndex(this.filteredList, filteredList.get(i));
+                            this.filteredList.add(newIndex, filteredList.get(i));
+                            notifyItemInserted(newIndex);
+                        }
                     }
                 }
             }
-        } else {
-            Map<Category, Integer> addMap = added.stream()
-                    .collect(Collectors.toMap(Function.identity(), c -> getAddIndex(this.filteredList, c)));
-            for (Map.Entry<Category, Integer> entry : addMap.entrySet().stream()
-                    .peek(e -> e.setValue(-e.getValue()))
-                    .sorted(Map.Entry.comparingByValue())
-                    .peek(e -> e.setValue(-e.getValue()))
-                    .collect(Collectors.toList())) {
-                synchronized (this.filteredList) {
-                    Log.d(TAG, "setFilteredCategories: Add at index: " + entry.getValue());
-                    this.filteredList.add(entry.getValue(), entry.getKey());
-                }
-                notifyItemInserted(entry.getValue());
+        }
+        Map<Category, Integer> addMap = added.stream()
+                .collect(Collectors.toMap(Function.identity(), c -> getAddIndex(this.filteredList, c)));
+        for (Map.Entry<Category, Integer> entry : addMap.entrySet().stream()
+                .peek(e -> e.setValue(-e.getValue()))
+                .sorted(Map.Entry.comparingByValue())
+                .peek(e -> e.setValue(-e.getValue()))
+                .collect(Collectors.toList())) {
+            synchronized (this.filteredList) {
+                Log.d(TAG, "setFilteredCategories: Add at index: " + entry.getValue());
+                this.filteredList.add(entry.getValue(), entry.getKey());
             }
+            notifyItemInserted(entry.getValue());
+        }
 
-            Map<Category, Integer> removeMap = removed.stream()
-                    .collect(Collectors.toMap(Function.identity(), c -> getRemoveIndex(this.filteredList, c)));
-            for (Map.Entry<Category, Integer> entry : removeMap.entrySet().stream()
-                    .peek(e -> e.setValue(-e.getValue()))
-                    .sorted(Map.Entry.comparingByValue())
-                    .peek(e -> e.setValue(-e.getValue()))
-                    .collect(Collectors.toList())) {
-                synchronized (this.filteredList) {
-                    Log.d(TAG, "setFilteredCategories: Remove from index: " + entry.getValue());
-                    this.filteredList.remove(entry.getKey());
-                }
-                notifyItemRemoved(entry.getValue());
+        Map<Category, Integer> removeMap = removed.stream()
+                .collect(Collectors.toMap(Function.identity(), c -> getRemoveIndex(this.filteredList, c)));
+        for (Map.Entry<Category, Integer> entry : removeMap.entrySet().stream()
+                .peek(e -> e.setValue(-e.getValue()))
+                .sorted(Map.Entry.comparingByValue())
+                .peek(e -> e.setValue(-e.getValue()))
+                .collect(Collectors.toList())) {
+            synchronized (this.filteredList) {
+                Log.d(TAG, "setFilteredCategories: Remove from index: " + entry.getValue());
+                this.filteredList.remove(entry.getKey());
             }
+            notifyItemRemoved(entry.getValue());
         }
     }
 
@@ -176,7 +182,10 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
             super(itemView);
             title = itemView.findViewById(R.id.root_category_item);
             itemView.setOnClickListener(view -> onClick(holderInterface::onCategoryClicked, categoryFromPositionGetter));
-            itemView.setOnLongClickListener(view -> {onClick(holderInterface::onLongCategoryClicked, categoryFromPositionGetter); return true;});
+            itemView.setOnLongClickListener(view -> {
+                onClick(holderInterface::onLongCategoryClicked, categoryFromPositionGetter);
+                return true;
+            });
         }
 
         private void onClick(Consumer<Category> onClickMethod, Function<Integer, Category> categoryFromPositionGetter) {
@@ -191,6 +200,7 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
          */
         public interface CategoryHolderInterface {
             void onCategoryClicked(Category category);
+
             void onLongCategoryClicked(Category category);
         }
     }
