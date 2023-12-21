@@ -1,6 +1,5 @@
-package com.android.circleoflife.ui.activities.categories;
+package com.android.circleoflife.ui.activities.categories.not_root;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +32,8 @@ import java.util.stream.Collectors;
 public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRecyclerViewAdapter.CategoryHolder> implements Filterable {
     private static final String TAG = "CategoryRecyclerViewAdapter";
 
+    // TODO: 21.12.2023 Implemnt Recycler View with three different Holders
+
     private final List<Category> categoryList = new ArrayList<>();
     private final List<Category> filteredList = new ArrayList<>();
 
@@ -63,7 +64,6 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private void setFilteredCategories(List<Category> filteredList) {
         if (this.filteredList.size() == 0) {
             this.filteredList.addAll(filteredList);
@@ -166,7 +166,7 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
         return filter;
     }
 
-    // TODO: 19.12.2023 Filtering should filter through ALL categories not just root-categories
+    // TODO: 21.12.2023 Do filtering
     private final Filter filter = new EntityFilter<>(Category::getName, this::getCategoryList) {
         @Override
         protected void publishResults(List<Category> resultList) {

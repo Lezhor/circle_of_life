@@ -32,8 +32,6 @@ import java.util.stream.Collectors;
 public class RootCategoryRecyclerViewAdapter extends RecyclerView.Adapter<RootCategoryRecyclerViewAdapter.CategoryHolder> implements Filterable {
     private static final String TAG = "RootCategoryRecyclerViewAdapter";
 
-    // TODO: 21.12.2023 Implemnt Recycler View with three different Holders
-
     private final List<Category> categoryList = new ArrayList<>();
     private final List<Category> filteredList = new ArrayList<>();
 
@@ -165,8 +163,7 @@ public class RootCategoryRecyclerViewAdapter extends RecyclerView.Adapter<RootCa
     public Filter getFilter() {
         return filter;
     }
-
-    // TODO: 21.12.2023 Do filtering
+    // TODO: 19.12.2023 Filtering should filter through ALL categories not just root-categories
     private final Filter filter = new EntityFilter<>(Category::getName, this::getCategoryList) {
         @Override
         protected void publishResults(List<Category> resultList) {
