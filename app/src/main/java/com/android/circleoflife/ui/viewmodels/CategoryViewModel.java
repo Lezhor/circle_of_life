@@ -18,24 +18,39 @@ public class CategoryViewModel extends ViewModel {
 
     private final CategoryRepository repository;
 
-    private LiveData<List<Category>> categories;
+    private final LiveData<List<Category>> allCategories;
+
+    private final LiveData<List<Category>> currentCategories;
+
     private final User user;
 
-    private Category root;
+    private final Category root;
 
     public CategoryViewModel(User user) {
-        this.user = user;
-        repository = new CategoryRepository(App.getDatabaseController());
-        //categories = repository.getAllCategories(user);
+        this(user, null);
     }
 
-    @Nullable
+    public CategoryViewModel(User user, @Nullable Category root) {
+        this.user = user;
+        this.root = root;
+        repository = new CategoryRepository(App.getDatabaseController());
+        allCategories = user == null ? null : repository.getAllCategories(user);
+        if (user == null) {
+            Log.w(TAG, "CategoryViewModel: Instantiated CategoryViewModel with null User!!!");
+            currentCategories = null;
+        } else if (root == null) {
+            currentCategories = repository.getRootCategories(user);
+        } else {
+            currentCategories =  repository.getChildren(root);
+        }
+    }
+
     public User getUser() {
         return user;
     }
 
-    public void setRoot(Category root) {
-        this.root = root;
+    public Category getRoot() {
+        return root;
     }
 
     public void insert(Category category) {
@@ -51,26 +66,10 @@ public class CategoryViewModel extends ViewModel {
     }
 
     public LiveData<List<Category>> getAllCategories() {
-        if (categories == null) {
-            if (user == null) {
-                Log.w(TAG, "getAllCategories: Tried to get Categories before User is set!!!");
-                return null;
-            } else {
-                categories = repository.getAllCategories(user);
-            }
-        }
-        return categories;
+        return allCategories;
     }
 
     public LiveData<List<Category>> getCurrentCategories() {
-        if (user == null) {
-            Log.w(TAG, "getCurrentCategories: tried to get currentCategories before user is set");
-            return null;
-        }
-        if (root == null) {
-            return repository.getRootCategories(user);
-        } else {
-            return repository.getChildren(root);
-        }
+        return currentCategories;
     }
 }
