@@ -15,7 +15,7 @@
         tools:itemCount="5"/>
 
     <TextView
-        android:id="@+id/no_categories_created_yet"
+        android:id="@+id/category_invis_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/no_categories_created_yet"

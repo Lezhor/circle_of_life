@@ -20,6 +20,7 @@
     <string name="dialog_ok">OK</string>
     <string name="category_dialog_edit_title">Edit Category</string>
     <string name="category_dialog_edit_name_hint">New name</string>
+    <string name="category_empty">Category is\nEmpty\nClick to Delete</string>
 
     <string-array name="days_of_week">
         <item>Monday</item>

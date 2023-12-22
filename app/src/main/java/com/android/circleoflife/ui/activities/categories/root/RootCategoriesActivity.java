@@ -60,7 +60,7 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        TextView invisText = findViewById(R.id.no_categories_created_yet);
+        TextView invisText = findViewById(R.id.category_invis_text);
 
         final User user = App.getAuthentication().getUser();
         if (user != null) {

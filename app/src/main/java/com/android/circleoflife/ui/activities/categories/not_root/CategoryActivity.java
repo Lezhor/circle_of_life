@@ -22,6 +22,8 @@ import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.UUID;
+
 public class CategoryActivity extends AppCompatActivity implements CategoryRecyclerViewAdapter.CategoryHolder.CategoryHolderInterface {
     private static final String TAG = "CategoryActivity";
 
@@ -30,6 +32,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryRecyc
     private RecyclerView recyclerView;
     private CategoryRecyclerViewAdapter adapter;
     private FloatingActionButton fab;
+    private TextView invisText;
 
 
     @Override
@@ -38,9 +41,9 @@ public class CategoryActivity extends AppCompatActivity implements CategoryRecyc
         setContentView(R.layout.activity_root_categories);
 
         Intent intent = getIntent();
-        Category category = intent.getParcelableExtra("category");
+        Category root = intent.getParcelableExtra("category");
 
-        if (category == null) {
+        if (root == null) {
             // THIS SHOULD NOT HAPPEN
             Toast.makeText(this, "Error occured loading category!!!", Toast.LENGTH_SHORT).show();
             //finish();
@@ -50,8 +53,16 @@ public class CategoryActivity extends AppCompatActivity implements CategoryRecyc
             if (actionBar == null) {
                 Log.i(TAG, "onCreate: Actionbar is null!");
             } else {
-                actionBar.setTitle(category.getName());
+                actionBar.setTitle(root.getName());
             }
+
+            invisText = findViewById(R.id.category_invis_text);
+            invisText.setText(R.string.category_empty);
+            invisText.setEnabled(false);
+            invisText.setOnClickListener(view -> {
+                categoryViewModel.delete(categoryViewModel.getRoot());
+                finish();
+            });
 
             fab = findViewById(R.id.floatingActionButton);
             fab.setOnClickListener(this::onFabClicked);
@@ -64,7 +75,6 @@ public class CategoryActivity extends AppCompatActivity implements CategoryRecyc
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-            TextView invisText = findViewById(R.id.no_categories_created_yet);
 
             final User user = App.getAuthentication().getUser();
             if (user != null) {
@@ -72,11 +82,12 @@ public class CategoryActivity extends AppCompatActivity implements CategoryRecyc
                     @NonNull
                     @Override
                     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                        return (T) new CategoryViewModel(user);
+                        return (T) new CategoryViewModel(user, root);
                     }
                 }).get(CategoryViewModel.class);
                 categoryViewModel.getCurrentCategories().observe(this, list -> {
                     invisText.setVisibility(list.size() == 0 ? View.VISIBLE : View.INVISIBLE);
+                    invisText.setEnabled(list.size() == 0);
                     adapter.setCategories(list);
                 });
             }
@@ -87,6 +98,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryRecyc
 
     private void onFabClicked(View view) {
         // TODO: 21.12.2023 Create Category/Cycle/Todo
+        categoryViewModel.insert(new Category(UUID.randomUUID(), "Temp", categoryViewModel.getUser().getId(), categoryViewModel.getRoot().getId()));
     }
 
     @Override
