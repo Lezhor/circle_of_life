@@ -2,6 +2,7 @@ package com.android.circleoflife.ui.activities.categories.not_root.recycler_view
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -12,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.Cycle;
 import com.android.circleoflife.database.models.Todo;
+import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.holder.CategoryHolder;
+import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.holder.CycleHolder;
+import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.holder.TodoHolder;
 import com.android.circleoflife.ui.other.EntityFilter;
 
 import java.util.ArrayList;
@@ -156,14 +160,22 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType) {
-            // TODO: 22.12.2023 Switch
-            // case RVItemWrapper.TYPE_CATEGORY -> ;
+            case RVItemWrapper.TYPE_CATEGORY -> {
+                View view = inflater.inflate(null, parent, false); // TODO: 22.12.2023 layout
+                return new CategoryHolder(view, holderInterface, pos -> ((Category) getFilteredItemAtIndex(pos).getObject()));
+            }
+            case RVItemWrapper.TYPE_CYCLE -> {
+                View view = inflater.inflate(null, parent, false); // TODO: 22.12.2023 layout
+                return new CycleHolder(view, holderInterface, pos -> ((Cycle) getFilteredItemAtIndex(pos).getObject()));
+            }
+            case RVItemWrapper.TYPE_TODO -> {
+                View view = inflater.inflate(null, parent, false); // TODO: 22.12.2023 layout
+                return new TodoHolder(view, holderInterface, pos -> ((Todo) getFilteredItemAtIndex(pos).getObject()));
+            }
+            default -> {
+                return null;
+            }
         }
-        /*
-        View view = inflater.inflate(R.layout.root_category_item, parent, false);
-        return new CategoryHolder(view, holderInterface, this::getFilteredCategoryAtIndex);
-         */
-        return null;
     }
 
     @Override
