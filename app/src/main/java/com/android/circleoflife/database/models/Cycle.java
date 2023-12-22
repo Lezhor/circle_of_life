@@ -12,6 +12,7 @@ import androidx.room.PrimaryKey;
 import com.android.circleoflife.database.models.additional.CycleFrequency;
 import com.android.circleoflife.database.validators.IntegerValidator;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -153,6 +154,23 @@ public class Cycle {
         }
         return false;
     }
+
+
+    /**
+     * Compares every attribute and returns true if all matching
+     * @param that cycle
+     * @return true if all attributes matching
+     */
+    public boolean equalsAllParams(Cycle that) {
+        return this.userID.equals(that.userID)
+                && this.id.equals(that.id)
+                && this.name.equals(that.name)
+                && Objects.equals(this.categoryID, that.categoryID)
+                && this.productiveness == that.productiveness
+                && this.frequency.equals(that.frequency)
+                && this.archived == that.archived;
+    }
+
 
     @NonNull
     public UUID getId() {

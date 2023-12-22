@@ -10,6 +10,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -145,6 +146,21 @@ public class Todo {
             return this.userID.equals(that.userID) && this.id.equals(that.id);
         }
         return false;
+    }
+
+    /**
+     * Compares every attribute and returns true if all matching
+     * @param that todô
+     * @return true if all attributes matching
+     */
+    public boolean equalsAllParams(Todo that) {
+        return this.userID.equals(that.userID)
+                && this.id.equals(that.id)
+                && this.name.equals(that.name)
+                && Objects.equals(this.categoryID, that.categoryID)
+                && this.done == that.done
+                && this.productive == that.productive
+                && Objects.equals(this.dueDate, that.dueDate);
     }
 
     @NonNull

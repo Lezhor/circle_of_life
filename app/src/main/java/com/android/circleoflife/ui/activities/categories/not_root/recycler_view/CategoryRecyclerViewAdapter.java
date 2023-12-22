@@ -1,49 +1,47 @@
-package com.android.circleoflife.ui.activities.categories.not_root;
+package com.android.circleoflife.ui.activities.categories.not_root.recycler_view;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.circleoflife.R;
 import com.android.circleoflife.database.models.Category;
+import com.android.circleoflife.database.models.Cycle;
+import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.ui.other.EntityFilter;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Recycler-View for displaying a list of categories.
+ * Recycler-View for displaying a list of categories, cycles and todos
  * The categoryList-Attribute holds every single root-category
  * The filteredList holds the categories which are actually displayed currently.<br>
  * Filtering happens in the {@link CategoryRecyclerViewAdapter#getFilter()} method.
  */
-public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRecyclerViewAdapter.CategoryHolder> implements Filterable {
+public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
     private static final String TAG = "CategoryRecyclerViewAdapter";
 
     // TODO: 21.12.2023 Implemnt Recycler View with three different Holders
 
-    private final List<Category> categoryList = new ArrayList<>();
-    private final List<Category> filteredList = new ArrayList<>();
+    private final List<RVItemWrapper<?>> fullList = new ArrayList<>();
+    private final List<RVItemWrapper<?>> filteredList = new ArrayList<>();
 
-    private final CategoryHolder.CategoryHolderInterface holderInterface;
+    private final RVHolderInterface holderInterface;
 
-    public CategoryRecyclerViewAdapter(@NonNull CategoryHolder.CategoryHolderInterface holderInterface) {
+    public CategoryRecyclerViewAdapter(@NonNull RVHolderInterface holderInterface) {
         this.holderInterface = holderInterface;
     }
 
-    public Category getFilteredCategoryAtIndex(int index) {
+    public RVItemWrapper<?> getFilteredItemAtIndex(int index) {
         if (index >= 0 && index < filteredList.size()) {
             return filteredList.get(index);
         } else {
@@ -52,32 +50,41 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
     }
 
     public void setCategories(List<Category> categoryList) {
-        categoryList.sort(Comparator.comparing(c -> c.getName().toLowerCase()));
-        boolean filtering = this.categoryList.size() > filteredList.size();
-        synchronized (this.categoryList) {
+        boolean filtering = this.fullList.size() > filteredList.size();
+        synchronized (this.fullList) {
             Log.d(TAG, "setCategories: " + categoryList.stream().map(Category::getName).reduce("Categories: ", (a, b) -> a + b + "; "));
-            this.categoryList.clear();
-            this.categoryList.addAll(categoryList);
+            this.fullList.removeIf(w -> w.getItemType() == RVItemWrapper.TYPE_CATEGORY);
+            this.fullList.addAll(categoryList.stream().map(RVItemWrapper<Category>::new).collect(Collectors.toSet()));
+            Collections.sort(this.fullList);
         }
         if (!filtering) {
-            setFilteredCategories(categoryList);
+            setFilteredList(this.fullList);
         }
     }
 
-    private void setFilteredCategories(List<Category> filteredList) {
+    public void setCycles(List<Cycle> cycleList) {
+        // TODO: 22.12.2023 set cycles
+    }
+
+    public void setTodos(List<Todo> todoList) {
+        // TODO: 22.12.2023 set todos
+    }
+
+    private void setFilteredList(List<RVItemWrapper<?>> filteredList) {
         if (this.filteredList.size() == 0) {
             this.filteredList.addAll(filteredList);
             notifyItemRangeInserted(0, filteredList.size());
             return;
         }
 
-        List<Category> added = filteredList.stream().filter(c -> !this.filteredList.contains(c)).collect(Collectors.toList());
-        List<Category> removed = this.filteredList.stream().filter(c -> !filteredList.contains(c)).collect(Collectors.toList());
+        List<RVItemWrapper<?>> added = filteredList.stream().filter(c -> !this.filteredList.contains(c)).collect(Collectors.toList());
+        List<RVItemWrapper<?>> removed = this.filteredList.stream().filter(c -> !filteredList.contains(c)).collect(Collectors.toList());
+
         if (added.size() == 0 && removed.size() == 0) {
             // maybe something changed
-            Log.d(TAG, "setFilteredCategories: no remove, no add, iterating....");
-            Log.d(TAG, this.filteredList.stream().map(Category::getName).reduce("old list: ", (a, b) -> a + b + "; "));
-            Log.d(TAG, filteredList.stream().map(Category::getName).reduce("new list: ", (a, b) -> a + b + "; "));
+            Log.d(TAG, "setFilteredLists: no remove, no add, iterating....");
+            Log.d(TAG, this.filteredList.stream().map(RVItemWrapper::getName).reduce("old list: ", (a, b) -> a + b + "; "));
+            Log.d(TAG, filteredList.stream().map(RVItemWrapper::getName).reduce("new list: ", (a, b) -> a + b + "; "));
             for (int i = 0; i < filteredList.size(); i++) {
                 if (this.filteredList.contains(filteredList.get(i))) {
                     int index = this.filteredList.indexOf(filteredList.get(i));
@@ -97,59 +104,71 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
                 }
             }
         }
-        Map<Category, Integer> addMap = added.stream()
+        Map<RVItemWrapper<?>, Integer> addMap = added.stream()
                 .collect(Collectors.toMap(Function.identity(), c -> getAddIndex(this.filteredList, c)));
-        for (Map.Entry<Category, Integer> entry : addMap.entrySet().stream()
+        for (Map.Entry<RVItemWrapper<?>, Integer> entry : addMap.entrySet().stream()
                 .peek(e -> e.setValue(-e.getValue()))
                 .sorted(Map.Entry.comparingByValue())
                 .peek(e -> e.setValue(-e.getValue()))
                 .collect(Collectors.toList())) {
             synchronized (this.filteredList) {
-                Log.d(TAG, "setFilteredCategories: Add at index: " + entry.getValue());
+                Log.d(TAG, "setFilteredList: Add at index: " + entry.getValue());
                 this.filteredList.add(entry.getValue(), entry.getKey());
             }
             notifyItemInserted(entry.getValue());
         }
 
-        Map<Category, Integer> removeMap = removed.stream()
+        Map<RVItemWrapper<?>, Integer> removeMap = removed.stream()
                 .collect(Collectors.toMap(Function.identity(), c -> getRemoveIndex(this.filteredList, c)));
-        for (Map.Entry<Category, Integer> entry : removeMap.entrySet().stream()
+        for (Map.Entry<RVItemWrapper<?>, Integer> entry : removeMap.entrySet().stream()
                 .peek(e -> e.setValue(-e.getValue()))
                 .sorted(Map.Entry.comparingByValue())
                 .peek(e -> e.setValue(-e.getValue()))
                 .collect(Collectors.toList())) {
             synchronized (this.filteredList) {
-                Log.d(TAG, "setFilteredCategories: Remove from index: " + entry.getValue());
+                Log.d(TAG, "setFilteredList: Remove from index: " + entry.getValue());
                 this.filteredList.remove(entry.getKey());
             }
             notifyItemRemoved(entry.getValue());
         }
     }
 
-    private int getAddIndex(List<Category> list, Category item) {
+    private int getAddIndex(List<RVItemWrapper<?>> list, RVItemWrapper<?> item) {
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getName().compareToIgnoreCase(item.getName()) > 0) {
+            if (list.get(i).compareTo(item) > 0) {
                 return i;
             }
         }
         return list.size();
     }
 
-    private int getRemoveIndex(List<Category> list, Category item) {
+    private int getRemoveIndex(List<RVItemWrapper<?>> list, RVItemWrapper<?> item) {
         return list.indexOf(item);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return this.filteredList.get(position).getItemType();
     }
 
     @NonNull
     @Override
-    public CategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        switch (viewType) {
+            // TODO: 22.12.2023 Switch
+            // case RVItemWrapper.TYPE_CATEGORY -> ;
+        }
+        /*
         View view = inflater.inflate(R.layout.root_category_item, parent, false);
         return new CategoryHolder(view, holderInterface, this::getFilteredCategoryAtIndex);
+         */
+        return null;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CategoryHolder holder, int position) {
-        holder.title.setText(filteredList.get(position).getName());
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        // TODO: 22.12.2023 Init Viewholder based on position
     }
 
     @Override
@@ -157,8 +176,8 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
         return filteredList.size();
     }
 
-    private List<Category> getCategoryList() {
-        return categoryList;
+    private List<RVItemWrapper<?>> getFullList() {
+        return fullList;
     }
 
     @Override
@@ -167,41 +186,10 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
     }
 
     // TODO: 21.12.2023 Do filtering
-    private final Filter filter = new EntityFilter<>(Category::getName, this::getCategoryList) {
+    private final Filter filter = new EntityFilter<>(RVItemWrapper::getName, this::getFullList) {
         @Override
-        protected void publishResults(List<Category> resultList) {
-            setFilteredCategories(resultList);
+        protected void publishResults(List<RVItemWrapper<?>> resultList) {
+            setFilteredList(resultList);
         }
     };
-
-    static class CategoryHolder extends RecyclerView.ViewHolder {
-
-        private final TextView title;
-
-        public CategoryHolder(@NonNull View itemView, CategoryHolderInterface holderInterface, Function<Integer, Category> categoryFromPositionGetter) {
-            super(itemView);
-            title = itemView.findViewById(R.id.root_category_item);
-            itemView.setOnClickListener(view -> onClick(holderInterface::onCategoryClicked, categoryFromPositionGetter));
-            itemView.setOnLongClickListener(view -> {
-                onClick(holderInterface::onLongCategoryClicked, categoryFromPositionGetter);
-                return true;
-            });
-        }
-
-        private void onClick(Consumer<Category> onClickMethod, Function<Integer, Category> categoryFromPositionGetter) {
-            int pos = getAdapterPosition();
-            if (pos != RecyclerView.NO_POSITION) {
-                onClickMethod.accept(categoryFromPositionGetter.apply(pos));
-            }
-        }
-
-        /**
-         * Used in every RecyclerView-Holder. onItemClick method is triggered the corresponding item is clicked.
-         */
-        public interface CategoryHolderInterface {
-            void onCategoryClicked(Category category);
-
-            void onLongCategoryClicked(Category category);
-        }
-    }
 }

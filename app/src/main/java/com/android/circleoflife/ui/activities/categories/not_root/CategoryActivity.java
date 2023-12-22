@@ -18,13 +18,17 @@ import android.widget.Toast;
 import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.models.Category;
+import com.android.circleoflife.database.models.Cycle;
+import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.database.models.User;
+import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.CategoryRecyclerViewAdapter;
+import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.RVHolderInterface;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.UUID;
 
-public class CategoryActivity extends AppCompatActivity implements CategoryRecyclerViewAdapter.CategoryHolder.CategoryHolderInterface {
+public class CategoryActivity extends AppCompatActivity implements RVHolderInterface {
     private static final String TAG = "CategoryActivity";
 
     private CategoryViewModel categoryViewModel;
@@ -108,6 +112,26 @@ public class CategoryActivity extends AppCompatActivity implements CategoryRecyc
 
     @Override
     public void onLongCategoryClicked(Category category) {
+
+    }
+
+    @Override
+    public void onCycleClicked(Cycle cycle) {
+
+    }
+
+    @Override
+    public void onCycleLongClicked(Cycle cycle) {
+
+    }
+
+    @Override
+    public void onTodoClicked(Todo todo) {
+
+    }
+
+    @Override
+    public void onTodoLongClicked(Todo todo) {
 
     }
 }

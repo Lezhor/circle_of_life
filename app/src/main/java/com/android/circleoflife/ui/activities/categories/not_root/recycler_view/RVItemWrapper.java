@@ -24,7 +24,7 @@ public class RVItemWrapper<T> implements Comparable<RVItemWrapper<?>> {
     /**
      * Constructor for this wrapper. Parameter will be saved in this wrapper and can't be changed.<br>
      * should be of type {@link Category}, {@link Cycle} or {@link Todo}
-     * @param object
+     * @param object object to be set
      */
     public RVItemWrapper(@NonNull T object) {
         this.object = object;
@@ -89,5 +89,20 @@ public class RVItemWrapper<T> implements Comparable<RVItemWrapper<?>> {
             return Objects.equals(this.object, that.object);
         }
         return this.object.equals(obj);
+    }
+
+    public boolean equalsAllParams(RVItemWrapper<?> rvItemWrapper) {
+        if (rvItemWrapper.getItemType() != this.getItemType()) {
+            return false;
+        }
+        return switch (getItemType()) {
+            case TYPE_CATEGORY ->
+                    ((Category) object).equalsAllParams((Category) rvItemWrapper.object);
+            case TYPE_CYCLE ->
+                    ((Cycle) object).equalsAllParams((Cycle) rvItemWrapper.object);
+            case TYPE_TODO ->
+                    ((Todo) object).equalsAllParams((Todo) rvItemWrapper.object);
+            default -> false;
+        };
     }
 }
