@@ -8,7 +8,7 @@ import com.android.circleoflife.database.models.Todo;
 public interface RVHolderInterface {
     void onCategoryClicked(Category category);
 
-    void onLongCategoryClicked(Category category);
+    void onCategoryLongClicked(Category category);
 
     void onCycleClicked(Cycle cycle);
 

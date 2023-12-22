@@ -111,7 +111,7 @@ public class CategoryActivity extends AppCompatActivity implements RVHolderInter
     }
 
     @Override
-    public void onLongCategoryClicked(Category category) {
+    public void onCategoryLongClicked(Category category) {
 
     }
 

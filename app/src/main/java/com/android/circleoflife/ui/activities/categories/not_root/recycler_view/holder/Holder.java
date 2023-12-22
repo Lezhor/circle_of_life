@@ -26,8 +26,21 @@ public abstract class Holder<T> extends RecyclerView.ViewHolder {
         });
     }
 
-    protected abstract void onClick();
 
-    protected abstract void onLongClick();
+    private void onClick() {
+        int pos = getAdapterPosition();
+        if (pos != RecyclerView.NO_POSITION) {
+            onClick(itemFromPositionGetter.apply(pos));
+        }
+    }
+    protected abstract void onClick(T object);
+
+    private void onLongClick() {
+        int pos = getAdapterPosition();
+        if (pos != RecyclerView.NO_POSITION) {
+            onLongClick(itemFromPositionGetter.apply(pos));
+        }
+    }
+    protected abstract void onLongClick(T object);
 
 }
