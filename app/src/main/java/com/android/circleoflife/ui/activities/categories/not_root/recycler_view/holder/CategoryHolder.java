@@ -18,7 +18,7 @@ public class CategoryHolder extends Holder<Category> {
 
     public CategoryHolder(@NonNull View itemView, RVHolderInterface holderInterface, Function<Integer, Category> categoryFromPositionGetter) {
         super(itemView, holderInterface, categoryFromPositionGetter);
-        title = itemView.findViewById(R.id.root_category_item);
+        title = itemView.findViewById(R.id.root_category_title);
     }
 
     @Override
@@ -31,5 +31,7 @@ public class CategoryHolder extends Holder<Category> {
         holderInterface.onCategoryLongClicked(category);
     }
 
-
+    public TextView getTitleView() {
+        return title;
+    }
 }

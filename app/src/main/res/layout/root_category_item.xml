@@ -23,7 +23,7 @@
             android:layout_centerVertical="true"/>
 
         <TextView
-            android:id="@+id/root_category_item"
+            android:id="@+id/root_category_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

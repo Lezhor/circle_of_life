@@ -17,4 +17,7 @@ public interface RVHolderInterface {
     void onTodoClicked(Todo todo);
 
     void onTodoLongClicked(Todo todo);
+
+    void onTodoCheckboxChecked(Todo todo);
+    void onTodoCheckboxUnchecked(Todo todo);
 }

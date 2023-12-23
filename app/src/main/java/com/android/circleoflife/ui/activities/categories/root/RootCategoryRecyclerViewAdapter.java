@@ -177,7 +177,7 @@ public class RootCategoryRecyclerViewAdapter extends RecyclerView.Adapter<RootCa
 
         public CategoryHolder(@NonNull View itemView, CategoryHolderInterface holderInterface, Function<Integer, Category> categoryFromPositionGetter) {
             super(itemView);
-            title = itemView.findViewById(R.id.root_category_item);
+            title = itemView.findViewById(R.id.root_category_title);
             itemView.setOnClickListener(view -> onClick(holderInterface::onCategoryClicked, categoryFromPositionGetter));
             itemView.setOnLongClickListener(view -> {
                 onClick(holderInterface::onLongCategoryClicked, categoryFromPositionGetter);

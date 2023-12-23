@@ -10,6 +10,7 @@ import android.widget.Filterable;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.circleoflife.R;
 import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.Cycle;
 import com.android.circleoflife.database.models.Todo;
@@ -161,15 +162,15 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType) {
             case RVItemWrapper.TYPE_CATEGORY -> {
-                View view = inflater.inflate(null, parent, false); // TODO: 22.12.2023 layout
+                View view = inflater.inflate(R.layout.root_category_item, parent, false);
                 return new CategoryHolder(view, holderInterface, pos -> ((Category) getFilteredItemAtIndex(pos).getObject()));
             }
             case RVItemWrapper.TYPE_CYCLE -> {
-                View view = inflater.inflate(null, parent, false); // TODO: 22.12.2023 layout
+                View view = inflater.inflate(R.layout.category_rv_cycle_item, parent, false);
                 return new CycleHolder(view, holderInterface, pos -> ((Cycle) getFilteredItemAtIndex(pos).getObject()));
             }
             case RVItemWrapper.TYPE_TODO -> {
-                View view = inflater.inflate(null, parent, false); // TODO: 22.12.2023 layout
+                View view = inflater.inflate(R.layout.category_rv_todo_item, parent, false);
                 return new TodoHolder(view, holderInterface, pos -> ((Todo) getFilteredItemAtIndex(pos).getObject()));
             }
             default -> {
@@ -197,7 +198,6 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         return filter;
     }
 
-    // TODO: 21.12.2023 Do filtering
     private final Filter filter = new EntityFilter<>(RVItemWrapper::getName, this::getFullList) {
         @Override
         protected void publishResults(List<RVItemWrapper<?>> resultList) {
