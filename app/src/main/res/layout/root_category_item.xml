@@ -20,7 +20,6 @@
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_folder"
             android:layout_alignParentStart="true"
-            app:tint="@color/black"
             android:layout_centerVertical="true"/>
 
         <TextView
