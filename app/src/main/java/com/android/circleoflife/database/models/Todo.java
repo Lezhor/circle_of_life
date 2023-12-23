@@ -68,6 +68,15 @@ public class Todo {
     @ColumnInfo(name = "due_date", defaultValue = "NULL")
     private LocalDateTime dueDate;
 
+    /**
+     * Constructor for cloning todó
+     * @param that to be cloned
+     */
+    @Ignore
+    public Todo(Todo that) {
+        this(that.id, that.name, that.userID, that.categoryID, that.productive, that.done, that.dueDate);
+    }
+
     @Ignore
     public Todo(@NonNull UUID id, @NonNull String name, @NonNull UUID userID, @Nullable UUID categoryID, int productive) {
         this(id, name, userID, categoryID, productive, false, null);

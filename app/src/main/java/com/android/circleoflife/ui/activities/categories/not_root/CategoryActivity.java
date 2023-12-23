@@ -137,11 +137,15 @@ public class CategoryActivity extends AppCompatActivity implements RVHolderInter
 
     @Override
     public void onTodoCheckboxChecked(Todo todo) {
-
+        todo = new Todo(todo);
+        todo.setDone(true);
+        categoryViewModel.update(todo);
     }
 
     @Override
     public void onTodoCheckboxUnchecked(Todo todo) {
-
+        todo = new Todo(todo);
+        todo.setDone(false);
+        categoryViewModel.update(todo);
     }
 }
