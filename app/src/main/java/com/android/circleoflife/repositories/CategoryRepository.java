@@ -44,8 +44,33 @@ public class CategoryRepository extends BaseRepository {
         return db.getChildCategories(category);
     }
 
+    public void insertCycle(Cycle cycle) {
+        doInBackground(() -> db.insertCycles(cycle));
+    }
+
+    public void updateCycle(Cycle cycle) {
+        doInBackground(() -> db.updateCycle(cycle));
+    }
+
+    public void deleteCycle(Cycle cycle) {
+        doInBackground(() -> db.deleteCycle(cycle));
+    }
+
+
     public LiveData<List<Cycle>> getCycles(Category category) {
         return db.getCycles(category);
+    }
+
+    public void insertTodo(Todo todo) {
+        doInBackground(() -> db.insertTodos(todo));
+    }
+
+    public void updateTodo(Todo todo) {
+        doInBackground(() -> db.updateTodo(todo));
+    }
+
+    public void deleteTodo(Todo todo) {
+        doInBackground(() -> db.deleteTodo(todo));
     }
 
     public LiveData<List<Todo>> getTodos(Category category) {
