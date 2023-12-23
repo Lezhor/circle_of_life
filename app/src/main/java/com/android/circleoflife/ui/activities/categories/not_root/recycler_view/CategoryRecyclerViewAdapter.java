@@ -69,11 +69,29 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     public void setCycles(List<Cycle> cycleList) {
-        // TODO: 22.12.2023 set cycles
+        boolean filtering = this.fullList.size() > filteredList.size();
+        synchronized (this.fullList) {
+            Log.d(TAG, "setCycles: " + cycleList.stream().map(Cycle::getName).reduce("Categories: ", (a, b) -> a + b + "; "));
+            this.fullList.removeIf(w -> w.getItemType() == RVItemWrapper.TYPE_CATEGORY);
+            this.fullList.addAll(cycleList.stream().map(RVItemWrapper<Cycle>::new).collect(Collectors.toSet()));
+            Collections.sort(this.fullList);
+        }
+        if (!filtering) {
+            setFilteredList(this.fullList);
+        }
     }
 
     public void setTodos(List<Todo> todoList) {
-        // TODO: 22.12.2023 set todos
+        boolean filtering = this.fullList.size() > filteredList.size();
+        synchronized (this.fullList) {
+            Log.d(TAG, "setTodos: " + todoList.stream().map(Todo::getName).reduce("Categories: ", (a, b) -> a + b + "; "));
+            this.fullList.removeIf(w -> w.getItemType() == RVItemWrapper.TYPE_CATEGORY);
+            this.fullList.addAll(todoList.stream().map(RVItemWrapper<Todo>::new).collect(Collectors.toSet()));
+            Collections.sort(this.fullList);
+        }
+        if (!filtering) {
+            setFilteredList(this.fullList);
+        }
     }
 
     private void setFilteredList(List<RVItemWrapper<?>> filteredList) {

@@ -21,11 +21,13 @@ import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.Cycle;
 import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.database.models.User;
+import com.android.circleoflife.database.models.additional.CycleFrequency;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.CategoryRecyclerViewAdapter;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.RVHolderInterface;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class CategoryActivity extends AppCompatActivity implements RVHolderInterface {
@@ -89,10 +91,18 @@ public class CategoryActivity extends AppCompatActivity implements RVHolderInter
                         return (T) new CategoryViewModel(user, root);
                     }
                 }).get(CategoryViewModel.class);
+
                 categoryViewModel.getCurrentCategories().observe(this, list -> {
-                    invisText.setVisibility(list.size() == 0 ? View.VISIBLE : View.INVISIBLE);
-                    invisText.setEnabled(list.size() == 0);
                     adapter.setCategories(list);
+                    setInvisText(adapter.getItemCount() == 0);
+                });
+                categoryViewModel.getCurrentCycles().observe(this, list -> {
+                    adapter.setCycles(list);
+                    setInvisText(adapter.getItemCount() == 0);
+                });
+                categoryViewModel.getCurrentTodos().observe(this, list -> {
+                    adapter.setTodos(list);
+                    setInvisText(adapter.getItemCount() == 0);
                 });
             }
 
@@ -100,9 +110,35 @@ public class CategoryActivity extends AppCompatActivity implements RVHolderInter
 
     }
 
+    private void setInvisText(boolean visible) {
+        invisText.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        invisText.setEnabled(visible);
+    }
+
     private void onFabClicked(View view) {
         // TODO: 21.12.2023 Create Category/Cycle/Todo
-        categoryViewModel.insert(new Category(UUID.randomUUID(), "Temp", categoryViewModel.getUser().getId(), categoryViewModel.getRoot().getId()));
+        //categoryViewModel.insert(new Category(UUID.randomUUID(), "Temp", categoryViewModel.getUser().getId(), categoryViewModel.getRoot().getId()));
+        /*
+        categoryViewModel.insert(
+                new Todo(UUID.randomUUID(),
+                        "MyTodo",
+                        categoryViewModel.getUser().getId(),
+                        categoryViewModel.getRoot().getId(),
+                        0,
+                        false,
+                        LocalDateTime.of(2023, 12, 25, 0, 0)));
+
+         */
+        categoryViewModel.insert(
+                new Cycle(
+                        UUID.randomUUID(),
+                        "Mathe",
+                        categoryViewModel.getUser().getId(),
+                        categoryViewModel.getRoot().getId(),
+                        1,
+                        CycleFrequency.fromBinaryString("10000011")
+                )
+        );
     }
 
     @Override
