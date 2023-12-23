@@ -19,6 +19,7 @@ import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.holder.TodoHolder;
 import com.android.circleoflife.ui.other.EntityFilter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -181,7 +182,30 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        // TODO: 22.12.2023 Init Viewholder based on position
+        RVItemWrapper<?> item = getFilteredItemAtIndex(position);
+        switch (item.getItemType()) {
+            case RVItemWrapper.TYPE_CATEGORY -> {
+                CategoryHolder categoryHolder = (CategoryHolder) holder;
+                Category category = (Category) item.getObject();
+                categoryHolder.getTitleView().setText(category.getName());
+            }
+            case RVItemWrapper.TYPE_CYCLE -> {
+                CycleHolder cycleHolder = (CycleHolder) holder;
+                Cycle cycle = (Cycle) item.getObject();
+                cycleHolder.getTitleView().setText(cycle.getName());
+                cycleHolder.getFrequencyView().setText(cycle.getFrequency().toString());
+            }
+            case RVItemWrapper.TYPE_TODO -> {
+                TodoHolder todoHolder = (TodoHolder) holder;
+                Todo todo = (Todo) item.getObject();
+                todoHolder.getTitleView().setText(todo.getName());
+                todoHolder.setCheckbox(todo.isDone());
+                LocalDateTime dueDate = todo.getDueDate();
+                todoHolder.getDueDateView().setText(dueDate == null ? "" : dueDate.toString());
+            }
+            default -> {
+            }
+        }
     }
 
     @Override

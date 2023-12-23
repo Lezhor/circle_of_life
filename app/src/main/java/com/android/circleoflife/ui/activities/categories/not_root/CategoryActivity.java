@@ -134,4 +134,14 @@ public class CategoryActivity extends AppCompatActivity implements RVHolderInter
     public void onTodoLongClicked(Todo todo) {
 
     }
+
+    @Override
+    public void onTodoCheckboxChecked(Todo todo) {
+
+    }
+
+    @Override
+    public void onTodoCheckboxUnchecked(Todo todo) {
+
+    }
 }

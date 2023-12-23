@@ -38,11 +38,11 @@ public class TodoHolder extends Holder<Todo> {
         holderInterface.onTodoLongClicked(todo);
     }
 
-    public TextView getTitle() {
+    public TextView getTitleView() {
         return title;
     }
 
-    public TextView getDueDate() {
+    public TextView getDueDateView() {
         return dueDate;
     }
 
