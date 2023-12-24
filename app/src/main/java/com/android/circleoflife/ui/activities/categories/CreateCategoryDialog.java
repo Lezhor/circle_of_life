@@ -34,7 +34,7 @@ public class CreateCategoryDialog extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.category_create_dialog, null);
+        View view = inflater.inflate(R.layout.edit_name_dialog, null);
 
         builder.setView(view)
                 .setTitle(R.string.category_dialog_title)
@@ -47,7 +47,7 @@ public class CreateCategoryDialog extends AppCompatDialogFragment {
 
 
 
-        nameInput = view.findViewById(R.id.category_create_dialog_name);
+        nameInput = view.findViewById(R.id.edit_name_dialog_input);
         nameInput.getEditText().requestFocus();
 
         Dialog result = builder.create();

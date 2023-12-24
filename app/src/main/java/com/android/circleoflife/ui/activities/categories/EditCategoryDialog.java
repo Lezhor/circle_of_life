@@ -25,7 +25,6 @@ import java.util.function.Consumer;
 public class EditCategoryDialog extends AppCompatDialogFragment {
 
     private TextInputLayout nameInput;
-    private TextInputLayout parentInput;
     private final Consumer<Category> submit;
     private final Category category;
 
@@ -41,7 +40,7 @@ public class EditCategoryDialog extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.category_edit_dialog, null);
+        View view = inflater.inflate(R.layout.edit_name_dialog, null);
 
         builder.setView(view)
                 .setTitle(R.string.category_dialog_edit_title)
@@ -54,17 +53,12 @@ public class EditCategoryDialog extends AppCompatDialogFragment {
 
 
 
-        nameInput = view.findViewById(R.id.category_edit_dialog_name);
+        nameInput = view.findViewById(R.id.edit_name_dialog_input);
         nameInput.setHint(R.string.category_dialog_edit_name_hint);
         EditText editText = nameInput.getEditText();
         editText.setText(category.getName());
         editText.setSelectAllOnFocus(true);
         editText.requestFocus();
-
-        parentInput = view.findViewById(R.id.category_edit_dialog_parent);
-        if (category.getParentID() != null) {
-            // parentInput.getEditText().setText("Not Null"); // TODO: 20.12.2023 set to old parent
-        }
 
         Dialog result = builder.create();
         result.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -78,10 +72,6 @@ public class EditCategoryDialog extends AppCompatDialogFragment {
         if (dialog != null) {
             Button positiveButton = (Button) dialog.getButton(Dialog.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(v -> {
-                String parentString = parentInput.getEditText().getText().toString().trim();
-                if (parentString.isEmpty() || parentString.equalsIgnoreCase("null")) {
-                    parentString = null;
-                }
                 if (TextInputLayoutValidator.validate(nameInput, StringValidator::validateString, "Category")) {
                     String nameString = nameInput.getEditText().getText().toString().trim();
                     category.setName(nameString);
