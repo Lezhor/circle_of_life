@@ -71,8 +71,8 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     public void setCycles(List<Cycle> cycleList) {
         boolean filtering = this.fullList.size() > filteredList.size();
         synchronized (this.fullList) {
-            Log.d(TAG, "setCycles: " + cycleList.stream().map(Cycle::getName).reduce("Categories: ", (a, b) -> a + b + "; "));
-            this.fullList.removeIf(w -> w.getItemType() == RVItemWrapper.TYPE_CATEGORY);
+            Log.d(TAG, "setCycles: " + cycleList.stream().map(Cycle::getName).reduce("Cycles: ", (a, b) -> a + b + "; "));
+            this.fullList.removeIf(w -> w.getItemType() == RVItemWrapper.TYPE_CYCLE);
             this.fullList.addAll(cycleList.stream().map(RVItemWrapper<Cycle>::new).collect(Collectors.toSet()));
             Collections.sort(this.fullList);
         }
@@ -84,8 +84,8 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     public void setTodos(List<Todo> todoList) {
         boolean filtering = this.fullList.size() > filteredList.size();
         synchronized (this.fullList) {
-            Log.d(TAG, "setTodos: " + todoList.stream().map(Todo::getName).reduce("Categories: ", (a, b) -> a + b + "; "));
-            this.fullList.removeIf(w -> w.getItemType() == RVItemWrapper.TYPE_CATEGORY);
+            Log.d(TAG, "setTodos: " + todoList.stream().map(Todo::getName).reduce("Todos: ", (a, b) -> a + b + "; "));
+            this.fullList.removeIf(w -> w.getItemType() == RVItemWrapper.TYPE_TODO);
             this.fullList.addAll(todoList.stream().map(RVItemWrapper<Todo>::new).collect(Collectors.toSet()));
             Collections.sort(this.fullList);
         }
@@ -95,65 +95,67 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     private void setFilteredList(List<RVItemWrapper<?>> filteredList) {
-        if (this.filteredList.size() == 0) {
-            this.filteredList.addAll(filteredList);
-            notifyItemRangeInserted(0, filteredList.size());
-            return;
-        }
+        synchronized (this.filteredList) {
+            if (this.filteredList.size() == 0) {
+                this.filteredList.addAll(filteredList);
+                notifyItemRangeInserted(0, filteredList.size());
+                return;
+            }
 
-        List<RVItemWrapper<?>> added = filteredList.stream().filter(c -> !this.filteredList.contains(c)).collect(Collectors.toList());
-        List<RVItemWrapper<?>> removed = this.filteredList.stream().filter(c -> !filteredList.contains(c)).collect(Collectors.toList());
+            List<RVItemWrapper<?>> added = filteredList.stream().filter(c -> !this.filteredList.contains(c)).collect(Collectors.toList());
+            List<RVItemWrapper<?>> removed = this.filteredList.stream().filter(c -> !filteredList.contains(c)).collect(Collectors.toList());
 
-        if (added.size() == 0 && removed.size() == 0) {
-            // maybe something changed
-            Log.d(TAG, "setFilteredLists: no remove, no add, iterating....");
-            Log.d(TAG, this.filteredList.stream().map(RVItemWrapper::getName).reduce("old list: ", (a, b) -> a + b + "; "));
-            Log.d(TAG, filteredList.stream().map(RVItemWrapper::getName).reduce("new list: ", (a, b) -> a + b + "; "));
-            for (int i = 0; i < filteredList.size(); i++) {
-                if (this.filteredList.contains(filteredList.get(i))) {
-                    int index = this.filteredList.indexOf(filteredList.get(i));
-                    if (!this.filteredList.get(index).equalsAllParams(filteredList.get(i))) {
-                        if (i == index) {
-                            this.filteredList.remove(index);
-                            this.filteredList.add(index, filteredList.get(i));
-                            notifyItemChanged(index);
-                        } else {
-                            this.filteredList.remove(index);
-                            notifyItemRemoved(index);
-                            int newIndex = getAddIndex(this.filteredList, filteredList.get(i));
-                            this.filteredList.add(newIndex, filteredList.get(i));
-                            notifyItemInserted(newIndex);
+            if (added.size() == 0 && removed.size() == 0) {
+                // maybe something changed
+                Log.d(TAG, "setFilteredLists: no remove, no add, iterating....");
+                Log.d(TAG, this.filteredList.stream().map(RVItemWrapper::getName).reduce("old list: ", (a, b) -> a + b + "; "));
+                Log.d(TAG, filteredList.stream().map(RVItemWrapper::getName).reduce("new list: ", (a, b) -> a + b + "; "));
+                for (int i = 0; i < filteredList.size(); i++) {
+                    if (this.filteredList.contains(filteredList.get(i))) {
+                        int index = this.filteredList.indexOf(filteredList.get(i));
+                        if (!this.filteredList.get(index).equalsAllParams(filteredList.get(i))) {
+                            if (i == index) {
+                                this.filteredList.remove(index);
+                                this.filteredList.add(index, filteredList.get(i));
+                                notifyItemChanged(index);
+                            } else {
+                                this.filteredList.remove(index);
+                                notifyItemRemoved(index);
+                                int newIndex = getAddIndex(this.filteredList, filteredList.get(i));
+                                this.filteredList.add(newIndex, filteredList.get(i));
+                                notifyItemInserted(newIndex);
+                            }
                         }
                     }
                 }
             }
-        }
-        Map<RVItemWrapper<?>, Integer> addMap = added.stream()
-                .collect(Collectors.toMap(Function.identity(), c -> getAddIndex(this.filteredList, c)));
-        for (Map.Entry<RVItemWrapper<?>, Integer> entry : addMap.entrySet().stream()
-                .peek(e -> e.setValue(-e.getValue()))
-                .sorted(Map.Entry.comparingByValue())
-                .peek(e -> e.setValue(-e.getValue()))
-                .collect(Collectors.toList())) {
-            synchronized (this.filteredList) {
-                Log.d(TAG, "setFilteredList: Add at index: " + entry.getValue());
-                this.filteredList.add(entry.getValue(), entry.getKey());
+            Map<RVItemWrapper<?>, Integer> addMap = added.stream()
+                    .collect(Collectors.toMap(Function.identity(), c -> getAddIndex(this.filteredList, c)));
+            for (Map.Entry<RVItemWrapper<?>, Integer> entry : addMap.entrySet().stream()
+                    .peek(e -> e.setValue(-e.getValue()))
+                    .sorted(Map.Entry.comparingByValue())
+                    .peek(e -> e.setValue(-e.getValue()))
+                    .collect(Collectors.toList())) {
+                synchronized (this.filteredList) {
+                    Log.d(TAG, "setFilteredList: Add at index: " + entry.getValue());
+                    this.filteredList.add(entry.getValue(), entry.getKey());
+                }
+                notifyItemInserted(entry.getValue());
             }
-            notifyItemInserted(entry.getValue());
-        }
 
-        Map<RVItemWrapper<?>, Integer> removeMap = removed.stream()
-                .collect(Collectors.toMap(Function.identity(), c -> getRemoveIndex(this.filteredList, c)));
-        for (Map.Entry<RVItemWrapper<?>, Integer> entry : removeMap.entrySet().stream()
-                .peek(e -> e.setValue(-e.getValue()))
-                .sorted(Map.Entry.comparingByValue())
-                .peek(e -> e.setValue(-e.getValue()))
-                .collect(Collectors.toList())) {
-            synchronized (this.filteredList) {
-                Log.d(TAG, "setFilteredList: Remove from index: " + entry.getValue());
-                this.filteredList.remove(entry.getKey());
+            Map<RVItemWrapper<?>, Integer> removeMap = removed.stream()
+                    .collect(Collectors.toMap(Function.identity(), c -> getRemoveIndex(this.filteredList, c)));
+            for (Map.Entry<RVItemWrapper<?>, Integer> entry : removeMap.entrySet().stream()
+                    .peek(e -> e.setValue(-e.getValue()))
+                    .sorted(Map.Entry.comparingByValue())
+                    .peek(e -> e.setValue(-e.getValue()))
+                    .collect(Collectors.toList())) {
+                synchronized (this.filteredList) {
+                    Log.d(TAG, "setFilteredList: Remove from index: " + entry.getValue());
+                    this.filteredList.remove(entry.getKey());
+                }
+                notifyItemRemoved(entry.getValue());
             }
-            notifyItemRemoved(entry.getValue());
         }
     }
 
