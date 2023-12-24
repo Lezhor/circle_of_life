@@ -15,23 +15,30 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.android.circleoflife.R;
-import com.android.circleoflife.database.models.Category;
+import com.android.circleoflife.database.models.additional.Nameable;
 import com.android.circleoflife.database.validators.StringValidator;
 import com.android.circleoflife.ui.other.TextInputLayoutValidator;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.function.Consumer;
 
-public class EditCategoryDialog extends AppCompatDialogFragment {
+public class EditNameDialog<E extends Nameable> extends AppCompatDialogFragment {
 
     private TextInputLayout nameInput;
-    private final Consumer<Category> submit;
-    private final Category category;
+    private final Consumer<E> submit;
+    private final E entity;
+    private final int entityTypeNameResId;
 
-    public EditCategoryDialog(Consumer<Category> submit, @NonNull Category category) {
+    /**
+     * Constructor for editNameDialog<br>
+     * @param submit submit method. e.g. update in database
+     * @param entity this entity should be a copy of the original, because it gets changed here!
+     */
+    public EditNameDialog(Consumer<E> submit, @NonNull E entity, int entityTypeNameResId) {
         super();
         this.submit = submit;
-        this.category = new Category(category);
+        this.entity = entity;
+        this.entityTypeNameResId = entityTypeNameResId;
     }
 
     @NonNull
@@ -43,7 +50,7 @@ public class EditCategoryDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.edit_name_dialog, null);
 
         builder.setView(view)
-                .setTitle(R.string.category_dialog_edit_title)
+                .setTitle(getString(R.string.dialog_edit_title, getString(entityTypeNameResId)))
                 .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -54,12 +61,12 @@ public class EditCategoryDialog extends AppCompatDialogFragment {
 
 
         nameInput = view.findViewById(R.id.edit_name_dialog_input);
-        nameInput.setHint(R.string.category_dialog_edit_name_hint);
+        nameInput.setHint(R.string.dialog_edit_name_hint);
         EditText editText = nameInput.getEditText();
-        editText.setText(category.getName());
+        editText.setText(entity.getName());
         editText.setSelectAllOnFocus(true);
         editText.requestFocus();
-
+        
         Dialog result = builder.create();
         result.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         return result;
@@ -72,10 +79,10 @@ public class EditCategoryDialog extends AppCompatDialogFragment {
         if (dialog != null) {
             Button positiveButton = (Button) dialog.getButton(Dialog.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(v -> {
-                if (TextInputLayoutValidator.validate(nameInput, StringValidator::validateString, "Category")) {
+                if (TextInputLayoutValidator.validate(nameInput, StringValidator::validateString, getString(entityTypeNameResId))) {
                     String nameString = nameInput.getEditText().getText().toString().trim();
-                    category.setName(nameString);
-                    submit.accept(category);
+                    entity.setName(nameString);
+                    submit.accept(entity);
                     dialog.dismiss();
                 }
             });
