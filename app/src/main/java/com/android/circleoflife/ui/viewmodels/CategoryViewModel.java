@@ -14,6 +14,7 @@ import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.repositories.CategoryRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * ViewModel for Category-Activities.<br>
@@ -24,7 +25,8 @@ public class CategoryViewModel extends ViewModel {
 
     private final CategoryRepository repository;
 
-    private final LiveData<List<Category>> allCategories;
+    private final LiveData<List<Category>> allCategoriesLiveData;
+    private List<Category> allCategories;
 
     private final LiveData<List<Category>> currentCategories;
     private final LiveData<List<Cycle>> currentCycles;
@@ -34,6 +36,9 @@ public class CategoryViewModel extends ViewModel {
 
     private final Category root;
 
+    private Runnable revertLastAction;
+
+
     public CategoryViewModel(User user) {
         this(user, null);
     }
@@ -42,7 +47,13 @@ public class CategoryViewModel extends ViewModel {
         this.user = user;
         this.root = root;
         repository = new CategoryRepository(App.getDatabaseController());
-        allCategories = user == null ? null : repository.getAllCategories(user);
+        allCategoriesLiveData = user == null ? null : repository.getAllCategories(user);
+        if (allCategoriesLiveData != null) {
+            allCategoriesLiveData.observeForever(list -> {
+                allCategories.clear();
+                allCategories.addAll(list);
+            });
+        }
         if (user == null) {
             Log.w(TAG, "CategoryViewModel: Instantiated CategoryViewModel with null User!!!");
             currentCategories = null;
@@ -67,28 +78,47 @@ public class CategoryViewModel extends ViewModel {
         return root;
     }
 
+    /**
+     * Reverts the last action
+     */
+    public void revertLastAction() {
+        if (revertLastAction != null) {
+            revertLastAction.run();
+            revertLastAction = null;
+        }
+    }
+
     public void insert(Category category) {
         repository.insertCategory(category);
+        revertLastAction = () -> delete(category);
     }
 
     public void update(Category category) {
+        Category backup = allCategories.stream().filter(category::equals).findFirst().orElse(null);
         repository.updateCategory(category);
+        if (backup != null) {
+            revertLastAction = () -> update(backup);
+        }
     }
 
     public void delete(Category category) {
         repository.deleteCategory(category);
+        revertLastAction = () -> insert(category);
     }
 
     public void insert(Cycle cycle) {
         repository.insertCycle(cycle);
+        revertLastAction = () -> delete(cycle);
     }
 
     public void update(Cycle cycle) {
+        // TODO: 24.12.2023 add revert last action
         repository.updateCycle(cycle);
     }
 
     public void delete(Cycle cycle) {
         repository.deleteCycle(cycle);
+        revertLastAction = () -> insert(cycle);
     }
 
     public void insert(Todo todo) {
@@ -96,15 +126,17 @@ public class CategoryViewModel extends ViewModel {
     }
 
     public void update(Todo todo) {
+        // TODO: 24.12.2023 add revert last action
         repository.updateTodo(todo);
     }
 
     public void delete(Todo todo) {
         repository.deleteTodo(todo);
+        revertLastAction = () -> insert(todo);
     }
 
-    public LiveData<List<Category>> getAllCategories() {
-        return allCategories;
+    public LiveData<List<Category>> getAllCategoriesLiveData() {
+        return allCategoriesLiveData;
     }
 
     public LiveData<List<Category>> getCurrentCategories() {
