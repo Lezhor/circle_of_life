@@ -58,6 +58,7 @@ public class CategoryActivity extends AppCompatActivity implements RVHolderInter
             if (actionBar == null) {
                 Log.i(TAG, "onCreate: Actionbar is null!");
             } else {
+                // TODO: 25.12.2023 Add optionsMenu
                 actionBar.setTitle(root.getName());
             }
 
