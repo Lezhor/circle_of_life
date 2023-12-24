@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +25,7 @@ import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.ui.activities.SuperActivity;
 import com.android.circleoflife.ui.activities.categories.CreateCategoryDialog;
 import com.android.circleoflife.ui.activities.categories.EditCategoryDialog;
+import com.android.circleoflife.ui.activities.categories.ItemTouchDragAndDropCallback;
 import com.android.circleoflife.ui.activities.categories.not_root.CategoryActivity;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -59,6 +61,10 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
         adapter = new RootCategoryRecyclerViewAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchDragAndDropCallback(recyclerView));
+        touchHelper.attachToRecyclerView(recyclerView);
+
 
         TextView invisText = findViewById(R.id.category_invis_text);
 
@@ -162,7 +168,10 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
     @Override
     public void onLongCategoryClicked(Category category) {
         Log.d(TAG, "Category long clicked: " + category);
+/*
         EditCategoryDialog dialog = new EditCategoryDialog(categoryViewModel::update, category);
         dialog.show(getSupportFragmentManager(), "edit root category dialog");
+ */
+
     }
 }
