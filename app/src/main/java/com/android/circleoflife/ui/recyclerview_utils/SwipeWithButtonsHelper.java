@@ -222,6 +222,14 @@ public abstract class SwipeWithButtonsHelper extends ItemTouchHelper.SimpleCallb
             );
             right = left;
         }
+        drawRemainingBackground(c, itemView, right, buffer.get(buffer.size() - 1));
+    }
+
+    private void drawRemainingBackground(Canvas c, View itemView, float right, UnderlayButton lastButton) {
+        Paint p = new Paint();
+        p.setColor(lastButton.backgroundColor);
+        RectF remainingBackground = new RectF(right - 64, itemView.getTop(), right, itemView.getBottom());
+        c.drawRect(remainingBackground, p);
     }
 
     public void attachSwipe() {
