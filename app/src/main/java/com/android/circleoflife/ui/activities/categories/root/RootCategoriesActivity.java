@@ -27,9 +27,11 @@ import com.android.circleoflife.ui.activities.categories.CreateCategoryDialog;
 import com.android.circleoflife.ui.activities.categories.EditCategoryDialog;
 import com.android.circleoflife.ui.activities.categories.ItemTouchDragAndDropCallback;
 import com.android.circleoflife.ui.activities.categories.not_root.CategoryActivity;
+import com.android.circleoflife.ui.recyclerview_utils.SwipeWithButtonsHelper;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
 import java.util.UUID;
 
 public class RootCategoriesActivity extends SuperActivity implements RootCategoryRecyclerViewAdapter.CategoryHolder.CategoryHolderInterface {
@@ -62,8 +64,31 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        /*
         ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchDragAndDropCallback(recyclerView));
         touchHelper.attachToRecyclerView(recyclerView);
+         */
+        SwipeWithButtonsHelper swipeHelper = new SwipeWithButtonsHelper(this, recyclerView) {
+            @Override
+            public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+                underlayButtons.add(new SwipeWithButtonsHelper.UnderlayButton(
+                        R.drawable.ic_folder, // TODO: 24.12.2023 Trash icon
+                        R.color.md_theme_errorContainer,
+                        R.color.md_theme_onErrorContainer,
+                        pos -> {
+                            Toast.makeText(RootCategoriesActivity.this, "Delete pressed on pos: " + pos, Toast.LENGTH_SHORT).show();
+                        }
+                ));
+                underlayButtons.add(new SwipeWithButtonsHelper.UnderlayButton(
+                        "EDIT", // TODO: 24.12.2023 Edit icon
+                        R.color.md_theme_secondaryContainer,
+                        R.color.md_theme_onSecondaryContainer,
+                        pos -> {
+                            Toast.makeText(RootCategoriesActivity.this, "Edit pressed on pos: " + pos, Toast.LENGTH_SHORT).show();
+                        }
+                ));
+            }
+        };
 
 
         TextView invisText = findViewById(R.id.category_invis_text);
