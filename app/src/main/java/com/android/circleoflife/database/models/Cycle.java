@@ -10,6 +10,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.android.circleoflife.database.models.additional.CycleFrequency;
+import com.android.circleoflife.database.models.additional.Nameable;
 import com.android.circleoflife.database.validators.IntegerValidator;
 
 import java.util.Objects;
@@ -40,7 +41,7 @@ import java.util.UUID;
                 )
         }
 )
-public class Cycle {
+public class Cycle implements Nameable {
 
     @NonNull
     @PrimaryKey
@@ -97,10 +98,12 @@ public class Cycle {
     // GETTER AND SETTER
 
     @NonNull
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(@NonNull String name) {
         this.name = name;
     }

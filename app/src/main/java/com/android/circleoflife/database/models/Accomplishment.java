@@ -9,6 +9,8 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.android.circleoflife.database.models.additional.Nameable;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -46,7 +48,7 @@ import java.util.UUID;
                 )
         }
 )
-public class Accomplishment {
+public class Accomplishment implements Nameable {
     
     @NonNull
     @PrimaryKey
@@ -152,10 +154,12 @@ public class Accomplishment {
     }
 
     @Nullable
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(@Nullable String name) {
         this.name = name;
     }

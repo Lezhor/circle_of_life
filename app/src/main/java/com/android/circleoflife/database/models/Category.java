@@ -12,10 +12,10 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.android.circleoflife.database.models.additional.Nameable;
 import com.android.circleoflife.database.models.type_converters.UUIDConverter;
 import com.android.circleoflife.database.validators.StringValidator;
 
-import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -45,7 +45,7 @@ import java.util.UUID;
         },
         inheritSuperIndices = true
 )
-public class Category implements Parcelable {
+public class Category implements Nameable, Parcelable {
 
     @NonNull
     @PrimaryKey
@@ -89,10 +89,12 @@ public class Category implements Parcelable {
     }
 
     @NonNull
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(@NonNull String name) {
         this.name = name;
     }

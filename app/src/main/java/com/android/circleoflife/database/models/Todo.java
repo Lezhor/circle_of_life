@@ -9,6 +9,8 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.android.circleoflife.database.models.additional.Nameable;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -39,7 +41,7 @@ import java.util.UUID;
                 )
         }
 )
-public class Todo {
+public class Todo implements Nameable {
 
     @NonNull
     @PrimaryKey
@@ -98,10 +100,12 @@ public class Todo {
     }
 
     @NonNull
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(@NonNull String name) {
         this.name = name;
     }
