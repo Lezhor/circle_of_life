@@ -65,10 +65,11 @@ public class TodoHolder extends Holder<Todo> {
     private void onCheckBoxClicked() {
         int pos = getAdapterPosition();
         if (pos != RecyclerView.NO_POSITION) {
+            currentlyChecked = !currentlyChecked;
             if (currentlyChecked) {
-                holderInterface.onTodoCheckboxUnchecked(itemFromPositionGetter.apply(pos));
-            } else {
                 holderInterface.onTodoCheckboxChecked(itemFromPositionGetter.apply(pos));
+            } else {
+                holderInterface.onTodoCheckboxUnchecked(itemFromPositionGetter.apply(pos));
             }
         }
     }

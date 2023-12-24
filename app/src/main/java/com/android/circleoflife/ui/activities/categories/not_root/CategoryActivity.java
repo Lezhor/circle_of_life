@@ -21,7 +21,6 @@ import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.Cycle;
 import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.database.models.User;
-import com.android.circleoflife.database.models.additional.CycleFrequency;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.CategoryRecyclerViewAdapter;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.RVHolderInterface;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
@@ -118,17 +117,16 @@ public class CategoryActivity extends AppCompatActivity implements RVHolderInter
     private void onFabClicked(View view) {
         // TODO: 21.12.2023 Create Category/Cycle/Todo
         //categoryViewModel.insert(new Category(UUID.randomUUID(), "Temp", categoryViewModel.getUser().getId(), categoryViewModel.getRoot().getId()));
-        /*
+
         categoryViewModel.insert(
                 new Todo(UUID.randomUUID(),
-                        "MyTodo",
+                        "Test-Todo",
                         categoryViewModel.getUser().getId(),
                         categoryViewModel.getRoot().getId(),
                         0,
                         false,
                         LocalDateTime.of(2023, 12, 25, 0, 0)));
-
-         */
+        /*
         categoryViewModel.insert(
                 new Cycle(
                         UUID.randomUUID(),
@@ -139,36 +137,37 @@ public class CategoryActivity extends AppCompatActivity implements RVHolderInter
                         CycleFrequency.fromBinaryString("10000011")
                 )
         );
+         */
     }
 
     @Override
     public void onCategoryClicked(Category category) {
-
+        Toast.makeText(this, "Category clicked", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onCategoryLongClicked(Category category) {
-
+        Toast.makeText(this, "Category long clicked", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onCycleClicked(Cycle cycle) {
-
+        Toast.makeText(this, "Cycle Clicked", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onCycleLongClicked(Cycle cycle) {
-
+        Toast.makeText(this, "Cycle long clicked", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onTodoClicked(Todo todo) {
-
+        Toast.makeText(this, "Todo clicked", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onTodoLongClicked(Todo todo) {
-
+        Toast.makeText(this, "Todo long clicked", Toast.LENGTH_SHORT).show();
     }
 
     @Override
