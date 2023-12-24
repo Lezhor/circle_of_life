@@ -64,7 +64,7 @@ public abstract class SwipeWithButtonsHelper extends ItemTouchHelper.SimpleCallb
             Rect rect = new Rect();
             swipedItem.getGlobalVisibleRect(rect);
 
-            if (e.getAction() == MotionEvent.ACTION_DOWN || e.getAction() == MotionEvent.ACTION_UP ||e.getAction() == MotionEvent.ACTION_MOVE) {
+            if (e.getAction() == MotionEvent.ACTION_DOWN || e.getAction() == MotionEvent.ACTION_UP || e.getAction() == MotionEvent.ACTION_MOVE) {
                 if (rect.top < point.y && rect.bottom > point.y) {
                     gestureDetector.onTouchEvent(e);
                 } else {
@@ -193,6 +193,14 @@ public abstract class SwipeWithButtonsHelper extends ItemTouchHelper.SimpleCallb
             }
         }
         super.onChildDraw(c, recyclerView, viewHolder, translationX, dY, actionState, isCurrentlyActive);
+    }
+
+    public void recoverCurrentItem() {
+        if (swipedPos >= 0) {
+            recoverQueue.add(swipedPos);
+            swipedPos = -1;
+            recoverSwipedItem();
+        }
     }
 
     private synchronized void recoverSwipedItem() {

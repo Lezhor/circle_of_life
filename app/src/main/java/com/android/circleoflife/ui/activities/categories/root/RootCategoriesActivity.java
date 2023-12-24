@@ -23,10 +23,12 @@ import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.ui.activities.SuperActivity;
 import com.android.circleoflife.ui.activities.categories.CreateCategoryDialog;
+import com.android.circleoflife.ui.activities.categories.EditNameDialog;
 import com.android.circleoflife.ui.activities.categories.not_root.CategoryActivity;
 import com.android.circleoflife.ui.recyclerview_utils.SwipeWithButtonsHelper;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 import java.util.UUID;
@@ -39,6 +41,7 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
 
     RecyclerView recyclerView;
     RootCategoryRecyclerViewAdapter adapter;
+    SwipeWithButtonsHelper swipeHelper;
     FloatingActionButton fab;
 
     @Override
@@ -61,20 +64,30 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        new SwipeWithButtonsHelper(this, recyclerView) {
+        swipeHelper = new SwipeWithButtonsHelper(this, recyclerView) {
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
                 underlayButtons.add(new SwipeWithButtonsHelper.UnderlayButton(
                         R.drawable.ic_delete,
                         R.color.md_theme_errorContainer,
                         R.color.md_theme_error,
-                        pos -> Toast.makeText(RootCategoriesActivity.this, "Delete pressed on pos: " + pos, Toast.LENGTH_SHORT).show()
+                        pos -> {
+                            categoryViewModel.delete(adapter.getFilteredCategoryAtIndex(pos));
+                            showSnackbarWithUndoLastAction();
+                        }
                 ));
                 underlayButtons.add(new SwipeWithButtonsHelper.UnderlayButton(
                         R.drawable.ic_edit,
                         R.color.md_theme_secondaryContainer,
                         R.color.md_theme_secondary,
-                        pos -> Toast.makeText(RootCategoriesActivity.this, "Edit pressed on pos: " + pos, Toast.LENGTH_SHORT).show()
+                        pos -> {
+                            Category category = adapter.getFilteredCategoryAtIndex(pos);
+                            EditNameDialog<Category> editNameDialog = new EditNameDialog<>(c -> {
+                                revertSwipe();
+                                categoryViewModel.update(c);
+                            }, category, R.string.category);
+                            editNameDialog.show(getSupportFragmentManager(), "dialog_edit_category");
+                        }
                 ));
             }
         };
@@ -154,6 +167,16 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
         return true;
     }
 
+    private void revertSwipe() {
+        swipeHelper.recoverCurrentItem();
+    }
+
+    private void showSnackbarWithUndoLastAction() {
+        Snackbar.make(recyclerView, categoryViewModel.getLastActionText(), Snackbar.LENGTH_LONG)
+                .setAction(R.string.snackbar_text_undo, v -> categoryViewModel.revertLastAction())
+                .show();
+    }
+
     private void addCategory() {
         if (categoryViewModel.getUser() != null) {
             openCreateCategoryDialog();
@@ -182,10 +205,6 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
     @Override
     public void onLongCategoryClicked(Category category) {
         Log.d(TAG, "Category long clicked: " + category);
-/*
-        EditCategoryDialog dialog = new EditCategoryDialog(categoryViewModel::update, category);
-        dialog.show(getSupportFragmentManager(), "edit root category dialog");
- */
 
     }
 }

@@ -17,6 +17,7 @@ import com.android.circleoflife.ui.other.EntityFilter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -60,6 +61,12 @@ public class RootCategoryRecyclerViewAdapter extends RecyclerView.Adapter<RootCa
         if (!filtering) {
             setFilteredCategories(categoryList);
         }
+    }
+
+    public void notifySomethingChanged() {
+        List<Category> newFilteredList = new ArrayList<>(this.filteredList);
+        newFilteredList.sort(Comparator.comparing(c -> c.getName().toLowerCase()));
+        setFilteredCategories(newFilteredList);
     }
 
     private void setFilteredCategories(List<Category> filteredList) {

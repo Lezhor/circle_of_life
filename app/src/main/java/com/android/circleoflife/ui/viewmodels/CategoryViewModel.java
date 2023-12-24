@@ -3,16 +3,21 @@ package com.android.circleoflife.ui.viewmodels;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.Cycle;
 import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.database.models.User;
+import com.android.circleoflife.database.models.additional.Nameable;
 import com.android.circleoflife.repositories.CategoryRepository;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +31,7 @@ public class CategoryViewModel extends ViewModel {
     private final CategoryRepository repository;
 
     private final LiveData<List<Category>> allCategoriesLiveData;
-    private List<Category> allCategories;
+    private final List<Category> allCategories = new LinkedList<>();
 
     private final LiveData<List<Category>> currentCategories;
     private final LiveData<List<Cycle>> currentCycles;
@@ -37,6 +42,7 @@ public class CategoryViewModel extends ViewModel {
     private final Category root;
 
     private Runnable revertLastAction;
+    private String lastActionText = "";
 
 
     public CategoryViewModel(User user) {
@@ -85,12 +91,14 @@ public class CategoryViewModel extends ViewModel {
         if (revertLastAction != null) {
             revertLastAction.run();
             revertLastAction = null;
+            lastActionText = "";
         }
     }
 
     public void insert(Category category) {
         repository.insertCategory(category);
         revertLastAction = () -> delete(category);
+        setLastActionText(R.string.snackbar_text_inserted, category);
     }
 
     public void update(Category category) {
@@ -98,17 +106,20 @@ public class CategoryViewModel extends ViewModel {
         repository.updateCategory(category);
         if (backup != null) {
             revertLastAction = () -> update(backup);
+            setLastActionText(R.string.snackbar_text_updated, backup);
         }
     }
 
     public void delete(Category category) {
         repository.deleteCategory(category);
         revertLastAction = () -> insert(category);
+        setLastActionText(R.string.snackbar_text_deleted, category);
     }
 
     public void insert(Cycle cycle) {
         repository.insertCycle(cycle);
         revertLastAction = () -> delete(cycle);
+        setLastActionText(R.string.snackbar_text_inserted, cycle);
     }
 
     public void update(Cycle cycle) {
@@ -119,10 +130,12 @@ public class CategoryViewModel extends ViewModel {
     public void delete(Cycle cycle) {
         repository.deleteCycle(cycle);
         revertLastAction = () -> insert(cycle);
+        setLastActionText(R.string.snackbar_text_deleted, cycle);
     }
 
     public void insert(Todo todo) {
         repository.insertTodo(todo);
+        setLastActionText(R.string.snackbar_text_inserted, todo);
     }
 
     public void update(Todo todo) {
@@ -133,6 +146,11 @@ public class CategoryViewModel extends ViewModel {
     public void delete(Todo todo) {
         repository.deleteTodo(todo);
         revertLastAction = () -> insert(todo);
+        setLastActionText(R.string.snackbar_text_deleted, todo);
+    }
+
+    public void setLastActionText(@StringRes int actionStringResId, Nameable item) {
+        this.lastActionText = App.getApplicationContext().getString(actionStringResId) + ": " + item.getName();
     }
 
     public LiveData<List<Category>> getAllCategoriesLiveData() {
@@ -149,5 +167,9 @@ public class CategoryViewModel extends ViewModel {
 
     public LiveData<List<Todo>> getCurrentTodos() {
         return currentTodos;
+    }
+
+    public String getLastActionText() {
+        return lastActionText;
     }
 }
