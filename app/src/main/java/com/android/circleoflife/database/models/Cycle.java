@@ -9,6 +9,7 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.android.circleoflife.database.models.additional.Copyable;
 import com.android.circleoflife.database.models.additional.CycleFrequency;
 import com.android.circleoflife.database.models.additional.Nameable;
 import com.android.circleoflife.database.validators.IntegerValidator;
@@ -41,7 +42,7 @@ import java.util.UUID;
                 )
         }
 )
-public class Cycle implements Nameable {
+public class Cycle implements Nameable, Copyable<Cycle> {
 
     @NonNull
     @PrimaryKey
@@ -71,6 +72,15 @@ public class Cycle implements Nameable {
 
     @ColumnInfo(name = "archived")
     private boolean archived;
+
+    /**
+     * Constructor for cloning
+     * @param that to be cloned
+     */
+    @Ignore
+    public Cycle(Cycle that) {
+        this(that.id, that.name, that.userID, that.categoryID, that.productiveness, that.frequency, that.archived);
+    }
 
     /**
      * Constructor for Cycle. Sets value archived to false.
@@ -182,5 +192,11 @@ public class Cycle implements Nameable {
 
     public void setId(@NonNull UUID id) {
         this.id = id;
+    }
+
+    @NonNull
+    @Override
+    public Cycle copy() {
+        return new Cycle(this);
     }
 }

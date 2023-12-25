@@ -9,6 +9,7 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.android.circleoflife.database.models.additional.Copyable;
 import com.android.circleoflife.database.models.additional.Nameable;
 
 import java.time.LocalDate;
@@ -48,7 +49,7 @@ import java.util.UUID;
                 )
         }
 )
-public class Accomplishment implements Nameable {
+public class Accomplishment implements Nameable, Copyable<Accomplishment> {
     
     @NonNull
     @PrimaryKey
@@ -88,6 +89,15 @@ public class Accomplishment implements Nameable {
 
     @ColumnInfo(name = "duration")
     private long durationMillis;
+
+    /**
+     * Constructor for cloning
+     * @param that to be cloned
+     */
+    @Ignore
+    public Accomplishment(Accomplishment that) {
+        this(that.id, that.userID, that.cycleID, that.todoID, that.name, that.description, that.productiveness, that.date, that.timestamp, that.durationMillis);
+    }
 
     public Accomplishment(@NonNull UUID id, @NonNull UUID userID, @Nullable UUID cycleID, @Nullable UUID todoID, @Nullable String name, @Nullable String description, int productiveness, @NonNull LocalDate date, @Nullable LocalTime timestamp, long durationMillis) {
         this.id = id;
@@ -213,5 +223,11 @@ public class Accomplishment implements Nameable {
             return this.userID.equals(that.userID) && this.id.equals(that.id);
         }
         return false;
+    }
+
+    @NonNull
+    @Override
+    public Accomplishment copy() {
+        return new Accomplishment(this);
     }
 }
