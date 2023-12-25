@@ -12,6 +12,7 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.android.circleoflife.database.models.additional.Copyable;
 import com.android.circleoflife.database.models.additional.Nameable;
 import com.android.circleoflife.database.models.type_converters.UUIDConverter;
 import com.android.circleoflife.database.validators.StringValidator;
@@ -45,7 +46,7 @@ import java.util.UUID;
         },
         inheritSuperIndices = true
 )
-public class Category implements Nameable, Parcelable {
+public class Category implements Nameable, Copyable<Category>, Parcelable {
 
     @NonNull
     @PrimaryKey
@@ -66,12 +67,14 @@ public class Category implements Nameable, Parcelable {
 
     /**
      * Constructor for cloning
+     *
      * @param that other category
      */
     @Ignore
     public Category(@NonNull Category that) {
         this(that.id, that.name, that.userID, that.parentID);
     }
+
     public Category(@NonNull UUID id, String name, @NonNull UUID userID, @Nullable UUID parentID) {
         this.id = id;
         this.name = StringValidator.validateStringMinLength(name, 1);
@@ -129,6 +132,7 @@ public class Category implements Nameable, Parcelable {
 
     /**
      * Compares every attribute and returns true if all matching
+     *
      * @param that category
      * @return true if all attributes matching
      */
@@ -149,7 +153,6 @@ public class Category implements Nameable, Parcelable {
     public String toString() {
         return "Category[" + getName() + "]";
     }
-
 
 
     // Parcelable:
@@ -174,10 +177,10 @@ public class Category implements Nameable, Parcelable {
     public static final Parcelable.Creator<Category> CREATOR = new Creator<>() {
         @Override
         public Category createFromParcel(Parcel in) {
-            UUID id  = UUIDConverter.uuidFromString(in.readString());
+            UUID id = UUIDConverter.uuidFromString(in.readString());
             String name = in.readString();
-            UUID userID  = UUIDConverter.uuidFromString(in.readString());
-            UUID parentID  = UUIDConverter.uuidFromString(in.readString());
+            UUID userID = UUIDConverter.uuidFromString(in.readString());
+            UUID parentID = UUIDConverter.uuidFromString(in.readString());
             if (id != null && name != null && userID != null) {
                 return new Category(id, name, userID, parentID);
             }
@@ -190,4 +193,9 @@ public class Category implements Nameable, Parcelable {
         }
     };
 
+    @NonNull
+    @Override
+    public Category copy() {
+        return new Category(this);
+    }
 }

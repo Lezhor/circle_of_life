@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.android.circleoflife.R;
+import com.android.circleoflife.database.models.additional.Copyable;
 import com.android.circleoflife.database.models.additional.Nameable;
 import com.android.circleoflife.database.validators.StringValidator;
 import com.android.circleoflife.ui.other.TextInputLayoutValidator;
@@ -22,7 +23,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.function.Consumer;
 
-public class EditNameDialog<E extends Nameable> extends AppCompatDialogFragment {
+public class EditNameDialog<E extends Nameable & Copyable<E>> extends AppCompatDialogFragment {
 
     private TextInputLayout nameInput;
     private final Consumer<E> submit;
@@ -37,7 +38,7 @@ public class EditNameDialog<E extends Nameable> extends AppCompatDialogFragment 
     public EditNameDialog(Consumer<E> submit, @NonNull E entity, int entityTypeNameResId) {
         super();
         this.submit = submit;
-        this.entity = entity;
+        this.entity = entity.copy();
         this.entityTypeNameResId = entityTypeNameResId;
     }
 

@@ -81,7 +81,7 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
                         R.color.md_theme_secondaryContainer,
                         R.color.md_theme_secondary,
                         pos -> {
-                            Category category = new Category(adapter.getFilteredCategoryAtIndex(pos));
+                            Category category = adapter.getFilteredCategoryAtIndex(pos);
                             EditNameDialog<Category> editNameDialog = new EditNameDialog<>(categoryViewModel::update, category, R.string.category);
                             editNameDialog.show(getSupportFragmentManager(), "dialog_edit_category");
                         }
@@ -162,10 +162,6 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
             }
         }
         return true;
-    }
-
-    private void revertSwipe() {
-        swipeHelper.recoverCurrentItem();
     }
 
     private void showSnackbarWithUndoLastAction() {
