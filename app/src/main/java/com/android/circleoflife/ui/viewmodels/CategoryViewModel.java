@@ -16,39 +16,89 @@ import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.database.models.additional.Nameable;
 import com.android.circleoflife.repositories.CategoryRepository;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * ViewModel for Category-Activities.<br>
- * Stores all needed livedata and offers getters for those.
+ * Stores all needed livedata and offers getters for those.<br>
+ * Has a root-attribute. If its null the categories here will be root-categories,
+ * else they will be child categories of root
  */
 public class CategoryViewModel extends ViewModel {
     private static final String TAG = "CategoryViewModel";
 
     private final CategoryRepository repository;
 
+    /**
+     * Stores every single category of this user as livedata
+     */
     private final LiveData<List<Category>> allCategoriesLiveData;
+
+    /**
+     * Stores all categories. Gets update via observing the {@link #allCategoriesLiveData livedata}.
+     */
     private final List<Category> allCategories = new LinkedList<>();
 
+    /**
+     * Stores categories that are currently relevant. if root is null stores root-categories.
+     * If root is set, stores all child categories of that root.
+     */
     private final LiveData<List<Category>> currentCategories;
+
+    /**
+     * null if root is null, if root is set, stores its cycles
+     */
     private final LiveData<List<Cycle>> currentCycles;
+
+    /**
+     * null if root is null, if root is set, stores its todos
+     */
     private final LiveData<List<Todo>> currentTodos;
 
+    /**
+     * User which is currently logged on
+     */
     private final User user;
 
+    /**
+     * Root Category
+     */
     private final Category root;
 
+    /**
+     * Stores revertlast action as a runnable.<br>
+     * e.g. last action was delete Category temp, than this instance will store:
+     * <pre>{@code
+     *      () -> insert(temp);
+     * }</pre>
+     * Setting the last action happens in the action-methods themselves. and resetting in {@link #revertLastAction()} where the runnable also is run
+     * @see #insert(Category)
+     * @see #update(Category)
+     * @see #delete(Category)
+     */
     private Runnable revertLastAction;
+
+    /**
+     * Stores the text of the last action. Used for displaying it with undo button in a snackbar.<br>
+     * The text is retrieved from the strings-resources.
+     */
     private String lastActionText = "";
 
 
+    /**
+     * Constructor. Sets root to null
+     * @param user user
+     */
     public CategoryViewModel(User user) {
         this(user, null);
     }
 
+    /**
+     * Constructor for CategoryViewModel
+     * @param user user
+     * @param root root
+     */
     public CategoryViewModel(User user, @Nullable Category root) {
         this.user = user;
         this.root = root;
