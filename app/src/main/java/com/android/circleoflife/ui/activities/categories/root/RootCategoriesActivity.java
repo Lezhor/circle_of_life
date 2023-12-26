@@ -73,7 +73,7 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
                         R.color.md_theme_error,
                         pos -> {
                             categoryViewModel.delete(adapter.getFilteredCategoryAtIndex(pos));
-                            showSnackbarWithUndoLastAction();
+                            showSnackbarWithUndoLastAction(recyclerView, categoryViewModel);
                         }
                 ));
                 underlayButtons.add(new SwipeWithButtonsHelper.UnderlayButton(
@@ -119,29 +119,9 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
         setUpMenu(menu, R.menu.categories_root_toolbar_menu);
 
         MenuItem searchItem = menu.findItem(R.id.search_button);
-        setUpSearchView((SearchView) searchItem.getActionView());
+        setUpSearchView((SearchView) searchItem.getActionView(), getString(R.string.search_category_hint), adapter);
 
         return true;
-    }
-
-    private void setUpSearchView(SearchView searchView) {
-        if (searchView != null) {
-            searchView.setQueryHint(getString(R.string.search_category_hint));
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    // TODO: 19.12.2023 Remove (Temp)
-                    Toast.makeText(RootCategoriesActivity.this, "Query Submitted: " + query, Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    adapter.getFilter().filter(newText);
-                    return true;
-                }
-            });
-        }
     }
 
     @Override
@@ -162,12 +142,6 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
             }
         }
         return true;
-    }
-
-    private void showSnackbarWithUndoLastAction() {
-        Snackbar.make(recyclerView, categoryViewModel.getLastActionText(), Snackbar.LENGTH_LONG)
-                .setAction(R.string.snackbar_text_undo, v -> categoryViewModel.revertLastAction())
-                .show();
     }
 
     private void addCategory() {

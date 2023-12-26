@@ -3,6 +3,7 @@ package com.android.circleoflife.ui.activities.categories.not_root;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,13 +24,19 @@ import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.Cycle;
 import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.database.models.User;
+import com.android.circleoflife.database.models.additional.Nameable;
 import com.android.circleoflife.ui.activities.SuperActivity;
+import com.android.circleoflife.ui.activities.categories.EditNameDialog;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.CategoryRecyclerViewAdapter;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.RVHolderInterface;
+import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.RVItemWrapper;
+import com.android.circleoflife.ui.activities.categories.root.RootCategoriesActivity;
+import com.android.circleoflife.ui.recyclerview_utils.SwipeWithButtonsHelper;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public class CategoryActivity extends SuperActivity implements RVHolderInterface {
@@ -40,6 +48,7 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
     private CategoryRecyclerViewAdapter adapter;
     private FloatingActionButton fab;
     private TextView invisText;
+    private SwipeWithButtonsHelper swipeHelper;
 
 
     @Override
@@ -84,6 +93,60 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
+            swipeHelper = new SwipeWithButtonsHelper(this, recyclerView) {
+                @Override
+                public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+                    underlayButtons.add(new SwipeWithButtonsHelper.UnderlayButton(
+                            R.drawable.ic_delete,
+                            R.color.md_theme_errorContainer,
+                            R.color.md_theme_error,
+                            pos -> {
+                                RVItemWrapper<?> o = adapter.getFilteredItemAtIndex(pos);
+                                switch (o.getItemType()) {
+                                    case RVItemWrapper.TYPE_CATEGORY -> categoryViewModel.delete((Category) o.getObject());
+                                    case RVItemWrapper.TYPE_CYCLE -> categoryViewModel.delete((Cycle) o.getObject());
+                                    case RVItemWrapper.TYPE_TODO -> categoryViewModel.delete((Todo) o.getObject());
+                                    default -> {
+                                        Log.w(TAG, "button pressed on ItemWrapper: " + o);
+                                        return;
+                                    }
+                                }
+                                showSnackbarWithUndoLastAction(recyclerView, categoryViewModel);
+                            }
+                    ));
+                    underlayButtons.add(new SwipeWithButtonsHelper.UnderlayButton(
+                            R.drawable.ic_edit,
+                            R.color.md_theme_secondaryContainer,
+                            R.color.md_theme_secondary,
+                            pos -> {
+                                try {
+                                    RVItemWrapper<?> o = adapter.getFilteredItemAtIndex(pos);
+                                    EditNameDialog<?> editNameDialog = switch (o.getItemType()) {
+                                        case RVItemWrapper.TYPE_CATEGORY -> new EditNameDialog<>(categoryViewModel::update, (Category) o.getObject(), R.string.category);
+                                        case RVItemWrapper.TYPE_CYCLE -> new EditNameDialog<>(categoryViewModel::update, (Cycle) o.getObject(), R.string.cycle);
+                                        case RVItemWrapper.TYPE_TODO -> new EditNameDialog<>(categoryViewModel::update, (Todo) o.getObject(), R.string.todo);
+                                        default ->
+                                                throw new IllegalStateException("Unknown Item Type: " + o.getItemType());
+                                    };
+                                    editNameDialog.show(getSupportFragmentManager(), "dialog_edit_name");
+                                } catch (ClassCastException | IllegalStateException e) {
+                                    Log.d(TAG, "Swipe edit button click failed on pos " + pos, e);
+                                }
+                            }
+                    ));
+                    underlayButtons.add(new SwipeWithButtonsHelper.UnderlayButton(
+                            R.drawable.ic_back,
+                            R.color.md_theme_primaryContainer,
+                            R.color.md_theme_primary,
+                            pos -> {
+                                Nameable nameable = (Nameable) adapter.getFilteredItemAtIndex(pos).getObject();
+                                Toast.makeText(CategoryActivity.this, "Clicked on: " + nameable.getName(), Toast.LENGTH_SHORT).show();
+                            }
+                    ));
+                }
+            };
+
+
             final User user = App.getAuthentication().getUser();
             if (user != null) {
                 categoryViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
@@ -120,6 +183,8 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         setUpMenu(menu, R.menu.categories_root_toolbar_menu);
+        MenuItem searchItem = menu.findItem(R.id.search_button);
+        setUpSearchView((SearchView) searchItem.getActionView(), getString(R.string.search_in_hint) + " " + categoryViewModel.getRoot().getName(), adapter);
         return super.onCreateOptionsMenu(menu);
     }
 

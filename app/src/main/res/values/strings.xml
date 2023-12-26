@@ -7,6 +7,7 @@
 
     <string name="search">Search</string>
     <string name="search_category_hint">Search Category…</string>
+    <string name="search_in_hint">Search in</string>
     <string name="add_category">Add Category</string>
     <string name="categories">Categories</string>
     <string name="no_categories_created_yet">No Categories\ncreated yet</string>
@@ -28,6 +29,8 @@
     <string name="snackbar_text_deleted">Deleted</string>
     <string name="snackbar_text_updated">Updated</string>
     <string name="snackbar_text_undo">Undo</string>
+    <string name="cycle">Cycle</string>
+    <string name="todo">Todo</string>
 
     <string-array name="days_of_week">
         <item>Monday</item>

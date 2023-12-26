@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
+import android.view.View;
 import android.widget.Filterable;
 import android.widget.Toast;
 
@@ -21,6 +22,8 @@ import androidx.appcompat.widget.SearchView;
 
 import com.android.circleoflife.R;
 import com.android.circleoflife.ui.activities.categories.root.RootCategoriesActivity;
+import com.android.circleoflife.ui.viewmodels.RevertibleActions;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -72,7 +75,7 @@ public class SuperActivity extends AppCompatActivity {
      * @param searchQueryHint searchQueryHint
      * @param filterable filterable#
      */
-    protected void setUpSearchView(SearchView searchView, @StringRes int searchQueryHint, Filterable filterable) {
+    protected void setUpSearchView(SearchView searchView, String searchQueryHint, Filterable filterable) {
         setUpSearchView(searchView, searchQueryHint, filterable, str -> {});
     }
 
@@ -84,9 +87,9 @@ public class SuperActivity extends AppCompatActivity {
      * @param filterable filterable
      * @param onQueryTextSubmit what happens when query text gets submitted.
      */
-    protected void setUpSearchView(SearchView searchView, @StringRes int searchQueryHint, Filterable filterable, Consumer<String> onQueryTextSubmit) {
+    protected void setUpSearchView(SearchView searchView, String searchQueryHint, Filterable filterable, Consumer<String> onQueryTextSubmit) {
         if (searchView != null) {
-            searchView.setQueryHint(getString(searchQueryHint));
+            searchView.setQueryHint(searchQueryHint);
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
@@ -101,6 +104,17 @@ public class SuperActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    /**
+     * Shows snackbar in specified view where the last action taken in given revertible can be reverted.
+     * @param view view where the snackbar is placed
+     * @param revertible the last action can be reverted here
+     */
+    protected void showSnackbarWithUndoLastAction(View view, RevertibleActions revertible) {
+        Snackbar.make(view, revertible.getLastActionText(), Snackbar.LENGTH_LONG)
+                .setAction(R.string.snackbar_text_undo, v -> revertible.revertLastAction())
+                .show();
     }
 
 

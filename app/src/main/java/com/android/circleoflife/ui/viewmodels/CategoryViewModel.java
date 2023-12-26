@@ -25,7 +25,7 @@ import java.util.List;
  * Has a root-attribute. If its null the categories here will be root-categories,
  * else they will be child categories of root
  */
-public class CategoryViewModel extends ViewModel {
+public class CategoryViewModel extends ViewModel implements RevertibleActions {
     private static final String TAG = "CategoryViewModel";
 
     private final CategoryRepository repository;
@@ -137,6 +137,7 @@ public class CategoryViewModel extends ViewModel {
     /**
      * Reverts the last action
      */
+    @Override
     public void revertLastAction() {
         if (revertLastAction != null) {
             revertLastAction.run();
@@ -219,6 +220,7 @@ public class CategoryViewModel extends ViewModel {
         return currentTodos;
     }
 
+    @Override
     public String getLastActionText() {
         return lastActionText;
     }
