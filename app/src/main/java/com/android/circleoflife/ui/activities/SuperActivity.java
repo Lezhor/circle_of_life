@@ -65,6 +65,13 @@ public class SuperActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets up search view to filter filterable when query text changes.<br>
+     * e.g. RecyclerViewAdapter can implement filterable so this can be used
+     * @param searchView searchview
+     * @param searchQueryHint searchQueryHint
+     * @param filterable filterable#
+     */
     protected void setUpSearchView(SearchView searchView, @StringRes int searchQueryHint, Filterable filterable) {
         setUpSearchView(searchView, searchQueryHint, filterable, str -> {});
     }
