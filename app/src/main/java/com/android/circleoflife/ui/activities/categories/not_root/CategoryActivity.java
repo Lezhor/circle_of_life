@@ -30,6 +30,7 @@ import com.android.circleoflife.ui.activities.categories.EditNameDialog;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.CategoryRecyclerViewAdapter;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.RVHolderInterface;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.RVItemWrapper;
+import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.holder.CategoryHolder;
 import com.android.circleoflife.ui.activities.categories.root.RootCategoriesActivity;
 import com.android.circleoflife.ui.recyclerview_utils.SwipeWithButtonsHelper;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
@@ -134,15 +135,21 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
                                 }
                             }
                     ));
-                    underlayButtons.add(new SwipeWithButtonsHelper.UnderlayButton(
-                            R.drawable.ic_back,
-                            R.color.md_theme_primaryContainer,
-                            R.color.md_theme_primary,
-                            pos -> {
-                                Nameable nameable = (Nameable) adapter.getFilteredItemAtIndex(pos).getObject();
-                                Toast.makeText(CategoryActivity.this, "Clicked on: " + nameable.getName(), Toast.LENGTH_SHORT).show();
-                            }
-                    ));
+                    if (categoryViewModel.getRoot().getParentID() != null || viewHolder instanceof CategoryHolder) {
+                        underlayButtons.add(new SwipeWithButtonsHelper.UnderlayButton(
+                                R.drawable.ic_back,
+                                R.color.md_theme_primaryContainer,
+                                R.color.md_theme_primary,
+                                pos -> {
+                                    RVItemWrapper<?> itemWrapper = adapter.getFilteredItemAtIndex(pos);
+                                    switch (itemWrapper.getItemType()) {
+                                        case RVItemWrapper.TYPE_CATEGORY -> moveToParent((Category) itemWrapper.getObject());
+                                        case RVItemWrapper.TYPE_CYCLE -> moveToParent((Cycle) itemWrapper.getObject());
+                                        case RVItemWrapper.TYPE_TODO -> moveToParent((Todo) itemWrapper.getObject());
+                                    }
+                                }
+                        ));
+                    }
                 }
             };
 
@@ -186,6 +193,51 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
         MenuItem searchItem = menu.findItem(R.id.search_button);
         setUpSearchView((SearchView) searchItem.getActionView(), getString(R.string.search_in_hint) + " " + categoryViewModel.getRoot().getName(), adapter);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.add_category) {
+            categoryViewModel.insert(new Category(UUID.randomUUID(), "Hello There", categoryViewModel.getUser().getId(), categoryViewModel.getRoot().getId()));
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
+    /**
+     * Moves given category to the parent of the root (one folder up)
+     * @param category category to be moved
+     */
+    private void moveToParent(Category category) {
+        Category copy = category.copy();
+        copy.setParentID(categoryViewModel.getRoot().getParentID());
+        categoryViewModel.update(copy);
+    }
+
+    /**
+     * Moves given cycle to the parent of the root, unless its null
+     * @param cycle cycle to be moved
+     */
+    private void moveToParent(Cycle cycle) {
+        if (categoryViewModel.getRoot().getParentID() != null) {
+            Cycle copy = cycle.copy();
+            copy.setCategoryID(categoryViewModel.getRoot().getParentID());
+            categoryViewModel.update(copy);
+        }
+    }
+
+    /**
+     * Moves given todó to the parent of the root, unless its null
+     * @param todoItem todó to be moved
+     */
+    private void moveToParent(Todo todoItem) {
+        if (categoryViewModel.getRoot().getParentID() != null) {
+            Todo copy = todoItem.copy();
+            copy.setCategoryID(categoryViewModel.getRoot().getParentID());
+            categoryViewModel.update(copy);
+        }
     }
 
     private void onFabClicked(View view) {
