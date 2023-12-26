@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.Cycle;
 import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.database.models.User;
+import com.android.circleoflife.ui.activities.SuperActivity;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.CategoryRecyclerViewAdapter;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.RVHolderInterface;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
@@ -29,7 +31,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class CategoryActivity extends AppCompatActivity implements RVHolderInterface {
+public class CategoryActivity extends SuperActivity implements RVHolderInterface {
     private static final String TAG = "CategoryActivity";
 
     private CategoryViewModel categoryViewModel;
@@ -113,6 +115,12 @@ public class CategoryActivity extends AppCompatActivity implements RVHolderInter
     private void setInvisText(boolean visible) {
         invisText.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
         invisText.setEnabled(visible);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        setUpMenu(menu, R.menu.categories_root_toolbar_menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void onFabClicked(View view) {
