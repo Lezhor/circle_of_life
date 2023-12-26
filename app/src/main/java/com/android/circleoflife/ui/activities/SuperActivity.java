@@ -10,10 +10,17 @@ import android.os.Looper;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
+import android.widget.Filterable;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+
+import com.android.circleoflife.R;
+import com.android.circleoflife.ui.activities.categories.root.RootCategoriesActivity;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -56,8 +63,39 @@ public class SuperActivity extends AppCompatActivity {
                 drawable.setColorFilter(primaryColor, PorterDuff.Mode.SRC_ATOP);
             }
         }
-
     }
+
+    protected void setUpSearchView(SearchView searchView, @StringRes int searchQueryHint, Filterable filterable) {
+        setUpSearchView(searchView, searchQueryHint, filterable, str -> {});
+    }
+
+    /**
+     * Sets up search view to filter filterable when query text changes.<br>
+     * e.g. RecyclerViewAdapter can implement filterable so this can be used
+     * @param searchView searchview
+     * @param searchQueryHint searchQueryHint
+     * @param filterable filterable
+     * @param onQueryTextSubmit what happens when query text gets submitted.
+     */
+    protected void setUpSearchView(SearchView searchView, @StringRes int searchQueryHint, Filterable filterable, Consumer<String> onQueryTextSubmit) {
+        if (searchView != null) {
+            searchView.setQueryHint(getString(searchQueryHint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    onQueryTextSubmit.accept(query);
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    filterable.getFilter().filter(newText);
+                    return true;
+                }
+            });
+        }
+    }
+
 
     /**
      * Executes given task on a background-thread
