@@ -46,6 +46,8 @@ public class RoomDBTester {
             list.add(new Category(UUID.randomUUID(), "Android BackEnd", users[0].getId(), list.get(4).getId()));
             list.add(new Category(UUID.randomUUID(), "Android FrondEnd", users[0].getId(), list.get(4).getId()));
             list.add(new Category(UUID.randomUUID(), "Duolingo", users[0].getId(), list.get(5).getId()));
+            list.add(new Category(UUID.randomUUID(), "Android Project", users[0].getId(), list.get(4).getId()));
+            list.add(new Category(UUID.randomUUID(), "Duolingo", users[0].getId(), list.get(list.size() - 2).getId()));
 
             list.add(new Category(UUID.randomUUID(), "Education", users[1].getId(), null));
             list.add(new Category(UUID.randomUUID(), "Uni", users[1].getId(), list.get(list.size() - 1).getId()));
@@ -70,7 +72,7 @@ public class RoomDBTester {
         return Arrays.stream(getCategories())
                 .filter(c -> c.getUserID().equals(user.getId()))
                 .filter(c -> c.getName().equals(name))
-                .reduce(null, (a, b) -> b);
+                .findFirst().orElse(null);
     }
 
     private Cycle[] cycles;
@@ -78,6 +80,7 @@ public class RoomDBTester {
     public final Cycle[] getCycles() {
         if (cycles == null) {
             List<Cycle> list = new LinkedList<>();
+            list.add(new Cycle(UUID.randomUUID(), "Cycle in sub-Dulingo", users[0].getId(), getCategories()[13].getId(), 0, CycleFrequency.fromBinaryString("11010100")));
             list.add(new Cycle(UUID.randomUUID(), "Swimming", users[1].getId(), getCategory(users[1], "Sports").getId(), 1, CycleFrequency.fromBinaryString("11010100")));
             list.add(new Cycle(UUID.randomUUID(), "New Lesson", users[0].getId(), getCategory(users[0], "Duolingo").getId(), 1, CycleFrequency.fromBinaryString("10101011")));
             list.add(new Cycle(UUID.randomUUID(), "gain XP", users[0].getId(), getCategory(users[0], "Duolingo").getId(), 0, CycleFrequency.fromBinaryString("11111111")));

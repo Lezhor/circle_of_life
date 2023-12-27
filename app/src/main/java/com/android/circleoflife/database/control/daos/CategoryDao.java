@@ -2,6 +2,7 @@ package com.android.circleoflife.database.control.daos;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Ignore;
 import androidx.room.Query;
@@ -35,38 +36,42 @@ public interface CategoryDao extends BaseDao<Category> {
     }
 
     @Nullable
-    @Query("SELECT c1.* FROM categories AS c1 JOIN categories AS c2 ON c1.userID = c2.userID AND c1.ID = c2.parentID AND c2.userID = :userID AND c2.category_name LIKE :categoryName LIMIT 1")
-    LiveData<Category> getCategoryParent(UUID userID, String categoryName);
+    @Query("SELECT * FROM categories WHERE userID = :userID AND ID = :id")
+    LiveData<Category> getCategory(UUID userID, UUID id);
 
     @Ignore
     default LiveData<Category> getParent(Category category) {
-        return getCategoryParent(category.getUserID(), category.getName());
+        if (category.getParentID() == null) {
+            return new MutableLiveData<>(null);
+        } else {
+            return getCategory(category.getUserID(), category.getParentID());
+        }
     }
 
-    @Query("SELECT c1.* FROM categories AS c1 JOIN categories AS c2 ON c1.userID = c2.userID AND c1.parentID = c2.ID AND c2.userID = :userID AND c2.category_name LIKE :categoryName ORDER BY c1.category_name")
-    LiveData<List<Category>> getChildCategories(UUID userID, String categoryName);
+    @Query("SELECT * FROM categories WHERE userID = :userID AND parentID = :parentID ORDER BY category_name")
+    LiveData<List<Category>> getChildCategories(UUID userID, UUID parentID);
 
     @Ignore
     default LiveData<List<Category>> getChildCategories(Category category) {
-        return getChildCategories(category.getUserID(), category.getName());
+        return getChildCategories(category.getUserID(), category.getId());
     }
 
     // Non-Category Methods
 
-    @Query("SELECT cycles.* FROM (SELECT * FROM categories WHERE userID = :userID AND category_name LIKE :categoryName) AS c JOIN cycles ON c.userID = cycles.userID AND c.ID = cycles.categoryID ORDER BY cycles.cycle_name")
-    LiveData<List<Cycle>> getCycles(UUID userID, String categoryName);
+    @Query("SELECT * FROM cycles WHERE userID = :userID AND categoryID = :categoryID ORDER BY cycles.cycle_name")
+    LiveData<List<Cycle>> getCycles(UUID userID, UUID categoryID);
 
     @Ignore
     default LiveData<List<Cycle>> getCycles(Category category) {
-        return getCycles(category.getUserID(), category.getName());
+        return getCycles(category.getUserID(), category.getId());
     }
 
 
-    @Query("SELECT todos.* FROM (SELECT * FROM categories WHERE userID = :userID AND category_name LIKE :categoryName) AS c JOIN todos ON c.userID = todos.userID AND c.ID = todos.categoryID ORDER BY todos.todo_name")
-    LiveData<List<Todo>> getTodos(UUID userID, String categoryName);
+    @Query("SELECT * FROM todos WHERE userID = :userID AND categoryID = :categoryID ORDER BY todos.todo_name")
+    LiveData<List<Todo>> getTodos(UUID userID, UUID categoryID);
 
     @Ignore
     default LiveData<List<Todo>> getTodos(Category category) {
-        return getTodos(category.getUserID(), category.getName());
+        return getTodos(category.getUserID(), category.getId());
     }
 }
