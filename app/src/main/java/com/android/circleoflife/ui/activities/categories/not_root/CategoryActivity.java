@@ -215,7 +215,8 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
     private void moveToParent(Category category) {
         Category copy = category.copy();
         copy.setParentID(categoryViewModel.getRoot().getParentID());
-        categoryViewModel.update(copy);
+        categoryViewModel.update(copy, R.string.snackbar_text_moved_to_parent);
+        showSnackbarWithUndoLastAction(recyclerView, categoryViewModel);
     }
 
     /**
@@ -226,7 +227,8 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
         if (categoryViewModel.getRoot().getParentID() != null) {
             Cycle copy = cycle.copy();
             copy.setCategoryID(categoryViewModel.getRoot().getParentID());
-            categoryViewModel.update(copy);
+            categoryViewModel.update(copy, R.string.snackbar_text_moved_to_parent);
+            showSnackbarWithUndoLastAction(recyclerView, categoryViewModel);
         }
     }
 
@@ -238,7 +240,8 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
         if (categoryViewModel.getRoot().getParentID() != null) {
             Todo copy = todoItem.copy();
             copy.setCategoryID(categoryViewModel.getRoot().getParentID());
-            categoryViewModel.update(copy);
+            categoryViewModel.update(copy, R.string.snackbar_text_moved_to_parent);
+            showSnackbarWithUndoLastAction(recyclerView, categoryViewModel);
         }
     }
 

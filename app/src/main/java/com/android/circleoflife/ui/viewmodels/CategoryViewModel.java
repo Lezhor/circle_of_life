@@ -16,7 +16,7 @@ import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.database.models.additional.Nameable;
 import com.android.circleoflife.repositories.CategoryRepository;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,25 +36,35 @@ public class CategoryViewModel extends ViewModel implements RevertibleActions {
     private final LiveData<List<Category>> allCategoriesLiveData;
 
     /**
-     * Stores all categories. Gets update via observing the {@link #allCategoriesLiveData livedata}.
-     */
-    private final List<Category> allCategories = new LinkedList<>();
-
-    /**
      * Stores categories that are currently relevant. if root is null stores root-categories.
      * If root is set, stores all child categories of that root.
      */
-    private final LiveData<List<Category>> currentCategories;
+    private final LiveData<List<Category>> currentCategoriesLiveData;
+
+    /**
+     * Saves current categories as list. gets updated with an observer
+     */
+    private final List<Category> currentCategories = new ArrayList<>();
 
     /**
      * null if root is null, if root is set, stores its cycles
      */
-    private final LiveData<List<Cycle>> currentCycles;
+    private final LiveData<List<Cycle>> currentCyclesLiveData;
+
+    /**
+     * Saves current cycles as list. gets updated with an observer
+     */
+    private final List<Cycle> currentCycles = new ArrayList<>();
 
     /**
      * null if root is null, if root is set, stores its todos
      */
-    private final LiveData<List<Todo>> currentTodos;
+    private final LiveData<List<Todo>> currentTodosLiveData;
+
+    /**
+     * Saves current todos as list. gets updated with an observer
+     */
+    private final List<Todo> currentTodos = new ArrayList<>();
 
     /**
      * User which is currently logged on
@@ -104,25 +114,31 @@ public class CategoryViewModel extends ViewModel implements RevertibleActions {
         this.root = root;
         repository = new CategoryRepository(App.getDatabaseController());
         allCategoriesLiveData = user == null ? null : repository.getAllCategories(user);
-        if (allCategoriesLiveData != null) {
-            allCategoriesLiveData.observeForever(list -> {
-                allCategories.clear();
-                allCategories.addAll(list);
-            });
-        }
         if (user == null) {
             Log.w(TAG, "CategoryViewModel: Instantiated CategoryViewModel with null User!!!");
-            currentCategories = null;
-            currentCycles = null;
-            currentTodos = null;
+            currentCategoriesLiveData = null;
+            currentCyclesLiveData = null;
+            currentTodosLiveData = null;
         } else if (root == null) {
-            currentCategories = repository.getRootCategories(user);
-            currentCycles = null;
-            currentTodos = null;
+            currentCategoriesLiveData = repository.getRootCategories(user);
+            currentCyclesLiveData = null;
+            currentTodosLiveData = null;
         } else {
-            currentCategories = repository.getChildren(root);
-            currentCycles = repository.getCycles(root);
-            currentTodos = repository.getTodos(root);
+            currentCategoriesLiveData = repository.getChildren(root);
+            currentCyclesLiveData = repository.getCycles(root);
+            currentTodosLiveData = repository.getTodos(root);
+        }
+        setUpLiveDataObserver(currentCategoriesLiveData, currentCategories);
+        setUpLiveDataObserver(currentCyclesLiveData, currentCycles);
+        setUpLiveDataObserver(currentTodosLiveData, currentTodos);
+    }
+
+    private <T> void setUpLiveDataObserver(LiveData<List<T>> liveData, List<T> list) {
+        if (liveData != null) {
+            liveData.observeForever(l -> {
+                list.clear();
+                list.addAll(l);
+            });
         }
     }
 
@@ -148,76 +164,107 @@ public class CategoryViewModel extends ViewModel implements RevertibleActions {
 
     public void insert(Category category) {
         repository.insertCategory(category);
-        revertLastAction = () -> delete(category);
+        revertLastAction = () -> repository.deleteCategory(category);
         setLastActionText(R.string.snackbar_text_inserted, category);
     }
 
     public void update(Category category) {
-        Category backup = allCategories.stream().filter(category::equals).findFirst().orElse(null);
+        update(category, R.string.snackbar_text_updated);
+    }
+
+    public void update(Category category, @StringRes int actionText) {
+        Category backup = currentCategories.stream().filter(category::equals).findFirst().orElse(null);
         repository.updateCategory(category);
         if (backup != null) {
-            revertLastAction = () -> update(backup);
-            setLastActionText(R.string.snackbar_text_updated, backup);
+            revertLastAction = () -> repository.updateCategory(backup);
+            setLastActionText(actionText, backup);
         }
     }
 
     public void delete(Category category) {
         repository.deleteCategory(category);
-        revertLastAction = () -> insert(category);
+        revertLastAction = () -> repository.insertCategory(category);
         setLastActionText(R.string.snackbar_text_deleted, category);
     }
 
     public void insert(Cycle cycle) {
         repository.insertCycle(cycle);
-        revertLastAction = () -> delete(cycle);
+        revertLastAction = () -> repository.deleteCycle(cycle);
         setLastActionText(R.string.snackbar_text_inserted, cycle);
     }
 
-    public void update(Cycle cycle) {
-        // TODO: 24.12.2023 add revert last action
+    public void update(Cycle cycle){
+        update(cycle, R.string.snackbar_text_updated);
+    }
+
+    public void update(Cycle cycle, @StringRes int actionText) {
+        Cycle backup = currentCycles.stream().filter(cycle::equals).findFirst().orElse(null);
         repository.updateCycle(cycle);
+        if (backup != null) {
+            revertLastAction = () -> repository.updateCycle(backup);
+            setLastActionText(actionText, backup);
+        }
     }
 
     public void delete(Cycle cycle) {
         repository.deleteCycle(cycle);
-        revertLastAction = () -> insert(cycle);
+        revertLastAction = () -> repository.insertCycle(cycle);
         setLastActionText(R.string.snackbar_text_deleted, cycle);
     }
 
     public void insert(Todo todo) {
         repository.insertTodo(todo);
+        revertLastAction = () -> repository.deleteTodo(todo);
         setLastActionText(R.string.snackbar_text_inserted, todo);
     }
 
     public void update(Todo todo) {
-        // TODO: 24.12.2023 add revert last action
+        update(todo, R.string.snackbar_text_updated);
+    }
+
+    public void update(Todo todo, @StringRes int actionText) {
+        Todo backup = currentTodos.stream().filter(todo::equals).findFirst().orElse(null);
         repository.updateTodo(todo);
+        if (backup != null) {
+            revertLastAction = () -> repository.updateTodo(backup);
+            setLastActionText(actionText, backup);
+        }
     }
 
     public void delete(Todo todo) {
         repository.deleteTodo(todo);
-        revertLastAction = () -> insert(todo);
+        revertLastAction = () -> repository.insertTodo(todo);
         setLastActionText(R.string.snackbar_text_deleted, todo);
     }
 
+    /**
+     * Retrieves given String from Resources. If string contains String 'PLACEHOLDER' than 'PLACEHOLDER' is replaced with item.getName() else it just appends item.getName() to the end.
+     * @param actionStringResId description of action
+     * @param item item
+     */
     public void setLastActionText(@StringRes int actionStringResId, Nameable item) {
-        this.lastActionText = App.getApplicationContext().getString(actionStringResId) + ": " + item.getName();
+        String passedString = App.getApplicationContext().getString(actionStringResId);
+        if (passedString.contains("PLACEHOLDER")) {
+            this.lastActionText = passedString.replaceAll("PLACEHOLDER", item.getName());
+        } else {
+            this.lastActionText = passedString + ": " + item.getName();
+        }
     }
 
-    public LiveData<List<Category>> getAllCategoriesLiveData() {
+    public LiveData<List<Category>> getAllCategories() {
         return allCategoriesLiveData;
     }
 
     public LiveData<List<Category>> getCurrentCategories() {
-        return currentCategories;
+        return currentCategoriesLiveData;
     }
 
     public LiveData<List<Cycle>> getCurrentCycles() {
-        return currentCycles;
+        return currentCyclesLiveData;
     }
 
     public LiveData<List<Todo>> getCurrentTodos() {
-        return currentTodos;
+        return currentTodosLiveData;
     }
 
     @Override
