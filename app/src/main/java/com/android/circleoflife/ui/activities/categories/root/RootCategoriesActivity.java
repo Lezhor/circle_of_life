@@ -28,7 +28,6 @@ import com.android.circleoflife.ui.activities.categories.not_root.CategoryActivi
 import com.android.circleoflife.ui.recyclerview_utils.SwipeWithButtonsHelper;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 import java.util.UUID;
@@ -110,7 +109,10 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
 
     private void openCategoryActivity(Category category) {
         Intent intent = new Intent(this, CategoryActivity.class);
-        intent.putExtra("category", category);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("category", category);
+        intent.putExtra("categoryBundle", bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

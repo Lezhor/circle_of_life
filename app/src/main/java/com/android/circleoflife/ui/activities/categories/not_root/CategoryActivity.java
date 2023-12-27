@@ -2,7 +2,6 @@ package com.android.circleoflife.ui.activities.categories.not_root;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,14 +23,12 @@ import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.Cycle;
 import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.database.models.User;
-import com.android.circleoflife.database.models.additional.Nameable;
 import com.android.circleoflife.ui.activities.SuperActivity;
 import com.android.circleoflife.ui.activities.categories.EditNameDialog;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.CategoryRecyclerViewAdapter;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.RVHolderInterface;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.RVItemWrapper;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.holder.CategoryHolder;
-import com.android.circleoflife.ui.activities.categories.root.RootCategoriesActivity;
 import com.android.circleoflife.ui.recyclerview_utils.SwipeWithButtonsHelper;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -58,12 +55,17 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
         setContentView(R.layout.activity_root_categories);
 
         Intent intent = getIntent();
-        Category root = intent.getParcelableExtra("category");
+        Bundle bundle = intent.getBundleExtra("categoryBundle");
+        Category passedCategory = null;
+        if (bundle != null) {
+            passedCategory = bundle.getParcelable("category");
+        }
+        final Category root = passedCategory;
 
         if (root == null) {
             // THIS SHOULD NOT HAPPEN
             Toast.makeText(this, "Error occured loading category!!!", Toast.LENGTH_SHORT).show();
-            //finish();
+            finish();
         } else {
 
             ActionBar actionBar = getSupportActionBar();
@@ -266,9 +268,23 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
          */
     }
 
+    /**
+     * Opens {@link CategoryActivity} with given category as parameter
+     * @param category passed category
+     */
+    private void openCategoryActivity(@NonNull Category category) {
+        Intent intent = new Intent(this, CategoryActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("category", category);
+        intent.putExtra("categoryBundle", bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
     @Override
     public void onCategoryClicked(Category category) {
-        Toast.makeText(this, "Category clicked", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onCategoryClicked: Switching to CategoryActivity with category: " + category.getName());
+        openCategoryActivity(category);
     }
 
     @Override
