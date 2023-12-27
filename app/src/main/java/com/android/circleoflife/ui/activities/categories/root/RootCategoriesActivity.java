@@ -3,12 +3,14 @@ package com.android.circleoflife.ui.activities.categories.root;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
+import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -25,6 +27,7 @@ import com.android.circleoflife.ui.activities.SuperActivity;
 import com.android.circleoflife.ui.activities.categories.CreateCategoryDialog;
 import com.android.circleoflife.ui.activities.categories.EditNameDialog;
 import com.android.circleoflife.ui.activities.categories.not_root.CategoryActivity;
+import com.android.circleoflife.ui.recyclerview_utils.ItemTouchDragAndDropCallback;
 import com.android.circleoflife.ui.recyclerview_utils.SwipeWithButtonsHelper;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -63,6 +66,31 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        new ItemTouchDragAndDropCallback(recyclerView){
+            @Override
+            protected void moveInto(int fromIndex, int intoIndex) {
+                Category from = adapter.getFilteredCategoryAtIndex(fromIndex);
+                Category into = adapter.getFilteredCategoryAtIndex(intoIndex);
+                Category copy = from.copy();
+                copy.setParentID(into.getId());
+                categoryViewModel.update(copy); // TODO: 27.12.2023 ActionText
+                // TODO: 27.12.2023 show Snackbar
+            }
+
+            @Override
+            protected void highlightFolder(View folder) {
+                CardView card = folder.findViewById(R.id.root_category_card);
+                card.setBackgroundColor(getColor(R.color.md_theme_secondaryContainer));
+            }
+
+            @Override
+            protected void revertHighlightFolder(View folder) {
+                CardView card = folder.findViewById(R.id.root_category_card);
+                card.setBackgroundColor(Color.TRANSPARENT);
+            }
+        };
+
+        /*
         swipeHelper = new SwipeWithButtonsHelper(this, recyclerView) {
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
@@ -87,6 +115,7 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
                 ));
             }
         };
+         */
 
 
         TextView invisText = findViewById(R.id.category_invis_text);
