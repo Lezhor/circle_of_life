@@ -74,10 +74,11 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
             protected void moveInto(int fromIndex, int intoIndex) {
                 Category from = adapter.getFilteredCategoryAtIndex(fromIndex);
                 Category into = adapter.getFilteredCategoryAtIndex(intoIndex);
+                Toast.makeText(RootCategoriesActivity.this, "from: " + fromIndex + ", into: " + intoIndex, Toast.LENGTH_SHORT).show();
                 Category copy = from.copy();
                 copy.setParentID(into.getId());
-                categoryViewModel.update(copy); // TODO: 27.12.2023 ActionText
-                // TODO: 27.12.2023 show Snackbar
+                categoryViewModel.update(copy, R.string.snackbar_text_moved_into, into);
+                showSnackbarWithUndoLastAction(recyclerView, categoryViewModel);
             }
 
             @Override

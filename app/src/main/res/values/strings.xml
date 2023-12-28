@@ -30,6 +30,7 @@
     <string name="snackbar_text_updated">Updated</string>
     <string name="snackbar_text_undo">Undo</string>
     <string name="snackbar_text_moved_to_parent">Moved PLACEHOLDER to parent</string>
+    <string name="snackbar_text_moved_into">Moved PLACEHOLDER into PLACEHOLDER</string>
 
     <string name="cycle">Cycle</string>
     <string name="todo">Todo</string>

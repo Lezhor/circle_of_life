@@ -45,7 +45,7 @@ public abstract class ItemTouchDragAndDropCallback extends ItemTouchHelper.Simpl
         } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
             if (folder != null) {
 
-                moveInto(draggedItem.getAdapterPosition(), folderIndex);
+                moveInto(draggedItem.getAdapterPosition(), recyclerView.getChildLayoutPosition(folder));
                 revertHighlightFolder(folder);
                 draggedItem.itemView.setVisibility(View.INVISIBLE);
                 draggedItem = null;

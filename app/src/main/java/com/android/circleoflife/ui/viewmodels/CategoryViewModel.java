@@ -172,12 +172,15 @@ public class CategoryViewModel extends ViewModel implements RevertibleActions {
         update(category, R.string.snackbar_text_updated);
     }
 
-    public void update(Category category, @StringRes int actionText) {
+    public void update(Category category, @StringRes int actionText, Nameable... others) {
         Category backup = currentCategories.stream().filter(category::equals).findFirst().orElse(null);
         repository.updateCategory(category);
         if (backup != null) {
             revertLastAction = () -> repository.updateCategory(backup);
-            setLastActionText(actionText, backup);
+            Nameable[] neededForSetLastActionText = new Nameable[others.length + 1];
+            neededForSetLastActionText[0] = backup;
+            System.arraycopy(others, 0, neededForSetLastActionText, 1, others.length);
+            setLastActionText(actionText, neededForSetLastActionText);
         }
     }
 
@@ -242,12 +245,20 @@ public class CategoryViewModel extends ViewModel implements RevertibleActions {
      * @param actionStringResId description of action
      * @param item item
      */
-    public void setLastActionText(@StringRes int actionStringResId, Nameable item) {
+    public void setLastActionText(@StringRes int actionStringResId, Nameable... item) {
         String passedString = App.getApplicationContext().getString(actionStringResId);
-        if (passedString.contains("PLACEHOLDER")) {
-            this.lastActionText = passedString.replaceAll("PLACEHOLDER", item.getName());
+        if (item.length == 0) {
+            Log.e(TAG, "setLastActionText: no items passed!!!");
+        } else if (passedString.contains("PLACEHOLDER")) {
+            for (int i = 0; passedString.contains("PLACEHOLDER"); i++) {
+                passedString = passedString.replaceFirst("PLACEHOLDER", item[i % item.length].getName());
+            }
+            this.lastActionText = passedString.replaceAll("PLACEHOLDER", item[0].getName());
         } else {
-            this.lastActionText = passedString + ": " + item.getName();
+            if (item.length != 1) {
+                Log.e(TAG, "setLastActionText: wrong number of items: " + item.length);
+            }
+            this.lastActionText = passedString + ": " + item[0].getName();
         }
     }
 
