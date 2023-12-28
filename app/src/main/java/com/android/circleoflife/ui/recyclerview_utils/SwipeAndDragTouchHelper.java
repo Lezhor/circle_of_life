@@ -271,9 +271,10 @@ public abstract class SwipeAndDragTouchHelper extends ItemTouchHelper.SimpleCall
         } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
             if (folder != null) {
 
-                moveInto(draggedItem.getAdapterPosition(), recyclerView.getChildLayoutPosition(folder));
                 revertHighlightFolder(folder);
-                draggedItem.itemView.setVisibility(View.INVISIBLE);
+                if (moveInto(draggedItem.getAdapterPosition(), recyclerView.getChildLayoutPosition(folder))) {
+                    draggedItem.itemView.setVisibility(View.INVISIBLE);
+                }
                 draggedItem = null;
             }
         }
@@ -293,8 +294,9 @@ public abstract class SwipeAndDragTouchHelper extends ItemTouchHelper.SimpleCall
      * It should delete {@code from} from current recyclerview.
      * @param from index of the item which was dragged
      * @param into index of the category where {@code from} should be inserted
+     * @return true if moving was successful and itemview can be made invisible
      */
-    protected abstract void moveInto(int from, int into);
+    protected abstract boolean moveInto(int from, int into);
 
     /**
      * Highlights a folder. e.g. make background green<br>
