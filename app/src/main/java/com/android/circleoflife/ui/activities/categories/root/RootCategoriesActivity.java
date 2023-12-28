@@ -227,13 +227,9 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
         } else if (id == R.id.add_category) {
             Toast.makeText(this, "Creating new category", Toast.LENGTH_SHORT).show();
             addCategory();
-        } else if (id == R.id.remove_first_category) {
-            Category category = adapter.getFilteredCategoryAtIndex(0);
-            if (category != null) {
-                Toast.makeText(this, "Deleting Category: " + category.getName(), Toast.LENGTH_SHORT).show();
-                categoryViewModel.delete(category);
-            } else {
-                Toast.makeText(this, "No Category found", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.undo_last_action) {
+            if (!categoryViewModel.revertLastAction()) {
+                Toast.makeText(this, getString(R.string.toast_there_is_no_action_to_undo), Toast.LENGTH_SHORT).show();
             }
         }
         return true;

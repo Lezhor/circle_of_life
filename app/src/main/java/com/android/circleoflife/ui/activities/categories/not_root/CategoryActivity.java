@@ -321,6 +321,10 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
         int id = item.getItemId();
         if (id == R.id.add_category) {
             categoryViewModel.insert(new Category(UUID.randomUUID(), "Hello There", categoryViewModel.getUser().getId(), categoryViewModel.getRoot().getId()));
+        } else if (id == R.id.undo_last_action) {
+            if (!categoryViewModel.revertLastAction()) {
+                Toast.makeText(this, getString(R.string.toast_there_is_no_action_to_undo), Toast.LENGTH_SHORT).show();
+            }
         } else {
             return super.onOptionsItemSelected(item);
         }

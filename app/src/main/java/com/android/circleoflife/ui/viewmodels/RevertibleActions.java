@@ -13,8 +13,9 @@ public interface RevertibleActions {
 
     /**
      * reverts last action
+     * returns true if reverted and false if there is nothing to revert
      */
-    void revertLastAction();
+    boolean revertLastAction();
 
 
 }

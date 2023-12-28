@@ -154,11 +154,14 @@ public class CategoryViewModel extends ViewModel implements RevertibleActions {
      * Reverts the last action
      */
     @Override
-    public void revertLastAction() {
+    public boolean revertLastAction() {
         if (revertLastAction != null) {
             revertLastAction.run();
             revertLastAction = null;
             lastActionText = "";
+            return true;
+        } else {
+            return false;
         }
     }
 

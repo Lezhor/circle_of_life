@@ -15,9 +15,8 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/remove_first_category"
-        android:title="Remove First Category"
-        app:showAsAction="never"/>
-
+        android:id="@+id/undo_last_action"
+        android:title="@string/undo_last_action"
+        app:showAsAction="never" />
 
 </menu>
