@@ -5,11 +5,8 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.function.Consumer;
 
 public abstract class ItemTouchDragAndDropCallback extends ItemTouchHelper.SimpleCallback {
 
@@ -23,9 +20,6 @@ public abstract class ItemTouchDragAndDropCallback extends ItemTouchHelper.Simpl
 
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-        int from = viewHolder.getAdapterPosition();
-        int to = target.getAdapterPosition();
-
         return true;
     }
 
@@ -60,6 +54,20 @@ public abstract class ItemTouchDragAndDropCallback extends ItemTouchHelper.Simpl
 
     }
 
+    /**
+     * If true than the ItemView at the given index will be highlighted when dragging another Item over it,
+     * and method moveInto will be executed when dropped on it.
+     * @param index index of the itemview which is being dragged on
+     * @return true if the item at given index is a category
+     */
+    protected abstract boolean isCategory(int index);
+
+    /**
+     * This method implements the logic for moving an Item inside a category.<br>
+     * It should delete {@code from} from current recyclerview.
+     * @param from index of the item which was dragged
+     * @param into index of the category where {@code from} should be inserted
+     */
     protected abstract void moveInto(int from, int into);
 
     @Override
@@ -79,11 +87,13 @@ public abstract class ItemTouchDragAndDropCallback extends ItemTouchHelper.Simpl
                 View child = recyclerView.getChildAt(i);
 
                 if (!child.equals(viewHolder.itemView)) {
-                    if (child.getTop() < itemActualPosition && itemActualPosition < child.getBottom()) {
-                        folder = child;
-                        highlightFolder(folder);
-                        folderIndex = i;
-                        break;
+                    if (isCategory(i)) {
+                        if (child.getTop() < itemActualPosition && itemActualPosition < child.getBottom()) {
+                            folder = child;
+                            highlightFolder(folder);
+                            folderIndex = i;
+                            break;
+                        }
                     }
                 }
             }
@@ -93,11 +103,23 @@ public abstract class ItemTouchDragAndDropCallback extends ItemTouchHelper.Simpl
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 
+    /**
+     * Highlights a folder. e.g. make background green<br>
+     * @param folder view where the current item was dragged onto
+     */
     protected abstract void highlightFolder(View folder);
+
+    /**
+     * Resets highlighting on a folder. e.g. reset background<br>
+     * @param folder view where hovering above just stopped (left view or released/dropped)
+     */
     protected abstract void revertHighlightFolder(View folder);
 
 
-    public void attachCallback() {
+    /**
+     * Creates an ItemTouchHelper with <code>this</code> as Callback and attaches the recyclerView to it
+     */
+    private void attachCallback() {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(this);
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }

@@ -3,7 +3,6 @@ package com.android.circleoflife.ui.activities.categories.root;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
-import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,14 +25,12 @@ import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.ui.activities.SuperActivity;
 import com.android.circleoflife.ui.activities.categories.CreateCategoryDialog;
-import com.android.circleoflife.ui.activities.categories.EditNameDialog;
 import com.android.circleoflife.ui.activities.categories.not_root.CategoryActivity;
 import com.android.circleoflife.ui.recyclerview_utils.ItemTouchDragAndDropCallback;
 import com.android.circleoflife.ui.recyclerview_utils.SwipeWithButtonsHelper;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.List;
 import java.util.UUID;
 
 public class RootCategoriesActivity extends SuperActivity implements RootCategoryRecyclerViewAdapter.CategoryHolder.CategoryHolderInterface {
@@ -68,8 +65,10 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         new ItemTouchDragAndDropCallback(recyclerView){
-
-            // TODO: 28.12.2023 Add Abstract Method checkIfViewHolderIsCategory()
+            @Override
+            protected boolean isCategory(int index) {
+                return true;
+            }
 
             @Override
             protected void moveInto(int fromIndex, int intoIndex) {
