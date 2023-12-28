@@ -11,6 +11,7 @@
     app:cardCornerRadius="8dp">
 
     <RelativeLayout
+        android:id="@+id/root_category_rel_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp">

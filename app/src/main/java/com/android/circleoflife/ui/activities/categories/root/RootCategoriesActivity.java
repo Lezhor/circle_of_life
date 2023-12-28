@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +68,9 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         new ItemTouchDragAndDropCallback(recyclerView){
+
+            // TODO: 28.12.2023 Add Abstract Method checkIfViewHolderIsCategory()
+
             @Override
             protected void moveInto(int fromIndex, int intoIndex) {
                 Category from = adapter.getFilteredCategoryAtIndex(fromIndex);
@@ -79,14 +83,14 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
 
             @Override
             protected void highlightFolder(View folder) {
-                CardView card = folder.findViewById(R.id.root_category_card);
-                card.setBackgroundColor(getColor(R.color.md_theme_secondaryContainer));
+                RelativeLayout layout = folder.findViewById(R.id.root_category_rel_layout);
+                layout.setBackgroundColor(getColor(R.color.md_theme_secondaryContainer));
             }
 
             @Override
             protected void revertHighlightFolder(View folder) {
-                CardView card = folder.findViewById(R.id.root_category_card);
-                card.setBackgroundColor(Color.TRANSPARENT);
+                RelativeLayout layout = folder.findViewById(R.id.root_category_rel_layout);
+                layout.setBackgroundColor(Color.TRANSPARENT);
             }
         };
 
