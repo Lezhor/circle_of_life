@@ -70,7 +70,7 @@ public class CategoryDaoTest {
         List<Category> retrievedCategories = getOrAwaitValue(categoryLiveData);
         assertEquals(Arrays.stream(tester.getCategories()).filter(c -> c.getUserID().equals(user.getId())).filter(c -> c.getParentID() == null).count(), retrievedCategories.size());
         for (Category category : tester.getCategories()) {
-            if (category.getUserID().equals(user.getId()) && category.getParentID() == null) {
+            if (category.getUserID().equals(user.getId()) && (category.getParentID() == null || category.getId().equals(category.getParentID()))) {
                 assertTrue(retrievedCategories.contains(category));
             } else {
                 assertFalse(retrievedCategories.contains(category));

@@ -27,7 +27,7 @@ public interface CategoryDao extends BaseDao<Category> {
         return getAllCategories(user.getId());
     }
 
-    @Query("SELECT * FROM categories WHERE userID = :userID AND parentID IS NULL ORDER BY category_name")
+    @Query("SELECT * FROM categories WHERE userID = :userID AND parentID IS NULL OR ID = parentID ORDER BY category_name")
     LiveData<List<Category>> getRootCategories(UUID userID);
 
     @Ignore
