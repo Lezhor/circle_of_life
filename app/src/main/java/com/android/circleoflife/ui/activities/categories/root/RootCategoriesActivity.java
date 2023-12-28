@@ -25,12 +25,14 @@ import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.ui.activities.SuperActivity;
 import com.android.circleoflife.ui.activities.categories.CreateCategoryDialog;
+import com.android.circleoflife.ui.activities.categories.EditNameDialog;
 import com.android.circleoflife.ui.activities.categories.not_root.CategoryActivity;
-import com.android.circleoflife.ui.recyclerview_utils.ItemTouchDragAndDropCallback;
+import com.android.circleoflife.ui.recyclerview_utils.SwipeAndDragTouchHelper;
 import com.android.circleoflife.ui.recyclerview_utils.SwipeWithButtonsHelper;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
 import java.util.UUID;
 
 public class RootCategoriesActivity extends SuperActivity implements RootCategoryRecyclerViewAdapter.CategoryHolder.CategoryHolderInterface {
@@ -64,6 +66,7 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        /*
         new ItemTouchDragAndDropCallback(recyclerView){
             @Override
             protected boolean isCategory(int index) {
@@ -93,6 +96,7 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
                 layout.setBackgroundColor(Color.TRANSPARENT);
             }
         };
+         */
 
         /*
         swipeHelper = new SwipeWithButtonsHelper(this, recyclerView) {
@@ -120,6 +124,59 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
             }
         };
          */
+
+        new SwipeAndDragTouchHelper(this, recyclerView) {
+            @Override
+            protected boolean isCategory(int index) {
+                return true;
+            }
+
+            @Override
+            protected void moveInto(int fromIndex, int intoIndex) {
+                Category from = adapter.getFilteredCategoryAtIndex(fromIndex);
+                Category into = adapter.getFilteredCategoryAtIndex(intoIndex);
+                Toast.makeText(RootCategoriesActivity.this, "from: " + fromIndex + ", into: " + intoIndex, Toast.LENGTH_SHORT).show();
+                Category copy = from.copy();
+                copy.setParentID(into.getId());
+                categoryViewModel.update(copy, R.string.snackbar_text_moved_into, into);
+                showSnackbarWithUndoLastAction(recyclerView, categoryViewModel);
+            }
+
+            @Override
+            protected void highlightFolder(View folder) {
+                RelativeLayout layout = folder.findViewById(R.id.root_category_rel_layout);
+                layout.setBackgroundColor(getColor(R.color.md_theme_secondaryContainer));
+            }
+
+            @Override
+            protected void revertHighlightFolder(View folder) {
+                RelativeLayout layout = folder.findViewById(R.id.root_category_rel_layout);
+                layout.setBackgroundColor(Color.TRANSPARENT);
+            }
+
+            @Override
+            public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+                underlayButtons.add(new SwipeAndDragTouchHelper.UnderlayButton(
+                        R.drawable.ic_delete,
+                        R.color.md_theme_errorContainer,
+                        R.color.md_theme_error,
+                        pos -> {
+                            categoryViewModel.delete(adapter.getFilteredCategoryAtIndex(pos));
+                            showSnackbarWithUndoLastAction(recyclerView, categoryViewModel);
+                        }
+                ));
+                underlayButtons.add(new SwipeAndDragTouchHelper.UnderlayButton(
+                        R.drawable.ic_edit,
+                        R.color.md_theme_secondaryContainer,
+                        R.color.md_theme_secondary,
+                        pos -> {
+                            Category category = adapter.getFilteredCategoryAtIndex(pos);
+                            EditNameDialog<Category> editNameDialog = new EditNameDialog<>(categoryViewModel::update, category, R.string.category);
+                            editNameDialog.show(getSupportFragmentManager(), "dialog_edit_category");
+                        }
+                ));
+            }
+        };
 
 
         TextView invisText = findViewById(R.id.category_invis_text);
