@@ -9,11 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,12 +25,14 @@ import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.Cycle;
 import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.database.models.User;
+import com.android.circleoflife.database.models.additional.Copyable;
 import com.android.circleoflife.ui.activities.SuperActivity;
 import com.android.circleoflife.ui.activities.categories.EditNameDialog;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.CategoryRecyclerViewAdapter;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.RVHolderInterface;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.RVItemWrapper;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.holder.CategoryHolder;
+import com.android.circleoflife.ui.recyclerview_utils.SwipeAndDragTouchHelper;
 import com.android.circleoflife.ui.recyclerview_utils.SwipeWithButtonsHelper;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -95,7 +99,7 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
+            /*
             swipeHelper = new SwipeWithButtonsHelper(this, recyclerView) {
                 @Override
                 public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
@@ -139,6 +143,121 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
                     ));
                     if (categoryViewModel.getRoot().getParentID() != null || viewHolder instanceof CategoryHolder) {
                         underlayButtons.add(new SwipeWithButtonsHelper.UnderlayButton(
+                                R.drawable.ic_back,
+                                R.color.md_theme_primaryContainer,
+                                R.color.md_theme_primary,
+                                pos -> {
+                                    RVItemWrapper<?> itemWrapper = adapter.getFilteredItemAtIndex(pos);
+                                    switch (itemWrapper.getItemType()) {
+                                        case RVItemWrapper.TYPE_CATEGORY -> moveToParent((Category) itemWrapper.getObject());
+                                        case RVItemWrapper.TYPE_CYCLE -> moveToParent((Cycle) itemWrapper.getObject());
+                                        case RVItemWrapper.TYPE_TODO -> moveToParent((Todo) itemWrapper.getObject());
+                                    }
+                                }
+                        ));
+                    }
+                }
+            };
+             */
+
+
+            new SwipeAndDragTouchHelper(this, recyclerView) {
+                @Override
+                protected boolean isCategory(int index) {
+                    return adapter.getFilteredItemAtIndex(index).getItemType() == RVItemWrapper.TYPE_CATEGORY;
+                }
+
+                @Override
+                protected boolean moveInto(int fromIndex, int intoIndex) {
+                    if (fromIndex == intoIndex) {
+                        return false;
+                    }
+                    RVItemWrapper<?> fromWrapper = adapter.getFilteredItemAtIndex(fromIndex);
+                    RVItemWrapper<?> intoWrapper = adapter.getFilteredItemAtIndex(intoIndex);
+                    if (intoWrapper.getItemType() != RVItemWrapper.TYPE_CATEGORY) {
+                        return false;
+                    }
+                    Category intoCategory = (Category) intoWrapper.getObject();
+                    if (fromWrapper.getObject() instanceof Copyable<?> copyable) {
+                        Object copy = copyable.copy();
+                        if (copy instanceof Category category) {
+                            category.setParentID(intoCategory.getId());
+                            categoryViewModel.update(category, R.string.snackbar_text_moved_into, intoCategory);
+                        } else if (copy instanceof Cycle cycle) {
+                            cycle.setCategoryID(intoCategory.getId());
+                            categoryViewModel.update(cycle, R.string.snackbar_text_moved_into, intoCategory);
+                        } else if (copy instanceof Todo todo) {
+                            todo.setCategoryID(intoCategory.getId());
+                            categoryViewModel.update(todo, R.string.snackbar_text_moved_into, intoCategory);
+                        } else {
+                            return false;
+                        }
+                        showSnackbarWithUndoLastAction(recyclerView, categoryViewModel);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+
+                @Override
+                protected void highlightFolder(View folder) {
+                    RelativeLayout layout = folder.findViewById(R.id.root_category_rel_layout);
+                    if (layout != null) {
+                        layout.setBackgroundColor(getColor(R.color.md_theme_secondaryContainer));
+                    }
+                }
+
+                @Override
+                protected void revertHighlightFolder(View folder) {
+                    RelativeLayout layout = folder.findViewById(R.id.root_category_rel_layout);
+                    if (layout != null) {
+                        layout.setBackgroundColor(Color.TRANSPARENT);
+                    }
+                }
+
+                @Override
+                public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+                    underlayButtons.add(new SwipeAndDragTouchHelper.UnderlayButton(
+                            R.drawable.ic_delete,
+                            R.color.md_theme_errorContainer,
+                            R.color.md_theme_error,
+                            pos -> {
+                                RVItemWrapper<?> wrapper = adapter.getFilteredItemAtIndex(pos);
+                                Object object = wrapper.getObject();
+                                if (object instanceof Category category) {
+                                    categoryViewModel.delete(category);
+                                } else if (object instanceof Cycle cycle) {
+                                    categoryViewModel.delete(cycle);
+                                } else if (object instanceof Todo todo) {
+                                    categoryViewModel.delete(todo);
+                                } else {
+                                    return;
+                                }
+                                showSnackbarWithUndoLastAction(recyclerView, categoryViewModel);
+                            }
+                    ));
+                    underlayButtons.add(new SwipeAndDragTouchHelper.UnderlayButton(
+                            R.drawable.ic_edit,
+                            R.color.md_theme_secondaryContainer,
+                            R.color.md_theme_secondary,
+                            pos -> {
+                                EditNameDialog<?> editNameDialog;
+                                RVItemWrapper<?> wrapper = adapter.getFilteredItemAtIndex(pos);
+                                Object object = wrapper.getObject();
+                                if (object instanceof Category category) {
+                                    editNameDialog = new EditNameDialog<>(categoryViewModel::update, category, R.string.category);
+                                } else if (object instanceof Cycle cycle) {
+                                    editNameDialog = new EditNameDialog<>(categoryViewModel::update, cycle, R.string.cycle);
+                                } else if (object instanceof Todo todo) {
+                                    editNameDialog = new EditNameDialog<>(categoryViewModel::update, todo, R.string.todo);
+                                } else {
+                                    return;
+                                }
+                                editNameDialog.show(getSupportFragmentManager(), "dialog_edit_category");
+                            }
+                    ));
+                    if (categoryViewModel.getRoot().getParentID() != null || viewHolder instanceof CategoryHolder) {
+                        underlayButtons.add(new SwipeAndDragTouchHelper.UnderlayButton(
                                 R.drawable.ic_back,
                                 R.color.md_theme_primaryContainer,
                                 R.color.md_theme_primary,
@@ -210,6 +329,7 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
 
     /**
      * Moves given category to the parent of the root (one folder up)
+     *
      * @param category category to be moved
      */
     private void moveToParent(Category category) {
@@ -221,6 +341,7 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
 
     /**
      * Moves given cycle to the parent of the root, unless its null
+     *
      * @param cycle cycle to be moved
      */
     private void moveToParent(Cycle cycle) {
@@ -234,6 +355,7 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
 
     /**
      * Moves given todó to the parent of the root, unless its null
+     *
      * @param todoItem todó to be moved
      */
     private void moveToParent(Todo todoItem) {
@@ -273,6 +395,7 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
 
     /**
      * Opens {@link CategoryActivity} with given category as parameter
+     *
      * @param category passed category
      */
     private void openCategoryActivity(@NonNull Category category) {

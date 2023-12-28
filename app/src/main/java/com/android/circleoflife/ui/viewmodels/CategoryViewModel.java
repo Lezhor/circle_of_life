@@ -200,12 +200,15 @@ public class CategoryViewModel extends ViewModel implements RevertibleActions {
         update(cycle, R.string.snackbar_text_updated);
     }
 
-    public void update(Cycle cycle, @StringRes int actionText) {
+    public void update(Cycle cycle, @StringRes int actionText, Nameable... others) {
         Cycle backup = currentCycles.stream().filter(cycle::equals).findFirst().orElse(null);
         repository.updateCycle(cycle);
         if (backup != null) {
             revertLastAction = () -> repository.updateCycle(backup);
-            setLastActionText(actionText, backup);
+            Nameable[] neededForSetLastActionText = new Nameable[others.length + 1];
+            neededForSetLastActionText[0] = backup;
+            System.arraycopy(others, 0, neededForSetLastActionText, 1, others.length);
+            setLastActionText(actionText, neededForSetLastActionText);
         }
     }
 
@@ -225,12 +228,15 @@ public class CategoryViewModel extends ViewModel implements RevertibleActions {
         update(todo, R.string.snackbar_text_updated);
     }
 
-    public void update(Todo todo, @StringRes int actionText) {
+    public void update(Todo todo, @StringRes int actionText, Nameable... others) {
         Todo backup = currentTodos.stream().filter(todo::equals).findFirst().orElse(null);
         repository.updateTodo(todo);
         if (backup != null) {
             revertLastAction = () -> repository.updateTodo(backup);
-            setLastActionText(actionText, backup);
+            Nameable[] neededForSetLastActionText = new Nameable[others.length + 1];
+            neededForSetLastActionText[0] = backup;
+            System.arraycopy(others, 0, neededForSetLastActionText, 1, others.length);
+            setLastActionText(actionText, neededForSetLastActionText);
         }
     }
 
