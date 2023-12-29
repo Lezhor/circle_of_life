@@ -2,7 +2,6 @@ package com.android.circleoflife.database.models.type_converters;
 
 import androidx.room.TypeConverter;
 
-import com.android.circleoflife.application.App;
 import com.android.circleoflife.logging.model.DBLog;
 
 /**
@@ -11,6 +10,7 @@ import com.android.circleoflife.logging.model.DBLog;
  * Used in {@link com.android.circleoflife.database.control.AppDatabase AppDatabase}
  */
 public class DBLogConverter {
+    // TODO: 29.12.2023 Make methods static
 
     /**
      * Converts DBLog to String representation
@@ -19,8 +19,8 @@ public class DBLogConverter {
      * @see com.android.circleoflife.logging.serializing.LogSerializer#dbLogToString(DBLog)
      */
     @TypeConverter
-    public String dbLogToString(DBLog log) {
-        return App.getLogSerializer().dbLogToString(log);
+    public String dbLogToString(DBLog<?> log) {
+        return DBLog.toString(log);
     }
 
     /**
@@ -30,8 +30,8 @@ public class DBLogConverter {
      * @see com.android.circleoflife.logging.serializing.LogSerializer#stringToDBLog(String)
      */
     @TypeConverter
-    public DBLog stringToDBLog(String str) {
-        return App.getLogSerializer().stringToDBLog(str);
+    public DBLog<?> stringToDBLog(String str) {
+        return DBLog.fromString(str);
     }
 
 }

@@ -18,6 +18,34 @@ public class DBLog<E extends HasUserId> {
     private final E changedObject;
     private final ChangeMode changeMode;
 
+    /**
+     * Converts string to a log. the opposite operation ist {@link #toString(DBLog)}
+     * @param str string to be converted
+     * @return converted log
+     */
+    public static DBLog<?> fromString(String str) {
+        if (str == null) {
+            return null;
+        } else {
+            // TODO: 29.12.2023 Parse Log from string
+            return null;
+        }
+    }
+
+    /**
+     * Converts given log to string. the opposite operation is {@link #fromString(String)}
+     * @param log log to be converted
+     * @return converted string
+     */
+    public static String toString(DBLog<?> log) {
+        if (log == null) {
+            return null;
+        } else {
+            // TODO: 29.12.2023 Parse log to string
+            return "";
+        }
+    }
+
     public DBLog(@NonNull Copyable<E> changedObject, ChangeMode changeMode) {
         this(UUID.randomUUID(), changedObject, changeMode);
     }

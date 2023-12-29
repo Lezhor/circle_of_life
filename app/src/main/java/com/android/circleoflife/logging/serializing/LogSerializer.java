@@ -13,7 +13,7 @@ import java.io.OutputStream;
  */
 public interface LogSerializer {
 
-    // TODO: 29.12.2023 Make methods generic
+    // TODO: 29.12.2023 REMOVE
 
     /**
      * serializes log to OutputStream
