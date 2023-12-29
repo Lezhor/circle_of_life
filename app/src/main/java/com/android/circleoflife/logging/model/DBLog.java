@@ -7,31 +7,31 @@ import com.android.circleoflife.database.models.Cycle;
 import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.database.models.additional.Copyable;
+import com.android.circleoflife.database.models.additional.HasUserId;
 
 import java.util.UUID;
 
-public class DBLog<E> {
+public class DBLog<E extends HasUserId> {
 
     private final UUID id;
     private final UUID userID;
     private final E changedObject;
     private final ChangeMode changeMode;
 
-    public DBLog(@NonNull User user, @NonNull Copyable<E> changedObject, ChangeMode changeMode) {
-        this(UUID.randomUUID(), user, changedObject, changeMode);
+    public DBLog(@NonNull Copyable<E> changedObject, ChangeMode changeMode) {
+        this(UUID.randomUUID(), changedObject, changeMode);
     }
 
     /**
      * Constructor for DBLog
      * @param id id
-     * @param user user
      * @param changedObject changedObject
      * @param changeMode changeMode
      */
-    public DBLog(@NonNull UUID id, @NonNull User user, @NonNull Copyable<E> changedObject, ChangeMode changeMode) {
+    public DBLog(@NonNull UUID id, @NonNull Copyable<E> changedObject, ChangeMode changeMode) {
         this.id = id;
-        this.userID = user.getId();
         this.changedObject = changedObject.copy();
+        this.userID = this.changedObject.getUserID();
         this.changeMode = changeMode;
     }
 
@@ -40,7 +40,7 @@ public class DBLog<E> {
      * @param that other DBLog
      * @return true if same instance type
      */
-    public boolean sameObjectType(DBLog that) {
+    public boolean sameObjectType(DBLog<?> that) {
         return this.getObjectType() == that.getObjectType();
     }
 
