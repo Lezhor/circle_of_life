@@ -6,6 +6,8 @@ import androidx.annotation.Nullable;
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.R;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 public class CycleFrequency {
@@ -27,6 +29,22 @@ public class CycleFrequency {
 
 
     private int value;
+
+    /**
+     * Gets the mask wich corresponds to todays weekday
+     * @return mask of todays weekday
+     */
+    public static int getTodayMask() {
+        return switch (LocalDateTime.now().getDayOfWeek()) {
+            case MONDAY -> MASK_MONDAY;
+            case TUESDAY -> MASK_TUESDAY;
+            case WEDNESDAY -> MASK_WEDNESDAY;
+            case THURSDAY -> MASK_THURSDAY;
+            case FRIDAY -> MASK_FRIDAY;
+            case SATURDAY -> MASK_SATURDAY;
+            case SUNDAY -> MASK_SUNDAY;
+        };
+    }
 
     public CycleFrequency(int... days) {
         value = Arrays.stream(days).reduce(MASK_END_CYCLE, (a, b) -> a | b);
