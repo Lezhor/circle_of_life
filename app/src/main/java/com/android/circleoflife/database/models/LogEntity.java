@@ -51,14 +51,14 @@ public class LogEntity {
 
     @NonNull
     @ColumnInfo(name = "content")
-    private DBLog log;
+    private DBLog<?> log;
 
     @Ignore
-    public LogEntity(@NonNull UUID id, @NonNull UUID userID, @NonNull DBLog log) {
-        this(id, userID, log.getTimeOfCreation(), log);
+    public LogEntity(@NonNull DBLog<?> log) {
+        this(log.getId(), log.getUserId(), LocalDateTime.now(), log);
     }
 
-    LogEntity(@NonNull UUID id, @NonNull UUID userID, @NonNull LocalDateTime timestamp, @NonNull DBLog log) {
+    LogEntity(@NonNull UUID id, @NonNull UUID userID, @NonNull LocalDateTime timestamp, @NonNull DBLog<?> log) {
         this.id = id;
         this.userID = userID;
         this.timestamp = timestamp;
@@ -84,11 +84,11 @@ public class LogEntity {
     }
 
     @NonNull
-    public DBLog getLog() {
+    public DBLog<?> getLog() {
         return log;
     }
 
-    public void setLog(@NonNull DBLog log) {
+    public void setLog(@NonNull DBLog<?> log) {
         this.log = log;
     }
 
