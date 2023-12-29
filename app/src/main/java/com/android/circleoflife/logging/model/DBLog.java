@@ -1,77 +1,95 @@
 package com.android.circleoflife.logging.model;
-import com.android.circleoflife.auth.Authentication;
-import com.android.circleoflife.auth.AuthenticationFailedException;
+import androidx.annotation.NonNull;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import com.android.circleoflife.database.models.Accomplishment;
+import com.android.circleoflife.database.models.Category;
+import com.android.circleoflife.database.models.Cycle;
+import com.android.circleoflife.database.models.Todo;
+import com.android.circleoflife.database.models.User;
+import com.android.circleoflife.database.models.additional.Copyable;
 
-public class DBLog {
+import java.util.UUID;
 
-    private final LocalDateTime timeOfCreation;
-    private final String user; // TODO: 08.12.2023 Change to User Object
-    private final List<Entry> entryList;
+public class DBLog<E> {
 
-    public DBLog(Authentication auth) throws AuthenticationFailedException {
-        this(auth.getUserName(), LocalDateTime.now());
-    }
+    private final UUID id;
+    private final UUID userID;
+    private final E changedObject;
+    private final ChangeMode changeMode;
 
-    private DBLog(String username, LocalDateTime timeOfCreation) {
-        user = username;
-        this.timeOfCreation = timeOfCreation;
-        entryList = new LinkedList<>();
-    }
-
-    /**
-     * Inits Log from logHeader
-     * @param logHeader logHeader
-     * @throws IllegalArgumentException if logHeader is wrong
-     */
-    public DBLog(String logHeader) throws IllegalArgumentException {
-        // TODO: 02.12.2023 Create Log from Header
-        this("", LocalDateTime.now());
-    }
-
-    public String getLogHeader() {
-        // TODO: 02.12.2023 Generate Log Header
-        return "Log|" + user + "|" + timeOfCreation.toString();
+    public DBLog(@NonNull User user, @NonNull Copyable<E> changedObject, ChangeMode changeMode) {
+        this(UUID.randomUUID(), user, changedObject, changeMode);
     }
 
     /**
-     * returns time of creation
-     * @return time of creation
+     * Constructor for DBLog
+     * @param id id
+     * @param user user
+     * @param changedObject changedObject
+     * @param changeMode changeMode
      */
-    public LocalDateTime getTimeOfCreation() {
-        return timeOfCreation;
+    public DBLog(@NonNull UUID id, @NonNull User user, @NonNull Copyable<E> changedObject, ChangeMode changeMode) {
+        this.id = id;
+        this.userID = user.getId();
+        this.changedObject = changedObject.copy();
+        this.changeMode = changeMode;
     }
-
-
 
     /**
-     * Is sorted by timestamp when the entry was made
+     * True if objects are of same instance
+     * @param that other DBLog
+     * @return true if same instance type
      */
-    public static class Entry implements Comparable<Entry> {
-
-        // TODO: 02.12.2023 Implement Log.Entry
-        private LocalDateTime timeStamp;
-
-        private String table;
-
-        @Override
-        public int compareTo(Entry that) {
-            return this.timeStamp.compareTo(that.timeStamp);
-        }
-
-        public Entry invert() {
-            // TODO: 02.12.2023 Implement Entry inversion
-            return null;
-        }
-
-        public enum Mode {
-            CREATE, UPDATE, DELETE
-        }
-
+    public boolean sameObjectType(DBLog that) {
+        return this.getObjectType() == that.getObjectType();
     }
+
+    /**
+     * returns number of type:
+     * <pre>
+     *     0 - User
+     *     1 - Category
+     *     2 - Cycle
+     *     3 - To do
+     *     4 - Accomplishment
+     * </pre>
+     * @return integer based on object type
+     */
+    private int getObjectType() {
+        if (changedObject instanceof User) {
+            return 0;
+        } else if (changedObject instanceof Category) {
+            return 1;
+        } else if (changedObject instanceof Cycle) {
+            return 2;
+        } else if (changedObject instanceof Todo) {
+            return 3;
+        } else if (changedObject instanceof Accomplishment) {
+            return 4;
+        } else {
+            return -1;
+        }
+    }
+
+    public E getChangedObject() {
+        return changedObject;
+    }
+
+    public ChangeMode getChangeMode() {
+        return changeMode;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public UUID getUserId() {
+        return userID;
+    }
+
+    public enum ChangeMode {
+        INSERT, UPDATE, DELETE
+    }
+
 
 }
