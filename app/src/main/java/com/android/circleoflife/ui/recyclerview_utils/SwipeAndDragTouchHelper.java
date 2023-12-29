@@ -273,7 +273,7 @@ public abstract class SwipeAndDragTouchHelper extends ItemTouchHelper.SimpleCall
 
                 revertHighlightFolder(folder);
                 if (draggedItem != null && moveInto(draggedItem.getAdapterPosition(), recyclerView.getChildLayoutPosition(folder))) {
-                    draggedItem.itemView.setVisibility(View.INVISIBLE);
+                    draggedItem.itemView.setVisibility(View.GONE);
                 }
                 draggedItem = null;
             }
