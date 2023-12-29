@@ -8,6 +8,7 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.android.circleoflife.database.models.additional.HasUserId;
 import com.android.circleoflife.logging.model.DBLog;
 
 import java.time.LocalDateTime;
@@ -34,7 +35,7 @@ import java.util.UUID;
         },
         inheritSuperIndices = true
 )
-public class LogEntity {
+public class LogEntity implements HasUserId {
 
     @NonNull
     @PrimaryKey
@@ -66,6 +67,7 @@ public class LogEntity {
     }
 
     @NonNull
+    @Override
     public UUID getUserID() {
         return userID;
     }

@@ -4,9 +4,10 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Update;
 
+import com.android.circleoflife.database.models.additional.HasUserId;
 import com.android.circleoflife.logging.model.DBLog;
 
-public interface BaseDao<T> {
+public interface BaseDao<T extends HasUserId> {
 
     @Insert
     void insert(T... entities);

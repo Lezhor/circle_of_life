@@ -10,6 +10,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.android.circleoflife.database.models.additional.Copyable;
+import com.android.circleoflife.database.models.additional.HasUserId;
 import com.android.circleoflife.database.models.additional.Nameable;
 
 import java.time.LocalDateTime;
@@ -42,7 +43,7 @@ import java.util.UUID;
                 )
         }
 )
-public class Todo implements Nameable, Copyable<Todo> {
+public class Todo implements Nameable, HasUserId, Copyable<Todo> {
 
     @NonNull
     @PrimaryKey
@@ -112,6 +113,7 @@ public class Todo implements Nameable, Copyable<Todo> {
     }
 
     @NonNull
+    @Override
     public UUID getUserID() {
         return userID;
     }

@@ -11,6 +11,7 @@ import androidx.room.PrimaryKey;
 
 import com.android.circleoflife.database.models.additional.Copyable;
 import com.android.circleoflife.database.models.additional.CycleFrequency;
+import com.android.circleoflife.database.models.additional.HasUserId;
 import com.android.circleoflife.database.models.additional.Nameable;
 import com.android.circleoflife.database.validators.IntegerValidator;
 
@@ -42,7 +43,7 @@ import java.util.UUID;
                 )
         }
 )
-public class Cycle implements Nameable, Copyable<Cycle> {
+public class Cycle implements Nameable, HasUserId, Copyable<Cycle> {
 
     @NonNull
     @PrimaryKey
@@ -119,6 +120,7 @@ public class Cycle implements Nameable, Copyable<Cycle> {
     }
 
     @NonNull
+    @Override
     public UUID getUserID() {
         return userID;
     }

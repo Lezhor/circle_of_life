@@ -13,6 +13,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.android.circleoflife.database.models.additional.Copyable;
+import com.android.circleoflife.database.models.additional.HasUserId;
 import com.android.circleoflife.database.models.additional.Nameable;
 import com.android.circleoflife.database.models.type_converters.UUIDConverter;
 import com.android.circleoflife.database.validators.StringValidator;
@@ -46,7 +47,7 @@ import java.util.UUID;
         },
         inheritSuperIndices = true
 )
-public class Category implements Nameable, Copyable<Category>, Parcelable {
+public class Category implements Nameable, HasUserId, Copyable<Category>, Parcelable {
 
     @NonNull
     @PrimaryKey
@@ -103,6 +104,7 @@ public class Category implements Nameable, Copyable<Category>, Parcelable {
     }
 
     @NonNull
+    @Override
     public UUID getUserID() {
         return userID;
     }

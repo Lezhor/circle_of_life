@@ -10,6 +10,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.android.circleoflife.database.models.additional.Copyable;
+import com.android.circleoflife.database.models.additional.HasUserId;
 import com.android.circleoflife.database.models.additional.Nameable;
 
 import java.time.LocalDate;
@@ -49,7 +50,7 @@ import java.util.UUID;
                 )
         }
 )
-public class Accomplishment implements Nameable, Copyable<Accomplishment> {
+public class Accomplishment implements Nameable, HasUserId, Copyable<Accomplishment> {
     
     @NonNull
     @PrimaryKey
@@ -137,6 +138,7 @@ public class Accomplishment implements Nameable, Copyable<Accomplishment> {
     }
 
     @NonNull
+    @Override
     public UUID getUserID() {
         return userID;
     }

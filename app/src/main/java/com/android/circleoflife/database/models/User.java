@@ -7,6 +7,8 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.android.circleoflife.database.models.additional.Copyable;
+import com.android.circleoflife.database.models.additional.HasUserId;
 import com.android.circleoflife.database.validators.StringValidator;
 
 import java.time.LocalDateTime;
@@ -14,7 +16,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity(tableName = "users", indices = @Index(value = {"userID"}))
-public class User {
+public class User implements HasUserId, Copyable<User> {
 
     @NonNull
     @PrimaryKey
@@ -82,5 +84,17 @@ public class User {
     @Override
     public String toString() {
         return "User{" + username + "}";
+    }
+
+    @NonNull
+    @Override
+    public User copy() {
+        return new User(id, username, password, timeOfCreation);
+    }
+
+    @NonNull
+    @Override
+    public UUID getUserID() {
+        return getId();
     }
 }
