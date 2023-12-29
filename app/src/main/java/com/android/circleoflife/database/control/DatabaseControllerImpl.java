@@ -206,7 +206,7 @@ public class DatabaseControllerImpl implements DatabaseController {
     @Override
     public void insertAccomplishment(Accomplishment... accomplishments) {
         db.getAccomplishmentDao().insert(accomplishments);
-        triggerObservers(o -> o.onInsertAccomplishment(accomplishments));
+        triggerObservers(o -> o.onInsertAccomplishments(accomplishments));
     }
 
     @Override

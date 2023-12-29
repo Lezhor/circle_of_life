@@ -2,12 +2,20 @@ package com.android.circleoflife.database.control.observers;
 
 import com.android.circleoflife.database.models.*;
 
+/**
+ * Methods are triggerd in the {@link com.android.circleoflife.database.control.DatabaseController}
+ */
 public interface DatabaseObserver {
 
     boolean isActive();
 
     // Users
-    void onInsertUsers(User... user);
+    void onInsertUser(User user);
+    default void onInsertUsers(User... users) {
+        for (User user : users) {
+            onInsertUser(user);
+        }
+    }
 
     void onUpdateUser(User user);
 
@@ -15,7 +23,12 @@ public interface DatabaseObserver {
 
 
     // Categories
-    void onInsertCategories(Category... categories);
+    void onInsertCategory(Category category);
+    default void onInsertCategories(Category... categories) {
+        for (Category category : categories) {
+            onInsertCategory(category);
+        }
+    }
 
     void onUpdateCategory(Category category);
 
@@ -23,7 +36,13 @@ public interface DatabaseObserver {
 
 
     // Cycles
-    void onInsertCycles(Cycle... cycles);
+    void onInsertCycle(Cycle cycle);
+
+    default void onInsertCycles(Cycle... cycles) {
+        for (Cycle cycle : cycles) {
+            onInsertCycle(cycle);
+        }
+    }
 
     void onUpdateCycle(Cycle cycle);
 
@@ -31,7 +50,13 @@ public interface DatabaseObserver {
 
 
     // To Do
-    void onInsertTodos(Todo... todos);
+    void onInsertTodo(Todo todos);
+
+    default void onInsertTodos(Todo... todos) {
+        for (Todo todo : todos) {
+            onInsertTodo(todo);
+        }
+    }
 
     void onUpdateTodo(Todo todo);
 
@@ -39,7 +64,13 @@ public interface DatabaseObserver {
 
 
     // Accomplishment
-    void onInsertAccomplishment(Accomplishment... accomplishments);
+    void onInsertAccomplishment(Accomplishment accomplishment);
+
+    default void onInsertAccomplishments(Accomplishment... accomplishments) {
+        for (Accomplishment accomplishment : accomplishments) {
+            onInsertAccomplishment(accomplishment);
+        }
+    }
 
     void onUpdateAccomplishment(Accomplishment accomplishment);
 
