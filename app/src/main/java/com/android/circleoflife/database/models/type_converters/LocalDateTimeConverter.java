@@ -21,7 +21,7 @@ public class LocalDateTimeConverter {
      * @see LocalDateTime#parse(CharSequence)
      */
     @TypeConverter
-    public LocalDateTime localDateTimeFromString(String str) {
+    public static LocalDateTime localDateTimeFromString(String str) {
         if (str == null) {
             return null;
         } else {
@@ -37,7 +37,7 @@ public class LocalDateTimeConverter {
      */
     @Nullable
     @TypeConverter
-    public String localDateTimeToString(@Nullable LocalDateTime time) {
+    public static String localDateTimeToString(@Nullable LocalDateTime time) {
         if (time == null) {
             return null;
         } else {
@@ -52,7 +52,7 @@ public class LocalDateTimeConverter {
      * @see LocalDate#parse(CharSequence)
      */
     @TypeConverter
-    public LocalDate localDateFromString(String str) {
+    public static LocalDate localDateFromString(String str) {
         if (str == null) {
             return null;
         }
@@ -66,7 +66,7 @@ public class LocalDateTimeConverter {
      * @see LocalDate#toString()
      */
     @TypeConverter
-    public String localDateToString(LocalDate date) {
+    public static String localDateToString(LocalDate date) {
         if (date == null) {
             return null;
         }
@@ -80,7 +80,7 @@ public class LocalDateTimeConverter {
      * @see LocalTime#parse(CharSequence)
      */
     @TypeConverter
-    public LocalTime localTimeFromString(String str) {
+    public static LocalTime localTimeFromString(String str) {
         if (str == null) {
             return null;
         }
@@ -94,7 +94,7 @@ public class LocalDateTimeConverter {
      * @see LocalTime#toString()
      */
     @TypeConverter
-    public String localDateToString(LocalTime time) {
+    public static String localTimeToString(LocalTime time) {
         if (time == null) {
             return null;
         }

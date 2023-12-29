@@ -18,7 +18,7 @@ public class CycleFrequencyConverter {
      * @see CycleFrequency#toBinaryString()
      */
     @TypeConverter
-    public String frequecyToString(CycleFrequency frequency) {
+    public static String frequecyToString(CycleFrequency frequency) {
         return frequency.toBinaryString();
     }
 
@@ -29,7 +29,7 @@ public class CycleFrequencyConverter {
      * @see CycleFrequency#fromBinaryString(String)
      */
     @TypeConverter
-    public CycleFrequency stringToFrequency(String binaryString) {
+    public static CycleFrequency stringToFrequency(String binaryString) {
         return CycleFrequency.fromBinaryString(binaryString);
     }
 }

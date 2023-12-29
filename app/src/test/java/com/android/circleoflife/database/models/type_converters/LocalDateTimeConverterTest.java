@@ -14,23 +14,16 @@ import java.util.List;
  */
 public class LocalDateTimeConverterTest {
 
-
-    LocalDateTimeConverter localDateTimeConverter;
-    @Before
-    public void setUp() {
-        localDateTimeConverter = new LocalDateTimeConverter();
-    }
-
     @Test
     public void testConvertTimeToStringAndBack() {
         LocalDateTime time = LocalDateTime.of(2020, 3, 20, 13, 23, 48, 458352);
-        assertEquals(time, localDateTimeConverter.localDateTimeFromString(localDateTimeConverter.localDateTimeToString(time)));
+        assertEquals(time, LocalDateTimeConverter.localDateTimeFromString(LocalDateTimeConverter.localDateTimeToString(time)));
     }
 
     @Test
     public void testConvertStringToTimeAndBack() {
         String time = "2023-12-05T12:26:37.084397600";
-        assertEquals(time, localDateTimeConverter.localDateTimeToString(localDateTimeConverter.localDateTimeFromString(time)));
+        assertEquals(time, LocalDateTimeConverter.localDateTimeToString(LocalDateTimeConverter.localDateTimeFromString(time)));
     }
 
     @Test
@@ -45,11 +38,10 @@ public class LocalDateTimeConverterTest {
         timestamps.add(LocalDateTime.of(2023, 10, 23, 3, 25, 42, 12690));
         timestamps.add(LocalDateTime.of(2023, 11, 3, 10, 51, 23, 8015));
 
-        //noinspection DataFlowIssue
         List<LocalDateTime> converted = timestamps.stream()
-                .map(localDateTimeConverter::localDateTimeToString)
+                .map(LocalDateTimeConverter::localDateTimeToString)
                 .sorted()
-                .map((localDateTimeConverter::localDateTimeFromString))
+                .map(LocalDateTimeConverter::localDateTimeFromString)
                 .toList();
 
         timestamps.sort(LocalDateTime::compareTo);

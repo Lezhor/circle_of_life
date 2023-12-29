@@ -16,6 +16,7 @@ import com.android.circleoflife.database.models.additional.Nameable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -231,5 +232,18 @@ public class Accomplishment implements Nameable, HasUserId, Copyable<Accomplishm
     @Override
     public Accomplishment copy() {
         return new Accomplishment(this);
+    }
+
+    public boolean equalsAllParams(Accomplishment that) {
+        return this.id.equals(that.id)
+                && this.userID.equals(that.userID)
+                && Objects.equals(this.cycleID, that.cycleID)
+                && Objects.equals(this.todoID, that.todoID)
+                && Objects.equals(this.name, that.name)
+                && Objects.equals(this.description, that.description)
+                && this.productiveness == that.productiveness
+                && Objects.equals(this.date, that.date)
+                && Objects.equals(this.timestamp, that.timestamp)
+                && this.durationMillis == that.durationMillis;
     }
 }
