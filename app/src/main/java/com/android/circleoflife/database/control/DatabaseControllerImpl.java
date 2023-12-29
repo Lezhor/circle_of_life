@@ -245,4 +245,19 @@ public class DatabaseControllerImpl implements DatabaseController {
     public LiveData<List<Accomplishment>> getAllAccomplishmentsBetweenTimestamps(User user, LocalDateTime timestamp1, LocalDateTime timestamp2) {
         return db.getAccomplishmentDao().getAllAccomplishmentsBetweenTimestamps(user, timestamp1, timestamp2);
     }
+
+    @Override
+    public void insertLog(LogEntity... logs) {
+        db.getLogDao().insert(logs);
+    }
+
+    @Override
+    public void updateLog(LogEntity log) {
+        db.getLogDao().update(log);
+    }
+
+    @Override
+    public void deleteLog(LogEntity log) {
+        db.getLogDao().delete(log);
+    }
 }

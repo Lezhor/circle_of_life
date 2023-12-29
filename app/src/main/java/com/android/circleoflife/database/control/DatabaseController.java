@@ -132,4 +132,16 @@ public interface DatabaseController {
 
     LiveData<List<Accomplishment>> getAllAccomplishmentsBetweenTimestamps(User user, LocalDateTime timestamp1, LocalDateTime timestamp2);
 
+
+    // Logs
+
+    void insertLog(LogEntity... logs);
+
+    default void insertLog(Collection<LogEntity> logs) {
+        insertLog(logs.stream().toArray(LogEntity[]::new));
+    }
+
+    void updateLog(LogEntity log);
+
+    void deleteLog(LogEntity log);
 }
