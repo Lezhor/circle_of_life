@@ -26,7 +26,9 @@ import com.android.circleoflife.database.models.Cycle;
 import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.database.models.additional.Copyable;
+import com.android.circleoflife.database.models.additional.CycleFrequency;
 import com.android.circleoflife.ui.activities.SuperActivity;
+import com.android.circleoflife.ui.activities.categories.CreateNameableDialog;
 import com.android.circleoflife.ui.activities.categories.EditNameDialog;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.CategoryRecyclerViewAdapter;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.RVHolderInterface;
@@ -38,6 +40,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.List;
+import java.util.UUID;
 
 public class CategoryActivity extends SuperActivity implements RVHolderInterface {
     private static final String TAG = "CategoryActivity";
@@ -342,24 +345,51 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
      * Opens create category dialog. called from fab or from options menu
      */
     private void openCreateCategoryDialog() {
-        // TODO: 29.12.2023 Create Category Dialog
-        Toast.makeText(this, "Creating Category", Toast.LENGTH_SHORT).show();
+        new CreateNameableDialog(R.string.category, name -> {
+            Log.d(TAG, "CreateCategoryDialog finished with name: " + name);
+            categoryViewModel.insert(new Category(
+                    UUID.randomUUID(),
+                    name,
+                    categoryViewModel.getUser().getId(),
+                    categoryViewModel.getRoot().getId()
+            ));
+        }).show(getSupportFragmentManager(), "category create dialog");
     }
 
     /**
      * Opens create cycle dialog. called from fab or from options menu
      */
     private void openCreateCycleDialog() {
-        // TODO: 29.12.2023 Create Cycle Dialog
-        Toast.makeText(this, "Creating Cycle", Toast.LENGTH_SHORT).show();
+        // TODO: 29.12.2023 Create Cycle Dialog with all params (prob in seperate activity
+        //Toast.makeText(this, "Creating Cycle", Toast.LENGTH_SHORT).show();
+        new CreateNameableDialog(R.string.cycle, name -> {
+            Log.d(TAG, "CreateTodoDialog finished with name: " + name);
+            categoryViewModel.insert(new Cycle(
+                    UUID.randomUUID(),
+                    name,
+                    categoryViewModel.getUser().getId(),
+                    categoryViewModel.getRoot().getId(),
+                    1,
+                    new CycleFrequency(CycleFrequency.getTodayMask()),
+                    false
+            ));
+        }).show(getSupportFragmentManager(), "category create dialog");
     }
 
     /**
      * Opens create todó dialog. called from fab or from options menu
      */
     private void openCreateTodoDialog() {
-        // TODO: 29.12.2023 Create Category Dialog
-        Toast.makeText(this, "Creating Todo", Toast.LENGTH_SHORT).show();
+        new CreateNameableDialog(R.string.todo, name -> {
+            Log.d(TAG, "CreateTodoDialog finished with name: " + name);
+            categoryViewModel.insert(new Todo(
+                    UUID.randomUUID(),
+                    name,
+                    categoryViewModel.getUser().getId(),
+                    categoryViewModel.getRoot().getId(),
+                    1
+            ));
+        }).show(getSupportFragmentManager(), "category create dialog");
     }
 
 
