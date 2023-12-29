@@ -24,7 +24,7 @@ import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.ui.activities.SuperActivity;
-import com.android.circleoflife.ui.activities.categories.CreateCategoryDialog;
+import com.android.circleoflife.ui.activities.categories.CreateNameableDialog;
 import com.android.circleoflife.ui.activities.categories.EditNameDialog;
 import com.android.circleoflife.ui.activities.categories.not_root.CategoryActivity;
 import com.android.circleoflife.ui.recyclerview_utils.SwipeAndDragTouchHelper;
@@ -244,7 +244,7 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
     }
 
     private void openCreateCategoryDialog() {
-        CreateCategoryDialog dialog = new CreateCategoryDialog(this::submitCreateCategoryDialog);
+        CreateNameableDialog dialog = new CreateNameableDialog(R.string.category, this::submitCreateCategoryDialog);
         dialog.show(getSupportFragmentManager(), "create root category dialog");
     }
 

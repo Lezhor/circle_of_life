@@ -2,7 +2,6 @@ package com.android.circleoflife.ui.activities.categories;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.android.circleoflife.R;
@@ -18,13 +18,15 @@ import com.android.circleoflife.database.validators.StringValidator;
 import com.android.circleoflife.ui.other.TextInputLayoutValidator;
 import com.google.android.material.textfield.TextInputLayout;
 
-public class CreateCategoryDialog extends AppCompatDialogFragment {
+public class CreateNameableDialog extends AppCompatDialogFragment {
 
     private TextInputLayout nameInput;
+    private final String nameableType;
     private final OnResultSubmitListener submit;
 
-    public CreateCategoryDialog(OnResultSubmitListener listener) {
+    public CreateNameableDialog(@StringRes int nameableType, OnResultSubmitListener listener) {
         super();
+        this.nameableType = getString(nameableType);
         this.submit = listener;
     }
 
@@ -37,12 +39,8 @@ public class CreateCategoryDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.edit_name_dialog, null);
 
         builder.setView(view)
-                .setTitle(R.string.category_dialog_title)
-                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                })
+                .setTitle(getString(R.string.dialog_create_new) + " " + nameableType)
+                .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> {})
                 .setPositiveButton(R.string.dialog_ok, null);
 
 
@@ -63,7 +61,7 @@ public class CreateCategoryDialog extends AppCompatDialogFragment {
             Button positiveButton = (Button) dialog.getButton(Dialog.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(v -> {
                 String nameString = nameInput.getEditText().getText().toString().trim();
-                if (TextInputLayoutValidator.validate(nameInput, StringValidator::validateString, "Category")) {
+                if (TextInputLayoutValidator.validate(nameInput, StringValidator::validateString, nameableType)) {
                     submit.trigger(nameString);
                     dialog.dismiss();
                 }

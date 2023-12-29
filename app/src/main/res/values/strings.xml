@@ -19,6 +19,7 @@
     <string name="category_dialog_name_hint">Name</string>
     <string name="category_dialog_parent_hint">Parent</string>
     <string name="category_dialog_no_parent">None</string>
+    <string name="dialog_create_new">Create new</string>
     <string name="category_dialog_title">Create new Category</string>
 
     <string name="dialog_cancel">Cancel</string>
