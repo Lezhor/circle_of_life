@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="custom_floating_buttons">
+        <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
+        <item name="android:background">@drawable/custom_floating_button_background</item>
+    </style>
+
+</resources>

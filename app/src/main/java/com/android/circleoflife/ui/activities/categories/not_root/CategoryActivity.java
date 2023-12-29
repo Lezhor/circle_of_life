@@ -33,11 +33,10 @@ import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.RVItemWrapper;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.holder.CategoryHolder;
 import com.android.circleoflife.ui.recyclerview_utils.SwipeAndDragTouchHelper;
-import com.android.circleoflife.ui.recyclerview_utils.SwipeWithButtonsHelper;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,15 +47,17 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
 
     private RecyclerView recyclerView;
     private CategoryRecyclerViewAdapter adapter;
-    private FloatingActionButton fab;
+    FloatingActionsMenu fabMenu;
+    FloatingActionButton fabCategory;
+    FloatingActionButton fabCycle;
+    FloatingActionButton fabTodo;
     private TextView invisText;
-    private SwipeWithButtonsHelper swipeHelper;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_root_categories);
+        setContentView(R.layout.activity_notroot_categories);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("categoryBundle");
@@ -76,7 +77,6 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
             if (actionBar == null) {
                 Log.i(TAG, "onCreate: Actionbar is null!");
             } else {
-                // TODO: 25.12.2023 Add optionsMenu
                 actionBar.setTitle(root.getName());
             }
 
@@ -88,192 +88,30 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
                 finish();
             });
 
-            fab = findViewById(R.id.floatingActionButton);
-            fab.setOnClickListener(this::onFabClicked);
+            fabMenu = findViewById(R.id.floating_action_menu);
+            fabCategory = findViewById(R.id.fab_create_category);
+            fabCycle = findViewById(R.id.fab_create_cycle);
+            fabTodo = findViewById(R.id.fab_create_todo);
+            fabCategory.setOnClickListener(view -> {
+                openCreateCategoryDialog();
+                fabMenu.collapse();
+            });
+            fabCycle.setOnClickListener(view -> {
+                openCreateCycleDialog();
+                fabMenu.collapse();
+            });
+            fabTodo.setOnClickListener(view -> {
+                openCreateTodoDialog();
+                fabMenu.collapse();
+            });
 
-            // TODO: 21.12.2023 ViewModel
-            // TODO: 21.12.2023 Recycler View!!!!!
 
-            recyclerView = findViewById(R.id.recyclerView);
+            recyclerView = findViewById(R.id.categories_recyclerView);
             adapter = new CategoryRecyclerViewAdapter(this);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-            /*
-            swipeHelper = new SwipeWithButtonsHelper(this, recyclerView) {
-                @Override
-                public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-                    underlayButtons.add(new SwipeWithButtonsHelper.UnderlayButton(
-                            R.drawable.ic_delete,
-                            R.color.md_theme_errorContainer,
-                            R.color.md_theme_error,
-                            pos -> {
-                                RVItemWrapper<?> o = adapter.getFilteredItemAtIndex(pos);
-                                switch (o.getItemType()) {
-                                    case RVItemWrapper.TYPE_CATEGORY -> categoryViewModel.delete((Category) o.getObject());
-                                    case RVItemWrapper.TYPE_CYCLE -> categoryViewModel.delete((Cycle) o.getObject());
-                                    case RVItemWrapper.TYPE_TODO -> categoryViewModel.delete((Todo) o.getObject());
-                                    default -> {
-                                        Log.w(TAG, "button pressed on ItemWrapper: " + o);
-                                        return;
-                                    }
-                                }
-                                showSnackbarWithUndoLastAction(recyclerView, categoryViewModel);
-                            }
-                    ));
-                    underlayButtons.add(new SwipeWithButtonsHelper.UnderlayButton(
-                            R.drawable.ic_edit,
-                            R.color.md_theme_secondaryContainer,
-                            R.color.md_theme_secondary,
-                            pos -> {
-                                try {
-                                    RVItemWrapper<?> o = adapter.getFilteredItemAtIndex(pos);
-                                    EditNameDialog<?> editNameDialog = switch (o.getItemType()) {
-                                        case RVItemWrapper.TYPE_CATEGORY -> new EditNameDialog<>(categoryViewModel::update, (Category) o.getObject(), R.string.category);
-                                        case RVItemWrapper.TYPE_CYCLE -> new EditNameDialog<>(categoryViewModel::update, (Cycle) o.getObject(), R.string.cycle);
-                                        case RVItemWrapper.TYPE_TODO -> new EditNameDialog<>(categoryViewModel::update, (Todo) o.getObject(), R.string.todo);
-                                        default ->
-                                                throw new IllegalStateException("Unknown Item Type: " + o.getItemType());
-                                    };
-                                    editNameDialog.show(getSupportFragmentManager(), "dialog_edit_name");
-                                } catch (ClassCastException | IllegalStateException e) {
-                                    Log.d(TAG, "Swipe edit button click failed on pos " + pos, e);
-                                }
-                            }
-                    ));
-                    if (categoryViewModel.getRoot().getParentID() != null || viewHolder instanceof CategoryHolder) {
-                        underlayButtons.add(new SwipeWithButtonsHelper.UnderlayButton(
-                                R.drawable.ic_back,
-                                R.color.md_theme_primaryContainer,
-                                R.color.md_theme_primary,
-                                pos -> {
-                                    RVItemWrapper<?> itemWrapper = adapter.getFilteredItemAtIndex(pos);
-                                    switch (itemWrapper.getItemType()) {
-                                        case RVItemWrapper.TYPE_CATEGORY -> moveToParent((Category) itemWrapper.getObject());
-                                        case RVItemWrapper.TYPE_CYCLE -> moveToParent((Cycle) itemWrapper.getObject());
-                                        case RVItemWrapper.TYPE_TODO -> moveToParent((Todo) itemWrapper.getObject());
-                                    }
-                                }
-                        ));
-                    }
-                }
-            };
-             */
-
-
-            new SwipeAndDragTouchHelper(this, recyclerView) {
-                @Override
-                protected boolean isCategory(int index) {
-                    return adapter.getFilteredItemAtIndex(index).getItemType() == RVItemWrapper.TYPE_CATEGORY;
-                }
-
-                @Override
-                protected boolean moveInto(int fromIndex, int intoIndex) {
-                    if (fromIndex == intoIndex) {
-                        return false;
-                    }
-                    RVItemWrapper<?> fromWrapper = adapter.getFilteredItemAtIndex(fromIndex);
-                    RVItemWrapper<?> intoWrapper = adapter.getFilteredItemAtIndex(intoIndex);
-                    if (intoWrapper.getItemType() != RVItemWrapper.TYPE_CATEGORY) {
-                        return false;
-                    }
-                    Category intoCategory = (Category) intoWrapper.getObject();
-                    if (fromWrapper.getObject() instanceof Copyable<?> copyable) {
-                        Object copy = copyable.copy();
-                        if (copy instanceof Category category) {
-                            category.setParentID(intoCategory.getId());
-                            categoryViewModel.update(category, R.string.snackbar_text_moved_into, intoCategory);
-                        } else if (copy instanceof Cycle cycle) {
-                            cycle.setCategoryID(intoCategory.getId());
-                            categoryViewModel.update(cycle, R.string.snackbar_text_moved_into, intoCategory);
-                        } else if (copy instanceof Todo todo) {
-                            todo.setCategoryID(intoCategory.getId());
-                            categoryViewModel.update(todo, R.string.snackbar_text_moved_into, intoCategory);
-                        } else {
-                            return false;
-                        }
-                        showSnackbarWithUndoLastAction(recyclerView, categoryViewModel);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-
-                @Override
-                protected void highlightFolder(View folder) {
-                    RelativeLayout layout = folder.findViewById(R.id.root_category_rel_layout);
-                    if (layout != null) {
-                        layout.setBackgroundColor(getColor(R.color.md_theme_secondaryContainer));
-                    }
-                }
-
-                @Override
-                protected void revertHighlightFolder(View folder) {
-                    RelativeLayout layout = folder.findViewById(R.id.root_category_rel_layout);
-                    if (layout != null) {
-                        layout.setBackgroundColor(Color.TRANSPARENT);
-                    }
-                }
-
-                @Override
-                public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-                    underlayButtons.add(new SwipeAndDragTouchHelper.UnderlayButton(
-                            R.drawable.ic_delete,
-                            R.color.md_theme_errorContainer,
-                            R.color.md_theme_error,
-                            pos -> {
-                                RVItemWrapper<?> wrapper = adapter.getFilteredItemAtIndex(pos);
-                                Object object = wrapper.getObject();
-                                if (object instanceof Category category) {
-                                    categoryViewModel.delete(category);
-                                } else if (object instanceof Cycle cycle) {
-                                    categoryViewModel.delete(cycle);
-                                } else if (object instanceof Todo todo) {
-                                    categoryViewModel.delete(todo);
-                                } else {
-                                    return;
-                                }
-                                showSnackbarWithUndoLastAction(recyclerView, categoryViewModel);
-                            }
-                    ));
-                    underlayButtons.add(new SwipeAndDragTouchHelper.UnderlayButton(
-                            R.drawable.ic_edit,
-                            R.color.md_theme_secondaryContainer,
-                            R.color.md_theme_secondary,
-                            pos -> {
-                                EditNameDialog<?> editNameDialog;
-                                RVItemWrapper<?> wrapper = adapter.getFilteredItemAtIndex(pos);
-                                Object object = wrapper.getObject();
-                                if (object instanceof Category category) {
-                                    editNameDialog = new EditNameDialog<>(categoryViewModel::update, category, R.string.category);
-                                } else if (object instanceof Cycle cycle) {
-                                    editNameDialog = new EditNameDialog<>(categoryViewModel::update, cycle, R.string.cycle);
-                                } else if (object instanceof Todo todo) {
-                                    editNameDialog = new EditNameDialog<>(categoryViewModel::update, todo, R.string.todo);
-                                } else {
-                                    return;
-                                }
-                                editNameDialog.show(getSupportFragmentManager(), "dialog_edit_category");
-                            }
-                    ));
-                    if (categoryViewModel.getRoot().getParentID() != null || viewHolder instanceof CategoryHolder) {
-                        underlayButtons.add(new SwipeAndDragTouchHelper.UnderlayButton(
-                                R.drawable.ic_back,
-                                R.color.md_theme_primaryContainer,
-                                R.color.md_theme_primary,
-                                pos -> {
-                                    RVItemWrapper<?> itemWrapper = adapter.getFilteredItemAtIndex(pos);
-                                    switch (itemWrapper.getItemType()) {
-                                        case RVItemWrapper.TYPE_CATEGORY -> moveToParent((Category) itemWrapper.getObject());
-                                        case RVItemWrapper.TYPE_CYCLE -> moveToParent((Cycle) itemWrapper.getObject());
-                                        case RVItemWrapper.TYPE_TODO -> moveToParent((Todo) itemWrapper.getObject());
-                                    }
-                                }
-                        ));
-                    }
-                }
-            };
-
+            setUpSwipeAndDrag(recyclerView);
 
             final User user = App.getAuthentication().getUser();
             if (user != null) {
@@ -300,6 +138,123 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
             }
 
         }
+
+    }
+
+    private void setUpSwipeAndDrag(RecyclerView recyclerView) {
+
+        new SwipeAndDragTouchHelper(this, recyclerView) {
+            @Override
+            protected boolean isCategory(int index) {
+                return adapter.getFilteredItemAtIndex(index).getItemType() == RVItemWrapper.TYPE_CATEGORY;
+            }
+
+            @Override
+            protected boolean moveInto(int fromIndex, int intoIndex) {
+                if (fromIndex == intoIndex) {
+                    return false;
+                }
+                RVItemWrapper<?> fromWrapper = adapter.getFilteredItemAtIndex(fromIndex);
+                RVItemWrapper<?> intoWrapper = adapter.getFilteredItemAtIndex(intoIndex);
+                if (intoWrapper.getItemType() != RVItemWrapper.TYPE_CATEGORY) {
+                    return false;
+                }
+                Category intoCategory = (Category) intoWrapper.getObject();
+                if (fromWrapper.getObject() instanceof Copyable<?> copyable) {
+                    Object copy = copyable.copy();
+                    if (copy instanceof Category category) {
+                        category.setParentID(intoCategory.getId());
+                        categoryViewModel.update(category, R.string.snackbar_text_moved_into, intoCategory);
+                    } else if (copy instanceof Cycle cycle) {
+                        cycle.setCategoryID(intoCategory.getId());
+                        categoryViewModel.update(cycle, R.string.snackbar_text_moved_into, intoCategory);
+                    } else if (copy instanceof Todo todo) {
+                        todo.setCategoryID(intoCategory.getId());
+                        categoryViewModel.update(todo, R.string.snackbar_text_moved_into, intoCategory);
+                    } else {
+                        return false;
+                    }
+                    showSnackbarWithUndoLastAction(recyclerView, categoryViewModel);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            @Override
+            protected void highlightFolder(View folder) {
+                RelativeLayout layout = folder.findViewById(R.id.root_category_rel_layout);
+                if (layout != null) {
+                    layout.setBackgroundColor(getColor(R.color.md_theme_secondaryContainer));
+                }
+            }
+
+            @Override
+            protected void revertHighlightFolder(View folder) {
+                RelativeLayout layout = folder.findViewById(R.id.root_category_rel_layout);
+                if (layout != null) {
+                    layout.setBackgroundColor(Color.TRANSPARENT);
+                }
+            }
+
+            @Override
+            public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+                underlayButtons.add(new SwipeAndDragTouchHelper.UnderlayButton(
+                        R.drawable.ic_delete,
+                        R.color.md_theme_errorContainer,
+                        R.color.md_theme_error,
+                        pos -> {
+                            RVItemWrapper<?> wrapper = adapter.getFilteredItemAtIndex(pos);
+                            Object object = wrapper.getObject();
+                            if (object instanceof Category category) {
+                                categoryViewModel.delete(category);
+                            } else if (object instanceof Cycle cycle) {
+                                categoryViewModel.delete(cycle);
+                            } else if (object instanceof Todo todo) {
+                                categoryViewModel.delete(todo);
+                            } else {
+                                return;
+                            }
+                            showSnackbarWithUndoLastAction(recyclerView, categoryViewModel);
+                        }
+                ));
+                underlayButtons.add(new SwipeAndDragTouchHelper.UnderlayButton(
+                        R.drawable.ic_edit,
+                        R.color.md_theme_secondaryContainer,
+                        R.color.md_theme_secondary,
+                        pos -> {
+                            EditNameDialog<?> editNameDialog;
+                            RVItemWrapper<?> wrapper = adapter.getFilteredItemAtIndex(pos);
+                            Object object = wrapper.getObject();
+                            if (object instanceof Category category) {
+                                editNameDialog = new EditNameDialog<>(categoryViewModel::update, category, R.string.category);
+                            } else if (object instanceof Cycle cycle) {
+                                editNameDialog = new EditNameDialog<>(categoryViewModel::update, cycle, R.string.cycle);
+                            } else if (object instanceof Todo todo) {
+                                editNameDialog = new EditNameDialog<>(categoryViewModel::update, todo, R.string.todo);
+                            } else {
+                                return;
+                            }
+                            editNameDialog.show(getSupportFragmentManager(), "dialog_edit_category");
+                        }
+                ));
+                if (categoryViewModel.getRoot().getParentID() != null || viewHolder instanceof CategoryHolder) {
+                    underlayButtons.add(new SwipeAndDragTouchHelper.UnderlayButton(
+                            R.drawable.ic_back,
+                            R.color.md_theme_primaryContainer,
+                            R.color.md_theme_primary,
+                            pos -> {
+                                RVItemWrapper<?> itemWrapper = adapter.getFilteredItemAtIndex(pos);
+                                switch (itemWrapper.getItemType()) {
+                                    case RVItemWrapper.TYPE_CATEGORY -> moveToParent((Category) itemWrapper.getObject());
+                                    case RVItemWrapper.TYPE_CYCLE -> moveToParent((Cycle) itemWrapper.getObject());
+                                    case RVItemWrapper.TYPE_TODO -> moveToParent((Todo) itemWrapper.getObject());
+                                }
+                            }
+                    ));
+                }
+            }
+        };
 
     }
 
@@ -371,31 +326,31 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
         }
     }
 
-    private void onFabClicked(View view) {
-        // TODO: 21.12.2023 Create Category/Cycle/Todo
-        //categoryViewModel.insert(new Category(UUID.randomUUID(), "Temp", categoryViewModel.getUser().getId(), categoryViewModel.getRoot().getId()));
-
-        categoryViewModel.insert(
-                new Todo(UUID.randomUUID(),
-                        "Test-Todo",
-                        categoryViewModel.getUser().getId(),
-                        categoryViewModel.getRoot().getId(),
-                        0,
-                        false,
-                        LocalDateTime.of(2023, 12, 25, 0, 0)));
-        /*
-        categoryViewModel.insert(
-                new Cycle(
-                        UUID.randomUUID(),
-                        "Mathe",
-                        categoryViewModel.getUser().getId(),
-                        categoryViewModel.getRoot().getId(),
-                        1,
-                        CycleFrequency.fromBinaryString("10000011")
-                )
-        );
-         */
+    /**
+     * Opens create category dialog. called from fab or from options menu
+     */
+    private void openCreateCategoryDialog() {
+        // TODO: 29.12.2023 Create Category Dialog
+        Toast.makeText(this, "Creating Category", Toast.LENGTH_SHORT).show();
     }
+
+    /**
+     * Opens create cycle dialog. called from fab or from options menu
+     */
+    private void openCreateCycleDialog() {
+        // TODO: 29.12.2023 Create Cycle Dialog
+        Toast.makeText(this, "Creating Cycle", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Opens create todó dialog. called from fab or from options menu
+     */
+    private void openCreateTodoDialog() {
+        // TODO: 29.12.2023 Create Category Dialog
+        Toast.makeText(this, "Creating Todo", Toast.LENGTH_SHORT).show();
+    }
+
+
 
     /**
      * Opens {@link CategoryActivity} with given category as parameter

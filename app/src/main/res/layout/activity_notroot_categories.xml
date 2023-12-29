@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activities.categories.root.RootCategoriesActivity">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/categories_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/root_category_item"
+        tools:itemCount="5"/>
+
+    <TextView
+        android:id="@+id/category_invis_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_categories_created_yet"
+        android:textAlignment="center"
+        android:textColor="@color/material_dynamic_primary60"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/floating_action_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="32dp"
+        app:fab_labelStyle="@style/custom_floating_buttons"
+        app:fab_addButtonColorNormal="@color/md_theme_primaryContainer"
+        app:fab_addButtonPlusIconColor="@color/md_theme_onPrimaryContainer">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_create_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_folder"
+            app:fab_title="@string/category"
+            app:fab_colorNormal="@color/md_theme_primaryContainer" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_create_cycle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_cycle"
+            app:fab_title="@string/cycle"
+            app:fab_colorNormal="@color/md_theme_primaryContainer" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_create_todo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_checkbox"
+            app:fab_title="@string/todo"
+            app:fab_colorNormal="@color/md_theme_primaryContainer" />
+
+
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
