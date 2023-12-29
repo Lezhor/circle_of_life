@@ -40,7 +40,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_add"
         app:maxImageSize="32dp"
-        android:contentDescription="@string/add_category"/>
+        android:contentDescription="@string/create_category"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,6 +15,16 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/add_cycle"
+        android:title="@string/create_cycle"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/add_todo"
+        android:title="@string/create_todo"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/undo_last_action"
         android:title="@string/undo_last_action"
         app:showAsAction="never" />

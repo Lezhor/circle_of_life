@@ -38,7 +38,6 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.List;
-import java.util.UUID;
 
 public class CategoryActivity extends SuperActivity implements RVHolderInterface {
     private static final String TAG = "CategoryActivity";
@@ -118,6 +117,7 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
                 categoryViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
                     @NonNull
                     @Override
+                    @SuppressWarnings("unchecked")
                     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
                         return (T) new CategoryViewModel(user, root);
                     }
@@ -265,7 +265,7 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        setUpMenu(menu, R.menu.categories_root_toolbar_menu);
+        setUpMenu(menu, R.menu.categories_toolbar_menu);
         MenuItem searchItem = menu.findItem(R.id.search_button);
         setUpSearchView((SearchView) searchItem.getActionView(), getString(R.string.search_in_hint) + " " + categoryViewModel.getRoot().getName(), adapter);
         return super.onCreateOptionsMenu(menu);
@@ -275,7 +275,11 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.add_category) {
-            categoryViewModel.insert(new Category(UUID.randomUUID(), "Hello There", categoryViewModel.getUser().getId(), categoryViewModel.getRoot().getId()));
+            openCreateCategoryDialog();
+        } else if (id == R.id.add_cycle) {
+            openCreateCycleDialog();
+        } else if (id == R.id.add_todo) {
+            openCreateTodoDialog();
         } else if (id == R.id.undo_last_action) {
             if (!categoryViewModel.revertLastAction()) {
                 Toast.makeText(this, getString(R.string.toast_there_is_no_action_to_undo), Toast.LENGTH_SHORT).show();
