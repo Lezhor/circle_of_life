@@ -11,14 +11,16 @@
         android:id="@+id/categories_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/root_category_item"
-        tools:itemCount="5"/>
+        tools:itemCount="5"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp"
+        tools:listitem="@layout/root_category_item" />
 
     <TextView
         android:id="@+id/category_invis_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/no_categories_created_yet"
+        android:text="@string/category_empty"
         android:textAlignment="center"
         android:textColor="@color/material_dynamic_primary60"
         android:textSize="18sp"
@@ -28,6 +30,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/delete_root_category_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/md_theme_errorContainer"
+        android:padding="12dp"
+        android:clickable="true"
+        android:text="@string/delete_category"
+        android:textAlignment="center"
+        android:textColor="@color/md_theme_error"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/category_invis_text" />
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/floating_action_menu"

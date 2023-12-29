@@ -26,7 +26,8 @@
     <string name="dialog_edit_title">Edit %s</string>
     <string name="dialog_edit_name_hint">New name</string>
 
-    <string name="category_empty">Category is\nEmpty\nClick to Delete</string>
+    <string name="category_empty">Category is empty</string>
+    <string name="delete_category">DELETE CATEGORY</string>
 
     <string name="snackbar_text_inserted">Inserted</string>
     <string name="snackbar_text_deleted">Deleted</string>

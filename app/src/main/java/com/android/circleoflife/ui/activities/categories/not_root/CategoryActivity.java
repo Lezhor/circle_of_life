@@ -51,6 +51,7 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
     FloatingActionButton fabCycle;
     FloatingActionButton fabTodo;
     private TextView invisText;
+    private TextView invisDeleteButton;
 
 
     @Override
@@ -81,8 +82,10 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
 
             invisText = findViewById(R.id.category_invis_text);
             invisText.setText(R.string.category_empty);
-            invisText.setEnabled(false);
-            invisText.setOnClickListener(view -> {
+            invisText.setVisibility(View.GONE);
+            invisDeleteButton = findViewById(R.id.delete_root_category_button);
+            invisDeleteButton.setVisibility(View.GONE);
+            invisDeleteButton.setOnClickListener(view -> {
                 categoryViewModel.delete(categoryViewModel.getRoot());
                 finish();
             });
@@ -146,7 +149,12 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
         new SwipeAndDragTouchHelper(this, recyclerView) {
             @Override
             protected boolean isCategory(int index) {
-                return adapter.getFilteredItemAtIndex(index).getItemType() == RVItemWrapper.TYPE_CATEGORY;
+                RVItemWrapper<?> wrapper = adapter.getFilteredItemAtIndex(index);
+                if (wrapper != null) {
+                    return wrapper.getItemType() == RVItemWrapper.TYPE_CATEGORY;
+                } else {
+                    return false;
+                }
             }
 
             @Override
@@ -259,8 +267,8 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
     }
 
     private void setInvisText(boolean visible) {
-        invisText.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-        invisText.setEnabled(visible);
+        invisText.setVisibility(visible ? View.VISIBLE : View.GONE);
+        invisDeleteButton.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
