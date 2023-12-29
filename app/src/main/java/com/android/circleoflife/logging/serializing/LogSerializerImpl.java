@@ -42,7 +42,7 @@ public class LogSerializerImpl implements LogSerializer {
     @Override
     public DBLog deserialize(InputStream is) throws IOException {
         // TODO: 02.12.2023 deserialize logs
-        return new DBLog("Log|max_mustermann|" + System.currentTimeMillis());
+        return null;
     }
 
     @Override
