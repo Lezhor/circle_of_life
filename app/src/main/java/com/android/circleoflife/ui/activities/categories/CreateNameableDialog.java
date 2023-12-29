@@ -21,12 +21,13 @@ import com.google.android.material.textfield.TextInputLayout;
 public class CreateNameableDialog extends AppCompatDialogFragment {
 
     private TextInputLayout nameInput;
-    private final String nameableType;
+    @StringRes
+    private final int nameableType;
     private final OnResultSubmitListener submit;
 
     public CreateNameableDialog(@StringRes int nameableType, OnResultSubmitListener listener) {
         super();
-        this.nameableType = getString(nameableType);
+        this.nameableType = nameableType;
         this.submit = listener;
     }
 
@@ -35,11 +36,11 @@ public class CreateNameableDialog extends AppCompatDialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.edit_name_dialog, null);
 
         builder.setView(view)
-                .setTitle(getString(R.string.dialog_create_new) + " " + nameableType)
+                .setTitle(getString(R.string.dialog_create_new) + " " + getString(nameableType))
                 .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> {})
                 .setPositiveButton(R.string.dialog_ok, null);
 
@@ -61,7 +62,7 @@ public class CreateNameableDialog extends AppCompatDialogFragment {
             Button positiveButton = (Button) dialog.getButton(Dialog.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(v -> {
                 String nameString = nameInput.getEditText().getText().toString().trim();
-                if (TextInputLayoutValidator.validate(nameInput, StringValidator::validateString, nameableType)) {
+                if (TextInputLayoutValidator.validate(nameInput, StringValidator::validateString, getString(nameableType))) {
                     submit.trigger(nameString);
                     dialog.dismiss();
                 }
