@@ -10,7 +10,6 @@ import com.android.circleoflife.logging.model.DBLog;
  * Used in {@link com.android.circleoflife.database.control.AppDatabase AppDatabase}
  */
 public class DBLogConverter {
-    // TODO: 29.12.2023 Make methods static
 
     /**
      * Converts DBLog to String representation
@@ -19,7 +18,7 @@ public class DBLogConverter {
      * @see com.android.circleoflife.logging.serializing.LogSerializer#dbLogToString(DBLog)
      */
     @TypeConverter
-    public String dbLogToString(DBLog<?> log) {
+    public static String dbLogToString(DBLog<?> log) {
         return DBLog.toString(log);
     }
 
@@ -30,7 +29,7 @@ public class DBLogConverter {
      * @see com.android.circleoflife.logging.serializing.LogSerializer#stringToDBLog(String)
      */
     @TypeConverter
-    public DBLog<?> stringToDBLog(String str) {
+    public static DBLog<?> stringToDBLog(String str) {
         return DBLog.fromString(str);
     }
 
