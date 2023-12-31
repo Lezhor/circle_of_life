@@ -97,4 +97,11 @@ public class User implements HasUserId, Copyable<User> {
     public UUID getUserID() {
         return getId();
     }
+
+    public boolean equalsAllParams(User that) {
+        return this.id.equals(that.id)
+                && this.username.equals(that.username)
+                && this.password.equals(that.password)
+                && this.timeOfCreation.equals(that.timeOfCreation);
+    }
 }

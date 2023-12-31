@@ -13,6 +13,76 @@ import java.util.Arrays;
 public final class EntityStringParser {
 
     public static final String SEPARATOR = "dkbKBj9dkjkKJd";
+    public static final String USER = "user";
+    public static final String CATEGORY = "category";
+    public static final String CYCLE = "cycle";
+    public static final String TODO = "todo";
+    public static final String ACCOMPLISHMENT = "accomplishment";
+
+    /**
+     * Checks which class the passed object is and calls the corresponding method
+     * @param object object
+     * @return string representing object
+     */
+    public static String objectToString(Object object) {
+        if (object instanceof User user) {
+            return userToString(user);
+        } else if (object instanceof Category category) {
+            return categoryToString(category);
+        } else if (object instanceof Cycle cycle) {
+            return cycleToString(cycle);
+        } else if (object instanceof Todo todo) {
+            return todoToString(todo);
+        } else if (object instanceof Accomplishment accomplishment) {
+            return accomplishmentToString(accomplishment);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Checks which class the passed object is and calls the corresponding method
+     * @param str string
+     * @return string representing object
+     */
+    public static Object objectFromString(String str) {
+        return switch (str.split(SEPARATOR)[0]) {
+            case USER -> userFromString(str);
+            case CATEGORY -> categoryFromString(str);
+            case CYCLE -> cycleFromString(str);
+            case TODO -> todoFromString(str);
+            case ACCOMPLISHMENT -> accomplishmentFromString(str);
+            default -> null;
+        };
+    }
+
+    /**
+     * serializes category to string
+     * @param user category
+     * @return serialized string
+     */
+    public static String userToString(User user) {
+        return USER + SEPARATOR
+                + UUIDConverter.uuidToString(user.getId()) + SEPARATOR
+                + user.getUsername() + SEPARATOR
+                + user.getPassword() + SEPARATOR
+                + LocalDateTimeConverter.localDateTimeToString(user.getTimeOfCreation());
+    }
+
+    /**
+     * deserializes category from string
+     * @param str string
+     * @return deserialized category
+     */
+    public static User userFromString(String str) {
+        String[] split = replaceNullStringWithNull(str.split(SEPARATOR));
+        return new User(
+                UUIDConverter.uuidFromString(split[1]),
+                split[2],
+                split[3],
+                LocalDateTimeConverter.localDateTimeFromString(split[4])
+        );
+    }
 
     /**
      * serializes category to string
@@ -20,7 +90,7 @@ public final class EntityStringParser {
      * @return serialized string
      */
     public static String categoryToString(Category category) {
-        return "category" + SEPARATOR
+        return CATEGORY + SEPARATOR
                 + UUIDConverter.uuidToString(category.getId()) + SEPARATOR
                 + category.getName() + SEPARATOR
                 + UUIDConverter.uuidToString(category.getUserID()) + SEPARATOR
@@ -48,7 +118,7 @@ public final class EntityStringParser {
      * @return serialized string
      */
     public static String cycleToString(Cycle cycle) {
-        return "cycle" + SEPARATOR
+        return CYCLE + SEPARATOR
                 + UUIDConverter.uuidToString(cycle.getId()) + SEPARATOR
                 + cycle.getName() + SEPARATOR
                 + UUIDConverter.uuidToString(cycle.getUserID()) + SEPARATOR
@@ -79,7 +149,7 @@ public final class EntityStringParser {
      * @return serialized string
      */
     public static String todoToString(Todo todo) {
-        return "todo" + SEPARATOR
+        return TODO + SEPARATOR
                 + UUIDConverter.uuidToString(todo.getId()) + SEPARATOR
                 + todo.getName() + SEPARATOR
                 + UUIDConverter.uuidToString(todo.getUserID()) + SEPARATOR
@@ -112,7 +182,7 @@ public final class EntityStringParser {
      * @return serialized string
      */
     public static String accomplishmentToString(Accomplishment accomplishment) {
-        return "accomplishment" + SEPARATOR
+        return ACCOMPLISHMENT + SEPARATOR
                 + UUIDConverter.uuidToString(accomplishment.getId()) + SEPARATOR
                 + UUIDConverter.uuidToString(accomplishment.getUserID()) + SEPARATOR
                 + UUIDConverter.uuidToString(accomplishment.getCycleID()) + SEPARATOR

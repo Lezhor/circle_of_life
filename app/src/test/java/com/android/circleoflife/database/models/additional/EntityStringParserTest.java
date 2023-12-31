@@ -31,6 +31,14 @@ public class EntityStringParserTest {
 
 
     @Test
+    public void testUserParsing() {
+        String str = EntityStringParser.userToString(user);
+        User parsed = EntityStringParser.userFromString(str);
+        assertEquals(user, parsed);
+        assertTrue(user.equalsAllParams(parsed));
+    }
+
+    @Test
     public void testCategoryParsing() {
         String str = EntityStringParser.categoryToString(category);
         Category parsed = EntityStringParser.categoryFromString(str);
@@ -60,6 +68,15 @@ public class EntityStringParserTest {
         Accomplishment parsed = EntityStringParser.accomplishmentFromString(str);
         assertEquals(accomplishment, parsed);
         assertTrue(accomplishment.equalsAllParams(parsed));
+    }
+
+    @Test
+    public void objectParsing() {
+        assertTrue(user.equalsAllParams((User) EntityStringParser.objectFromString(EntityStringParser.objectToString(user))));
+        assertTrue(category.equalsAllParams((Category) EntityStringParser.objectFromString(EntityStringParser.objectToString(category))));
+        assertTrue(cycle.equalsAllParams((Cycle) EntityStringParser.objectFromString(EntityStringParser.objectToString(cycle))));
+        assertTrue(todo.equalsAllParams((Todo) EntityStringParser.objectFromString(EntityStringParser.objectToString(todo))));
+        assertTrue(accomplishment.equalsAllParams((Accomplishment) EntityStringParser.objectFromString(EntityStringParser.objectToString(accomplishment))));
     }
 
 }
