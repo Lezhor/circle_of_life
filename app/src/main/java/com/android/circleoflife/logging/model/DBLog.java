@@ -9,6 +9,7 @@ import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.database.models.additional.Copyable;
 import com.android.circleoflife.database.models.additional.HasUserId;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class DBLog<E extends HasUserId> {
@@ -17,6 +18,7 @@ public class DBLog<E extends HasUserId> {
     private final UUID userID;
     private final E changedObject;
     private final ChangeMode changeMode;
+    private final LocalDateTime timestamp;
 
     /**
      * Converts string to a log. the opposite operation ist {@link #toString(DBLog)}
@@ -46,6 +48,28 @@ public class DBLog<E extends HasUserId> {
         }
     }
 
+    /**
+     * Private constructor for initializing every attribute directly
+     * @param id id of the log
+     * @param userID userId
+     * @param changedObject changedObject
+     * @param changeMode changeMode
+     * @param timestamp timestamp
+     */
+    private DBLog(UUID id, UUID userID, E changedObject, ChangeMode changeMode, LocalDateTime timestamp) {
+        this.id = id;
+        this.userID = userID;
+        this.changedObject = changedObject;
+        this.changeMode = changeMode;
+        this.timestamp = timestamp;
+    }
+
+    /**
+     * Constructor for DBLog. Initializes DBLog
+     * @param changedObject object which got changed during the transaction
+     * @param changeMode transaction mode (Insert, Update, Delete)
+     */
+
     public DBLog(@NonNull Copyable<E> changedObject, ChangeMode changeMode) {
         this(UUID.randomUUID(), changedObject, changeMode);
     }
@@ -61,6 +85,7 @@ public class DBLog<E extends HasUserId> {
         this.changedObject = changedObject.copy();
         this.userID = this.changedObject.getUserID();
         this.changeMode = changeMode;
+        this.timestamp = LocalDateTime.now();
     }
 
     /**
@@ -113,6 +138,10 @@ public class DBLog<E extends HasUserId> {
 
     public UUID getUserId() {
         return userID;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 
     public enum ChangeMode {
