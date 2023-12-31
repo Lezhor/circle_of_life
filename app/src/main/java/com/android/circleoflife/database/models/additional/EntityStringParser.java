@@ -75,7 +75,7 @@ public final class EntityStringParser {
     }
 
     /**
-     * serializes cycle to string
+     * serializes todó to string
      * @return serialized string
      */
     public static String todoToString(Todo todo) {
