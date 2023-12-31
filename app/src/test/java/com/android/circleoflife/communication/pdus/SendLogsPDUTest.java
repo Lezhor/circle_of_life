@@ -2,7 +2,11 @@ package com.android.circleoflife.communication.pdus;
 
 import static org.junit.Assert.*;
 
+import com.android.circleoflife.application.App;
+import com.android.circleoflife.database.models.Category;
+import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.logging.model.DBLog;
+import com.android.circleoflife.logging.serializing.LogSerializer;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,19 +14,25 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Tests {@link SendLogsPDU}
  */
 public class SendLogsPDUTest {
-    DBLog[] logArray;
+    DBLog<?>[] logArray;
 
     @Before
     public void setUp() {
         logArray = new DBLog[3];
         // TODO: 03.12.2023 Test SendLogsPDU Setup
+        logArray[0] = new DBLog<>(UUID.randomUUID(), new Category(UUID.randomUUID(), "Test Category", UUID.randomUUID(), null), DBLog.ChangeMode.INSERT);
+        logArray[1] = new DBLog<>(UUID.randomUUID(), new User(UUID.randomUUID(), "john_doe", "this.password1", LocalDateTime.now()), DBLog.ChangeMode.UPDATE);
+        logArray[2] = new DBLog<>(UUID.randomUUID(), new Category(UUID.randomUUID(), "Test Category", UUID.randomUUID(), null), DBLog.ChangeMode.DELETE);
     }
 
     /**
@@ -31,7 +41,6 @@ public class SendLogsPDUTest {
      */
     @Test
     public void testSerialize() {
-        // TODO: 03.12.2023 Test SendLogsPDU serialize
         System.out.println("Testing SendLogsPDU Serializing");
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -40,6 +49,13 @@ public class SendLogsPDUTest {
             InputStream is = new ByteArrayInputStream(os.toByteArray());
             DataInputStream dis = new DataInputStream(is);
             assertEquals(pdu.getID(), dis.readInt());
+            assertEquals(logArray.length, dis.readInt());
+
+            LogSerializer serializer = App.getLogSerializer();
+            for (DBLog<?> actualLog : logArray) {
+                assertEquals(actualLog, serializer.deserialize(is));
+            }
+
         } catch (IOException e) {
             fail();
         }
@@ -51,15 +67,27 @@ public class SendLogsPDUTest {
      */
     @Test
     public void testDeserialize() {
-        // TODO: 03.12.2023 Test SendLogsPDU deserialize
         System.out.println("Testing SendLogsPDU Deserializing");
         try {
-            InputStream is = new ByteArrayInputStream(new byte[0]);
-            PDU pdu = SendLogsPDU.fromInputStream(is);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            DataOutputStream dos = new DataOutputStream(bos);
+
+            LogSerializer serializer = App.getLogSerializer();
+
+            dos.writeInt(SendLogsPDU.ID);
+            dos.writeInt(logArray.length);
+            for (DBLog<?> log : logArray) {
+                serializer.serialize(bos, log);
+            }
+
+            InputStream is = new ByteArrayInputStream(bos.toByteArray());
+            DataInputStream dis = new DataInputStream(is);
+            assertEquals(SendLogsPDU.ID, dis.readInt());
+            SendLogsPDU pdu = SendLogsPDU.fromInputStream(is);
             assertEquals(SendLogsPDU.ID, pdu.getID());
+            assertArrayEquals(logArray, pdu.getLogs());
         } catch (IOException e) {
-            // Comment this in again!
-            //fail();
+            fail();
         }
     }
 }
