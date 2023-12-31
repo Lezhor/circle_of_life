@@ -19,12 +19,12 @@ public class SendLogsPDU implements PDU {
 
     public final static int ID = 4;
 
-    private DBLog[] logArray;
+    private DBLog<?>[] logArray;
 
     /**
      * Creates a pdu with logs - Note: There is no way to edit the logs later
      */
-    public SendLogsPDU(DBLog... logs) {
+    public SendLogsPDU(DBLog<?>... logs) {
         this.logArray = logs;
     }
 
@@ -39,7 +39,7 @@ public class SendLogsPDU implements PDU {
         dos.writeInt(getID());
         dos.writeInt(logArray.length);
         LogSerializer logSerializer = App.getLogSerializer();
-        for (DBLog log : logArray) {
+        for (DBLog<?> log : logArray) {
             logSerializer.serialize(os, log);
         }
     }
@@ -48,7 +48,7 @@ public class SendLogsPDU implements PDU {
     public void deserialize(InputStream is) throws IOException {
         DataInputStream dis = new DataInputStream(is);
         int logCount = dis.readInt();
-        DBLog[] logs = new DBLog[logCount];
+        DBLog<?>[] logs = new DBLog[logCount];
         LogSerializer logSerializer = App.getLogSerializer();
         for (int i = 0; i < logs.length; i++) {
             logs[i] = logSerializer.deserialize(is);
@@ -71,7 +71,7 @@ public class SendLogsPDU implements PDU {
      * Getter for the logs
      * @return the log array
      */
-    public DBLog[] getLogs() {
+    public DBLog<?>[] getLogs() {
         return logArray;
     }
 }

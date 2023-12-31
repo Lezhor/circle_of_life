@@ -13,15 +13,13 @@ import java.io.OutputStream;
  */
 public interface LogSerializer {
 
-    // TODO: 29.12.2023 REMOVE
-
     /**
      * serializes log to OutputStream
      * @param os OutputStream
      * @param log log to be serialized
      * @throws IOException if serializing fails
      */
-    void serialize(OutputStream os, DBLog log) throws IOException;
+    void serialize(OutputStream os, DBLog<?> log) throws IOException;
 
     /**
      * deserializes log from InputStream
@@ -29,20 +27,6 @@ public interface LogSerializer {
      * @return log to be serialized
      * @throws IOException if deserializing fails
      */
-    DBLog deserialize(InputStream is) throws IOException;
-
-    /**
-     * Converts a log to its String Representation
-     * @param log log
-     * @return String representation of log
-     */
-    String dbLogToString(DBLog log);
-
-    /**
-     * Converts a String to a DBLog Object
-     * @param str string representation of log
-     * @return converted DBLog
-     */
-    DBLog stringToDBLog(String str);
+    DBLog<?> deserialize(InputStream is) throws IOException;
 
 }

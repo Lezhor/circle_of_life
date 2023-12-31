@@ -1,8 +1,11 @@
 package com.android.circleoflife.logging.serializing;
 
 import com.android.circleoflife.communication.pdus.SendLogsPDU;
+import com.android.circleoflife.database.models.type_converters.DBLogConverter;
 import com.android.circleoflife.logging.model.DBLog;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,26 +38,15 @@ public class LogSerializerImpl implements LogSerializer {
     }
 
     @Override
-    public void serialize(OutputStream os, DBLog log) throws IOException {
-        // TODO: 02.12.2023 serialize logs
+    public void serialize(OutputStream os, DBLog<?> log) throws IOException {
+        DataOutputStream dos = new DataOutputStream(os);
+        dos.writeUTF(DBLogConverter.dbLogToString(log));
     }
 
     @Override
-    public DBLog deserialize(InputStream is) throws IOException {
-        // TODO: 02.12.2023 deserialize logs
-        return null;
-    }
-
-    @Override
-    public String dbLogToString(DBLog log) {
-        // TODO: 06.12.2023 Implement LogToString (maybe by calling DBLog.toString())
-        return null;
-    }
-
-    @Override
-    public DBLog stringToDBLog(String str) {
-        // TODO: 06.12.2023 Implement StringToLog (maybe by calling a method in DBLog)
-        return null;
+    public DBLog<?> deserialize(InputStream is) throws IOException {
+        DataInputStream dis = new DataInputStream(is);
+        return DBLogConverter.stringToDBLog(dis.readUTF());
     }
 
 }

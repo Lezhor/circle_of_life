@@ -15,7 +15,6 @@ public class DBLogConverter {
      * Converts DBLog to String representation
      * @param log Log
      * @return String representation
-     * @see com.android.circleoflife.logging.serializing.LogSerializer#dbLogToString(DBLog)
      */
     @TypeConverter
     public static String dbLogToString(DBLog<?> log) {
@@ -26,7 +25,6 @@ public class DBLogConverter {
      * Converts String to log
      * @param str String representation of log
      * @return converted log
-     * @see com.android.circleoflife.logging.serializing.LogSerializer#stringToDBLog(String)
      */
     @TypeConverter
     public static DBLog<?> stringToDBLog(String str) {
