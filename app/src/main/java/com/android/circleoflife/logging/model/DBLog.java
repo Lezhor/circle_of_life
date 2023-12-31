@@ -1,5 +1,7 @@
 package com.android.circleoflife.logging.model;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.circleoflife.database.models.Accomplishment;
 import com.android.circleoflife.database.models.Category;
@@ -7,12 +9,16 @@ import com.android.circleoflife.database.models.Cycle;
 import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.database.models.additional.Copyable;
+import com.android.circleoflife.database.models.additional.EntityStringParser;
 import com.android.circleoflife.database.models.additional.HasUserId;
+import com.android.circleoflife.database.models.type_converters.LocalDateTimeConverter;
+import com.android.circleoflife.database.models.type_converters.UUIDConverter;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class DBLog<E extends HasUserId> {
+    final static String SEPARATOR = "dkjLdj4wlkK6lSD3OP";
 
     private final UUID id;
     private final UUID userID;
@@ -22,6 +28,7 @@ public class DBLog<E extends HasUserId> {
 
     /**
      * Converts string to a log. the opposite operation ist {@link #toString(DBLog)}
+     *
      * @param str string to be converted
      * @return converted log
      */
@@ -29,13 +36,26 @@ public class DBLog<E extends HasUserId> {
         if (str == null) {
             return null;
         } else {
-            // TODO: 29.12.2023 Parse Log from string
-            return null;
+            String[] split = str.split(SEPARATOR);
+            UUID id = UUIDConverter.uuidFromString(split[2]);
+            UUID userId = UUIDConverter.uuidFromString(split[3]);
+            Object changedObject = EntityStringParser.objectFromString(split[4]);
+            ChangeMode mode = ChangeMode.parseFromString(split[5]);
+            LocalDateTime timestamp = LocalDateTimeConverter.localDateTimeFromString(split[6]);
+            return switch (split[1]) {
+                case EntityStringParser.USER -> new DBLog<>(id, userId, (User) changedObject, mode, timestamp);
+                case EntityStringParser.CATEGORY -> new DBLog<>(id, userId, (Category) changedObject, mode, timestamp);
+                case EntityStringParser.CYCLE -> new DBLog<>(id, userId, (Cycle) changedObject, mode, timestamp);
+                case EntityStringParser.TODO -> new DBLog<>(id, userId, (Todo) changedObject, mode, timestamp);
+                case EntityStringParser.ACCOMPLISHMENT -> new DBLog<>(id, userId, (Accomplishment) changedObject, mode, timestamp);
+                default -> null;
+            };
         }
     }
 
     /**
      * Converts given log to string. the opposite operation is {@link #fromString(String)}
+     *
      * @param log log to be converted
      * @return converted string
      */
@@ -43,20 +63,33 @@ public class DBLog<E extends HasUserId> {
         if (log == null) {
             return null;
         } else {
-            // TODO: 29.12.2023 Parse log to string
-            return "";
+            return "log" + SEPARATOR +
+                    switch (log.getObjectType()) {
+                        case 0 -> EntityStringParser.USER;
+                        case 1 -> EntityStringParser.CATEGORY;
+                        case 2 -> EntityStringParser.CYCLE;
+                        case 3 -> EntityStringParser.TODO;
+                        case 4 -> EntityStringParser.ACCOMPLISHMENT;
+                        default -> "null";
+                    } + SEPARATOR
+                    + UUIDConverter.uuidToString(log.id) + SEPARATOR
+                    + UUIDConverter.uuidToString(log.userID) + SEPARATOR
+                    + EntityStringParser.objectToString(log.changedObject) + SEPARATOR
+                    + ChangeMode.parseToString(log.changeMode) + SEPARATOR
+                    + LocalDateTimeConverter.localDateTimeToString(log.timestamp);
         }
     }
 
     /**
      * Private constructor for initializing every attribute directly
-     * @param id id of the log
-     * @param userID userId
+     *
+     * @param id            id of the log
+     * @param userID        userId
      * @param changedObject changedObject
-     * @param changeMode changeMode
-     * @param timestamp timestamp
+     * @param changeMode    changeMode
+     * @param timestamp     timestamp
      */
-    private DBLog(UUID id, UUID userID, E changedObject, ChangeMode changeMode, LocalDateTime timestamp) {
+    DBLog(UUID id, UUID userID, E changedObject, ChangeMode changeMode, LocalDateTime timestamp) {
         this.id = id;
         this.userID = userID;
         this.changedObject = changedObject;
@@ -66,8 +99,9 @@ public class DBLog<E extends HasUserId> {
 
     /**
      * Constructor for DBLog. Initializes DBLog
+     *
      * @param changedObject object which got changed during the transaction
-     * @param changeMode transaction mode (Insert, Update, Delete)
+     * @param changeMode    transaction mode (Insert, Update, Delete)
      */
 
     public DBLog(@NonNull Copyable<E> changedObject, ChangeMode changeMode) {
@@ -76,9 +110,10 @@ public class DBLog<E extends HasUserId> {
 
     /**
      * Constructor for DBLog
-     * @param id id
+     *
+     * @param id            id
      * @param changedObject changedObject
-     * @param changeMode changeMode
+     * @param changeMode    changeMode
      */
     public DBLog(@NonNull UUID id, @NonNull Copyable<E> changedObject, ChangeMode changeMode) {
         this.id = id;
@@ -86,15 +121,6 @@ public class DBLog<E extends HasUserId> {
         this.userID = this.changedObject.getUserID();
         this.changeMode = changeMode;
         this.timestamp = LocalDateTime.now();
-    }
-
-    /**
-     * True if objects are of same instance
-     * @param that other DBLog
-     * @return true if same instance type
-     */
-    public boolean sameObjectType(DBLog<?> that) {
-        return this.getObjectType() == that.getObjectType();
     }
 
     /**
@@ -106,6 +132,7 @@ public class DBLog<E extends HasUserId> {
      *     3 - To do
      *     4 - Accomplishment
      * </pre>
+     *
      * @return integer based on object type
      */
     private int getObjectType() {
@@ -144,8 +171,29 @@ public class DBLog<E extends HasUserId> {
         return timestamp;
     }
 
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof DBLog<?> that) {
+            return this.id.equals(that.id)
+                    && this.userID.equals(that.userID)
+                    && this.changedObject.equals(that.changedObject)
+                    && this.changeMode == that.changeMode
+                    && this.timestamp.equals(that.timestamp);
+        }
+        return false;
+    }
+
     public enum ChangeMode {
-        INSERT, UPDATE, DELETE
+        INSERT, UPDATE, DELETE;
+
+        static String parseToString(ChangeMode mode) {
+            return mode.name();
+        }
+
+        static ChangeMode parseFromString(String name) {
+            return valueOf(name);
+        }
+
     }
 
 
