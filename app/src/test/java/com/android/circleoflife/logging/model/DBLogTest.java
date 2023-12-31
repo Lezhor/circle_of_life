@@ -37,9 +37,9 @@ public class DBLogTest {
 
     @Test
     public void testLogParsing() {
-        DBLog<Category> log1 = new DBLog<>(UUID.randomUUID(), category, DBLog.ChangeMode.UPDATE);
-        DBLog<Todo> log2 = new DBLog<>(UUID.randomUUID(), todo, DBLog.ChangeMode.INSERT);
-        DBLog<User> log3 = new DBLog<>(UUID.randomUUID(), user, DBLog.ChangeMode.DELETE);
+        DBLog<Category> log1 = new DBLog<>(category, DBLog.ChangeMode.UPDATE);
+        DBLog<Todo> log2 = new DBLog<>(todo, DBLog.ChangeMode.INSERT);
+        DBLog<User> log3 = new DBLog<>(user, DBLog.ChangeMode.DELETE);
         DBLog<Accomplishment> log4 = new DBLog<>(UUID.randomUUID(), user.getId(), accomplishment, DBLog.ChangeMode.DELETE, LocalDateTime.of(2023, 12, 28, 14, 43, 14, 426));
         assertEquals(log1, DBLog.fromString(DBLog.toString(log1)));
         assertEquals(log2, DBLog.fromString(DBLog.toString(log2)));
