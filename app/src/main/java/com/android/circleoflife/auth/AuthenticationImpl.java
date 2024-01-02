@@ -85,38 +85,13 @@ public class AuthenticationImpl implements Authentication {
     }
 
     @Override
-    public String getUserName() throws AuthenticationFailedException {
-        return null;
-    }
-
-    @Override
-    public String usernameToDisplayedVersion(String username) {
-        return null;
-    }
-
-    @Override
-    public String displayedUsernameToActualVersion(String displayedUsername) {
-        return null;
-    }
-
-    @Override
-    public String getPasswordHash() throws AuthenticationFailedException {
-        return null;
-    }
-
-    @Override
-    public Date getTimeStampOfAccountCreation() throws AuthenticationFailedException {
-        return null;
-    }
-
-    @Override
     public String getAuthenticationString() throws AuthenticationFailedException {
         return null;
     }
 
     @Override
-    public boolean authenticated(String userName) {
-        return false;
+    public boolean authenticated(User user) {
+        return user != null;
     }
 
     @Override
@@ -135,17 +110,7 @@ public class AuthenticationImpl implements Authentication {
     }
 
     @Override
-    public void validateUserName(String userName) throws IllegalArgumentException {
-
-    }
-
-    @Override
     public boolean checkIfUserNameAvailable(String userName, boolean onServerToo) throws IOException {
         return false;
-    }
-
-    @Override
-    public void validatePassword(String password) throws IllegalArgumentException {
-
     }
 }

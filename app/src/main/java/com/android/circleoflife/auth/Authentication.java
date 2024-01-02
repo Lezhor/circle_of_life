@@ -32,67 +32,17 @@ public interface Authentication {
     /**
      * Returns logged in user and null if no user is currently authenticated
      * @return user which is currently logged in
+     * @throws AuthenticationFailedException if no user currently logged in
      */
-    User getUser();
+    User getUser() throws AuthenticationFailedException;
 
     /**
      * Waits until User is set! - This method should be called on a background thread
      * @return user
      * @throws InterruptedException if waiting was interrupted
+     * @throws AuthenticationFailedException if no user currently logged in
      */
-    User waitForUser() throws InterruptedException;
-
-    /**
-     * Getter for username. Returns null if currently not authenticated<br>
-     * Username contains only lowercase letters, digits and underscores
-     * @return returns username
-     * @throws AuthenticationFailedException if user is not logged in
-     */
-    String getUserName() throws AuthenticationFailedException;
-
-    /**
-     * Returns the displayed version of the userName.
-     * @return displayed version of userName
-     * @see Authentication#usernameToDisplayedVersion(String)
-     * @throws AuthenticationFailedException if user is not logged in
-     */
-    default String getDisplayedUsername() throws AuthenticationFailedException {
-        return usernameToDisplayedVersion(getUserName());
-    }
-
-    /**
-     * Converts username to its displayed version<br>
-     * The differences are that:<br>
-     * 1) all underscores are replaced with spaces<br>
-     * 2) every new word starts with a capital letter
-     * @param username username
-     * @return displayed version of username
-     */
-    String usernameToDisplayedVersion(String username);
-
-    /**
-     * Converts displayedUsername to actual version<br>
-     * The differences are that:<br>
-     * 1) all spaces are replaced with underscores<br>
-     * 2) everything is lowercase
-     * @param displayedUsername displayedUsername
-     * @return actual version of username with underscores and lowercase letters
-     */
-    String displayedUsernameToActualVersion(String displayedUsername);
-
-    /**
-     * Getter for password hash. PasswordHash makes use of timeStampOfAccountCreation. Returns null if currently not authenticated.
-     * @return returns password hash
-     * @throws AuthenticationFailedException if user is not logged in
-     */
-    String getPasswordHash() throws AuthenticationFailedException;
-
-    /**
-     * Returns timestamp of account creation. can't be changed.
-     * @return timestamp of account creation.
-     * @throws AuthenticationFailedException if user is not logged in
-     */
-    Date getTimeStampOfAccountCreation() throws AuthenticationFailedException;
+    User waitForUser() throws AuthenticationFailedException, InterruptedException;
 
     /**
      * Used in {@link SyncProtocol SyncProtocol} for the authentication.<br>
@@ -107,10 +57,10 @@ public interface Authentication {
 
     /**
      * Returns authenticated status for user username
-     * @param userName user to be checked.
+     * @param user user to be checked.
      * @return true if the passed userName is currently authenticated
      */
-    boolean authenticated(String userName);
+    boolean authenticated(User user);
 
     /**
      * Checks authentication on server and sets the values of this instance if successful<br><br>
@@ -120,9 +70,10 @@ public interface Authentication {
      * @param userName userName for authentication
      * @param password password for authentication
      * @return true or false whether or not the user is authenticated now.
-     * @throws AuthenticationFailedException if user is not logged in
+     * @throws AuthenticationFailedException if logging in failed (because username not found or incorrect password)
+     * @throws InterruptedException if waiting for server gets interrupted
      */
-    boolean login(String userName, String password) throws AuthenticationFailedException;
+    boolean login(String userName, String password) throws AuthenticationFailedException, InterruptedException;
 
     /**
      * After this method is called the no user will be authenticated.
@@ -137,22 +88,7 @@ public interface Authentication {
      * @param localOnly if true syncing to server is disabled. can be turned on later however fails to do so if username already exists.
      * @throws SignUpException if username or password are not valid, if username exists of if connection to server could not be achieved.
      */
-    void signUp(String userName, String password, boolean localOnly) throws SignUpException;
-
-    /**
-     * checks if userName is valid.<br>
-     * A userName is valid if:<br>
-     * 1) it is at least 4 characters long<br>
-     * 2) it contains only lowercase letters, digits and underscores<br><br>Examples for valid usernames are:<br>
-     * <code>
-     *     max_mustermann23<br>
-     *     johnny_depp<br>
-     *     mr_beast
-     * </code>
-     * @param userName username to be checked
-     * @throws IllegalArgumentException with corresponding message, if one of the conditions is not satisfied
-     */
-    void validateUserName(String userName) throws IllegalArgumentException;
+    void signUp(String userName, String password, boolean localOnly) throws SignUpException, InterruptedException;
 
     /**
      * Checks if username is currently available
@@ -162,21 +98,5 @@ public interface Authentication {
      * @throws IOException if communication to server failed
      */
     boolean checkIfUserNameAvailable(String userName, boolean onServerToo) throws IOException;
-
-    /**
-     * checks if userName is valid.<br>
-     * A userName is valid if:<br>
-     * 1) it is at least 6 characters long<br>
-     * 2) it contains only letters, digits, underscores, dots
-     * 3) it contains at least one letter and one digit
-     * <br><br>Examples for valid passwords are:<br>
-     * <code>
-     *     PassWord.323<br>
-     *     LOL123
-     * </code>
-     * @param password password to be checked
-     * @throws IllegalArgumentException with corresponding message, if one of the conditions is not satisfied
-     */
-    void validatePassword(String password) throws IllegalArgumentException;
 
 }
