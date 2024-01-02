@@ -45,6 +45,7 @@ public class ProtocolSerializer {
      * Deserializes PDU from Inputstream.<br>
      * Deserilizes the PDU ID and than calls the {@link PDU#deserialize(InputStream) deserialize()} method on specific PDU
      * @return returns deserialized PDU
+     * @throws IOException if deseralizing fails
      */
     public PDU deserialize() throws IOException {
         deserializeHeader();
@@ -56,6 +57,9 @@ public class ProtocolSerializer {
             case SendLogsPDU.ID -> SendLogsPDU.fromInputStream(is);
             case SendInstructionsPDU.ID -> SendInstructionsPDU.fromInputStream(is);
             case SyncSuccessfulPDU.ID -> SyncSuccessfulPDU.fromInputStream(is);
+            case LoginPDU.ID -> LoginPDU.fromInputStream(is);
+            case LoginFailedPDU.ID -> LoginFailedPDU.fromInputStream(is);
+            case SendUserPDU.ID -> SendUserPDU.fromInputStream(is);
             default -> throw new IOException("Failed to deserialize PDU-ID");
         };
     }
