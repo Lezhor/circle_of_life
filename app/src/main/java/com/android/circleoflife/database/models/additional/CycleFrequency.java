@@ -54,7 +54,11 @@ public class CycleFrequency {
     @Override
     public String toString() {
         // TODO: 06.12.2023 String Representation of Frequency - e.g. "every day", "every monday" etc.
-        return Arrays.stream(CycleFrequency.MASKS_DAYS_ALL).boxed().map(CycleFrequency::getDayString).reduce("Frequency{ ", (a, b) -> a + b + "; ") + "}";
+        return Arrays.stream(CycleFrequency.MASKS_DAYS_ALL)
+                .boxed()
+                .filter(i -> (i & value) > 0)
+                .map(CycleFrequency::getDayString)
+                .reduce("Frequency{ ", (a, b) -> a + b + "; ") + "}";
     }
 
     @Override
