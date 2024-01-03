@@ -1,8 +1,8 @@
 package com.android.circleoflife.communication.pdus.sync;
 
-import com.android.circleoflife.auth.Authentication;
-import com.android.circleoflife.auth.AuthenticationFailedException;
 import com.android.circleoflife.communication.pdus.PDU;
+import com.android.circleoflife.database.models.User;
+import com.android.circleoflife.database.models.additional.EntityStringParser;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -12,29 +12,23 @@ import java.io.OutputStream;
 
 /**
  * This PDU is sent to server to verify the authentication.<br>
- * Its ID is 6 and its data-block consists of a single String containing the auth-String
- *
- * @see Authentication#getAuthenticationString()
+ * Its ID is 1 and its data-block consists of a single String containing the serialized user
  */
 public class SendAuthPDU implements PDU {
 
     public final static int ID = 1;
 
-    private String authString;
+    private User user;
 
-    /**
-     * Creates a pdu with the authString
-     * @param auth needed authentication
-     */
-    public SendAuthPDU(Authentication auth) throws AuthenticationFailedException {
-        this.authString = auth.getAuthenticationString();
+    public SendAuthPDU(User user) {
+        this.user = user;
     }
 
     /**
      * is private because only {@link SendAuthPDU#fromInputStream(InputStream)} should be able to call this.
      */
     private SendAuthPDU() {
-        this.authString = null;
+        this.user = null;
     }
 
     @Override
@@ -46,13 +40,13 @@ public class SendAuthPDU implements PDU {
     public void serialize(OutputStream os) throws IOException {
         DataOutputStream dos = new DataOutputStream(os);
         dos.writeInt(getID());
-        dos.writeUTF(authString);
+        dos.writeUTF(EntityStringParser.userToString(user));
     }
 
     @Override
     public void deserialize(InputStream is) throws IOException {
         DataInputStream dis = new DataInputStream(is);
-        this.authString = dis.readUTF();
+        this.user = EntityStringParser.userFromString(dis.readUTF());
     }
 
     /**
@@ -67,10 +61,10 @@ public class SendAuthPDU implements PDU {
     }
 
     /**
-     * Getter for authString
-     * @return returns authString
+     * getter for user
+     * @return user
      */
-    public String getAuthString() {
-        return authString;
+    public User getUser() {
+        return user;
     }
 }

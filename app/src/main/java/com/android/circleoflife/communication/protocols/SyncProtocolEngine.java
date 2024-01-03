@@ -3,7 +3,6 @@ package com.android.circleoflife.communication.protocols;
 import android.util.Log;
 
 import com.android.circleoflife.application.App;
-import com.android.circleoflife.auth.Authentication;
 import com.android.circleoflife.auth.AuthenticationFailedException;
 import com.android.circleoflife.communication.pdus.*;
 import com.android.circleoflife.communication.pdus.sync.AuthNotVerifiedPDU;
@@ -13,6 +12,7 @@ import com.android.circleoflife.communication.pdus.sync.SendInstructionsPDU;
 import com.android.circleoflife.communication.pdus.sync.SendLogsPDU;
 import com.android.circleoflife.communication.pdus.sync.SyncSuccessfulPDU;
 import com.android.circleoflife.communication.socket_communication.SocketCommunication;
+import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.logging.model.DBLog;
 
 import java.io.IOException;
@@ -23,14 +23,14 @@ import java.util.stream.Collectors;
 
 /**
  * Implementation of interface {@link SyncProtocol}.<br>
- * Implements {@link SyncProtocolEngine#sync(Authentication, DBLog[], List)} and {@link SyncProtocolEngine#getLastSuccessfulSyncDate()}<br><br>
+ * Implements {@link SyncProtocolEngine#sync(User, DBLog[], List)} and {@link SyncProtocolEngine#getLastSuccessfulSyncDate()}<br><br>
  * <code>
  * PROTOCOL_NAME = "COL_SyncProt";<br>
  * VERSION = "v1.0";<br><br>
  * </code>
  * Follows the singleton pattern.
  *
- * @see SyncProtocolEngine#sync(Authentication, DBLog[], List)
+ * @see SyncProtocolEngine#sync(User, DBLog[], List)
  * @see App#getSyncProtocol()
  * @see SyncProtocol
  */
@@ -65,7 +65,7 @@ public class SyncProtocolEngine implements SyncProtocol {
     public static String VERSION = "v1.0";
 
     @Override
-    public boolean sync(Authentication auth, DBLog<?>[] logs, List<String> outSQLQueries) {
+    public boolean sync(User user, DBLog<?>[] logs, List<String> outSQLQueries) {
         boolean successful = true;
         Log.d("SyncProtocolEngine", "Begin syncing...");
         SocketCommunication com = App.openCommunicationSessionWithServer();
@@ -79,7 +79,7 @@ public class SyncProtocolEngine implements SyncProtocol {
             ProtocolSerializer serializer = new ProtocolSerializer(this, com);
 
             // Step 1:
-            SendAuthPDU authPDU = new SendAuthPDU(auth);
+            SendAuthPDU authPDU = new SendAuthPDU(user);
             Log.d("SyncProtocolEngine", "1) Sending AuthPDU...");
             serializer.serialize(authPDU);
 
@@ -87,7 +87,7 @@ public class SyncProtocolEngine implements SyncProtocol {
             PDU pdu2 = serializer.deserialize();
             Log.d("SyncProtocolEngine", "2) Received PDU with ID " + pdu2.getID());
             if (pdu2.getID() == AuthNotVerifiedPDU.ID) {
-                throw new AuthenticationFailedException("Server did not confirm authentication: '" + authPDU.getAuthString() + "'");
+                throw new AuthenticationFailedException("Server did not confirm authentication: '" + authPDU.getUser() + "'");
             } else if (pdu2.getID() != AuthVerifiedPDU.ID) {
                 throw new IOException("Wrong PDU received: PDU" + pdu2.getID());
             }

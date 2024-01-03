@@ -1,6 +1,6 @@
 package com.android.circleoflife.communication.protocols;
 
-import com.android.circleoflife.auth.Authentication;
+import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.logging.model.DBLog;
 
 import java.util.Date;
@@ -14,12 +14,12 @@ public interface SyncProtocol extends Protocol {
 
     /**
      * Calling this method kicks off the communication with the server
-     * @param auth authentication that is sent to Server
+     * @param user user that needs to be authenticated
      * @param logs to be sent to Server
      * @param outSQLQueries where the received sql-queries
      * @return true if sync was successful. false if either synchronisation didn't work or connection to server failed
      */
-    boolean sync(Authentication auth, DBLog<?>[] logs, List<String> outSQLQueries);
+    boolean sync(User user, DBLog<?>[] logs, List<String> outSQLQueries);
 
     /**
      * Returns the timestamp when the last successful sync happened.

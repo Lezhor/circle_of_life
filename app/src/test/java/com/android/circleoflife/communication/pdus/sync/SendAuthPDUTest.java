@@ -3,12 +3,11 @@ package com.android.circleoflife.communication.pdus.sync;
 import static org.junit.Assert.*;
 
 import com.android.circleoflife.auth.Authentication;
-import com.android.circleoflife.auth.AuthenticationFailedException;
-import com.android.circleoflife.communication.pdus.sync.SendAuthPDU;
+import com.android.circleoflife.database.models.User;
+import com.android.circleoflife.database.models.additional.EntityStringParser;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,23 +15,23 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Tests {@link SendAuthPDU}. Mocks {@link Authentication} for this purpose.
  */
 public class SendAuthPDUTest {
 
-    Authentication auth;
+    User user;
 
     /**
      * Mocks the {@link Authentication} so that {@link Authentication#getAuthenticationString()}
      * returns <code>auth[johnny_depp123|24257]</code>
      */
     @Before
-    public void setUp() throws AuthenticationFailedException {
-        auth = Mockito.mock(Authentication.class);
-        Mockito.when(auth.getAuthenticationString()).thenReturn("auth[johnny_depp123|24257]");
-        //System.out.println("Mocked Authentication.getAuthenticationString() to return '" + auth.getAuthenticationString() + "'");
+    public void setUp() {
+        user = new User(UUID.randomUUID(), "john_doe", "a.Password123", LocalDateTime.of(2023, 12, 20, 20, 20));
     }
 
     /**
@@ -44,14 +43,17 @@ public class SendAuthPDUTest {
         System.out.println("Testing SendAuthPDUTest Serializing");
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            SendAuthPDU pdu = new SendAuthPDU(auth);
-            assertEquals(auth.getAuthenticationString(), pdu.getAuthString());
+            SendAuthPDU pdu = new SendAuthPDU(user);
+            assertEquals(user, pdu.getUser());
+            assertTrue(user.equalsAllParams(pdu.getUser()));
             pdu.serialize(os);
             InputStream is = new ByteArrayInputStream(os.toByteArray());
             DataInputStream dis = new DataInputStream(is);
             assertEquals(pdu.getID(), dis.readInt());
-            assertEquals(pdu.getAuthString(), dis.readUTF());
-        } catch (IOException | AuthenticationFailedException e) {
+            User deserialized = EntityStringParser.userFromString(dis.readUTF());
+            assertEquals(user, deserialized);
+            assertTrue(user.equalsAllParams(deserialized));
+        } catch (IOException e) {
             fail();
         }
     }
@@ -65,12 +67,13 @@ public class SendAuthPDUTest {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             DataOutputStream dos = new DataOutputStream(os);
-            dos.writeUTF(auth.getAuthenticationString());
+            dos.writeUTF(EntityStringParser.userToString(user));
             InputStream is = new ByteArrayInputStream(os.toByteArray());
             SendAuthPDU pdu = SendAuthPDU.fromInputStream(is);
             assertEquals(SendAuthPDU.ID, pdu.getID());
-            assertEquals(auth.getAuthenticationString(), pdu.getAuthString());
-        } catch (IOException | AuthenticationFailedException e) {
+            assertEquals(user, pdu.getUser());
+            assertTrue(user.equalsAllParams(pdu.getUser()));
+        } catch (IOException e) {
             fail();
         }
     }
