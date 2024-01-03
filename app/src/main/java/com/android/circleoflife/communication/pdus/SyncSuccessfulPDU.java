@@ -1,31 +1,18 @@
 package com.android.circleoflife.communication.pdus;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * PDU which terminates the synchronisation. has no datablock
  */
-public class SyncSuccessfulPDU implements PDU {
+public class SyncSuccessfulPDU implements PDUWithNoData {
 
     public final static int ID = 6;
 
     @Override
     public int getID() {
         return ID;
-    }
-
-    @Override
-    public void serialize(OutputStream os) throws IOException {
-        DataOutputStream dos = new DataOutputStream(os);
-        dos.writeInt(getID());
-    }
-
-    @Override
-    public void deserialize(InputStream is) {
-
     }
 
     /**
