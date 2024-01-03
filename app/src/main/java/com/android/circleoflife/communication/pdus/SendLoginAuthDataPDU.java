@@ -9,7 +9,7 @@ import java.io.OutputStream;
 /**
  * Part of the LoginProtocol. Is being send from client to server to log in.
  */
-public class LoginPDU implements PDU {
+public class SendLoginAuthDataPDU implements PDU {
 
     public final static int ID = 101;
 
@@ -27,7 +27,7 @@ public class LoginPDU implements PDU {
      * @param username username (not displayed variant)
      * @param password password
      */
-    public LoginPDU(String username, String password) {
+    public SendLoginAuthDataPDU(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -53,8 +53,8 @@ public class LoginPDU implements PDU {
      * @return instance of type LoginPDU
      * @throws IOException if deserializing fails
      */
-    public static LoginPDU fromInputStream(InputStream is) throws IOException {
-        LoginPDU pdu = new LoginPDU("", "");
+    public static SendLoginAuthDataPDU fromInputStream(InputStream is) throws IOException {
+        SendLoginAuthDataPDU pdu = new SendLoginAuthDataPDU("", "");
         pdu.deserialize(is);
         return pdu;
     }

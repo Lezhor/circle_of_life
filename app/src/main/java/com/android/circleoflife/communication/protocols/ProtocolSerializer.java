@@ -57,7 +57,7 @@ public class ProtocolSerializer {
             case SendLogsPDU.ID -> SendLogsPDU.fromInputStream(is);
             case SendInstructionsPDU.ID -> SendInstructionsPDU.fromInputStream(is);
             case SyncSuccessfulPDU.ID -> SyncSuccessfulPDU.fromInputStream(is);
-            case LoginPDU.ID -> LoginPDU.fromInputStream(is);
+            case SendLoginAuthDataPDU.ID -> SendLoginAuthDataPDU.fromInputStream(is);
             case LoginFailedPDU.ID -> LoginFailedPDU.fromInputStream(is);
             case SendUserPDU.ID -> SendUserPDU.fromInputStream(is);
             default -> throw new IOException("Failed to deserialize PDU-ID");

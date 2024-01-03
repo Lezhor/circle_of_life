@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.communication.pdus.LoginFailedPDU;
-import com.android.circleoflife.communication.pdus.LoginPDU;
+import com.android.circleoflife.communication.pdus.SendLoginAuthDataPDU;
 import com.android.circleoflife.communication.pdus.PDU;
 import com.android.circleoflife.communication.pdus.SendUserPDU;
 import com.android.circleoflife.communication.socket_communication.SocketCommunication;
@@ -60,9 +60,9 @@ public class LoginProtocolEngine implements LoginProtocol {
             ProtocolSerializer serializer = new ProtocolSerializer(this, com);
 
             // Step 1:
-            LoginPDU loginPDU = new LoginPDU(username, password);
+            SendLoginAuthDataPDU sendLoginAuthDataPDU = new SendLoginAuthDataPDU(username, password);
             Log.d(TAG, "1) Sending LoginPDU");
-            serializer.serialize(loginPDU);
+            serializer.serialize(sendLoginAuthDataPDU);
 
             // Step 2:
             PDU pdu = serializer.deserialize();
