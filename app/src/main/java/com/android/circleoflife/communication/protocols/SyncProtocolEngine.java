@@ -6,6 +6,12 @@ import com.android.circleoflife.application.App;
 import com.android.circleoflife.auth.Authentication;
 import com.android.circleoflife.auth.AuthenticationFailedException;
 import com.android.circleoflife.communication.pdus.*;
+import com.android.circleoflife.communication.pdus.sync.AuthNotVerifiedPDU;
+import com.android.circleoflife.communication.pdus.sync.AuthVerifiedPDU;
+import com.android.circleoflife.communication.pdus.sync.SendAuthPDU;
+import com.android.circleoflife.communication.pdus.sync.SendInstructionsPDU;
+import com.android.circleoflife.communication.pdus.sync.SendLogsPDU;
+import com.android.circleoflife.communication.pdus.sync.SyncSuccessfulPDU;
 import com.android.circleoflife.communication.socket_communication.SocketCommunication;
 import com.android.circleoflife.logging.model.DBLog;
 

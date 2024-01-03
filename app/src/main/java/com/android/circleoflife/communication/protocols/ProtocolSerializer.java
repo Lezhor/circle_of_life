@@ -1,6 +1,15 @@
 package com.android.circleoflife.communication.protocols;
 
 import com.android.circleoflife.communication.pdus.*;
+import com.android.circleoflife.communication.pdus.auth.LoginFailedPDU;
+import com.android.circleoflife.communication.pdus.auth.SendLoginAuthDataPDU;
+import com.android.circleoflife.communication.pdus.auth.SendUserPDU;
+import com.android.circleoflife.communication.pdus.sync.AuthNotVerifiedPDU;
+import com.android.circleoflife.communication.pdus.sync.AuthVerifiedPDU;
+import com.android.circleoflife.communication.pdus.sync.SendAuthPDU;
+import com.android.circleoflife.communication.pdus.sync.SendInstructionsPDU;
+import com.android.circleoflife.communication.pdus.sync.SendLogsPDU;
+import com.android.circleoflife.communication.pdus.sync.SyncSuccessfulPDU;
 import com.android.circleoflife.communication.socket_communication.SocketCommunication;
 
 import java.io.DataInputStream;

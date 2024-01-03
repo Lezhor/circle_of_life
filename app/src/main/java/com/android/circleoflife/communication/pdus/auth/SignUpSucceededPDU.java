@@ -1,15 +1,17 @@
-package com.android.circleoflife.communication.pdus;
+package com.android.circleoflife.communication.pdus.auth;
+
+import com.android.circleoflife.communication.pdus.PDUWithNoData;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * Part of the {@link com.android.circleoflife.communication.protocols.SignUpProtocol SignUpProtocol}.
- * Server sends this to client if signUp failed
+ * Server sends this to client if signUp succeeded
  */
-public class SignUpFailedPDU implements PDUWithNoData {
+public class SignUpSucceededPDU implements PDUWithNoData {
 
-    public static final int ID = 104;
+    public static final int ID = 105;
 
     @Override
     public int getID() {
@@ -22,8 +24,8 @@ public class SignUpFailedPDU implements PDUWithNoData {
      * @return instance of this class
      * @throws IOException if deserializing fails
      */
-    public static SignUpFailedPDU fromInputStream(InputStream is) throws IOException {
-        SignUpFailedPDU pdu = new SignUpFailedPDU();
+    public static SignUpSucceededPDU fromInputStream(InputStream is) throws IOException {
+        SignUpSucceededPDU pdu = new SignUpSucceededPDU();
         pdu.deserialize(is);
         return pdu;
     }

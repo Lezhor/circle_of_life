@@ -1,9 +1,9 @@
-package com.android.circleoflife.communication.pdus;
+package com.android.circleoflife.communication.pdus.sync;
 
 import static org.junit.Assert.*;
 
 import com.android.circleoflife.communication.pdus.PDU;
-import com.android.circleoflife.communication.pdus.SyncSuccessfulPDU;
+import com.android.circleoflife.communication.pdus.sync.AuthVerifiedPDU;
 
 import org.junit.Test;
 
@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Tests {@link SyncSuccessfulPDU}
+ * Tests {@link AuthVerifiedPDU}
  */
-public class SyncSuccessfulPDUTest {
+public class AuthVerifiedPDUTest {
 
     /**
      * Tests serialize() method by serializing to ByteArrayOutputStream and then checking
@@ -24,10 +24,10 @@ public class SyncSuccessfulPDUTest {
      */
     @Test
     public void testSerialize() {
-        System.out.println("Testing SyncSuccessfulPDU Serializing");
+        System.out.println("Testing AuthVerifiedPDU Serializing");
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            SyncSuccessfulPDU pdu = new SyncSuccessfulPDU();
+            AuthVerifiedPDU pdu = new AuthVerifiedPDU();
             pdu.serialize(os);
             assertEquals(4, os.size());
             InputStream is = new ByteArrayInputStream(os.toByteArray());
@@ -44,11 +44,11 @@ public class SyncSuccessfulPDUTest {
      */
     @Test
     public void testDeserialize() {
-        System.out.println("Testing SyncSuccessfulPDU Deserializing");
+        System.out.println("Testing AuthVerifiedPDU Deserializing");
         try {
             InputStream is = new ByteArrayInputStream(new byte[0]);
-            PDU pdu = SyncSuccessfulPDU.fromInputStream(is);
-            assertEquals(SyncSuccessfulPDU.ID, pdu.getID());
+            PDU pdu = AuthVerifiedPDU.fromInputStream(is);
+            assertEquals(AuthVerifiedPDU.ID, pdu.getID());
         } catch (IOException e) {
             fail();
         }

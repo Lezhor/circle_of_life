@@ -1,6 +1,6 @@
 package com.android.circleoflife.logging.serializing;
 
-import com.android.circleoflife.communication.pdus.SendLogsPDU;
+import com.android.circleoflife.communication.pdus.sync.SendLogsPDU;
 import com.android.circleoflife.database.models.type_converters.DBLogConverter;
 import com.android.circleoflife.logging.model.DBLog;
 

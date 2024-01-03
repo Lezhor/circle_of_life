@@ -1,10 +1,10 @@
-package com.android.circleoflife.communication.pdus;
+package com.android.circleoflife.communication.pdus.sync;
 
 import static org.junit.Assert.*;
 
 import com.android.circleoflife.auth.Authentication;
 import com.android.circleoflife.auth.AuthenticationFailedException;
-import com.android.circleoflife.communication.pdus.SendAuthPDU;
+import com.android.circleoflife.communication.pdus.sync.SendAuthPDU;
 
 import org.junit.Before;
 import org.junit.Test;

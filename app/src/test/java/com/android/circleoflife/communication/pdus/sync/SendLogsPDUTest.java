@@ -1,8 +1,10 @@
-package com.android.circleoflife.communication.pdus;
+package com.android.circleoflife.communication.pdus.sync;
 
 import static org.junit.Assert.*;
 
 import com.android.circleoflife.application.App;
+import com.android.circleoflife.communication.pdus.PDU;
+import com.android.circleoflife.communication.pdus.sync.SendLogsPDU;
 import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.logging.model.DBLog;

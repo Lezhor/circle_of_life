@@ -4,10 +4,10 @@ import android.util.Log;
 
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.communication.pdus.PDU;
-import com.android.circleoflife.communication.pdus.SendLoginAuthDataPDU;
-import com.android.circleoflife.communication.pdus.SendUserPDU;
-import com.android.circleoflife.communication.pdus.SignUpFailedPDU;
-import com.android.circleoflife.communication.pdus.SignUpSucceededPDU;
+import com.android.circleoflife.communication.pdus.auth.SendLoginAuthDataPDU;
+import com.android.circleoflife.communication.pdus.auth.SendUserPDU;
+import com.android.circleoflife.communication.pdus.auth.SignUpFailedPDU;
+import com.android.circleoflife.communication.pdus.auth.SignUpSucceededPDU;
 import com.android.circleoflife.communication.socket_communication.SocketCommunication;
 import com.android.circleoflife.database.models.User;
 

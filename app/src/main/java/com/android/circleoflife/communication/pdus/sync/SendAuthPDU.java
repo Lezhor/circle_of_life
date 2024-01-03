@@ -1,7 +1,8 @@
-package com.android.circleoflife.communication.pdus;
+package com.android.circleoflife.communication.pdus.sync;
 
 import com.android.circleoflife.auth.Authentication;
 import com.android.circleoflife.auth.AuthenticationFailedException;
+import com.android.circleoflife.communication.pdus.PDU;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

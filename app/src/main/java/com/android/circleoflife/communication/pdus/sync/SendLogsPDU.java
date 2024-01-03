@@ -1,6 +1,7 @@
-package com.android.circleoflife.communication.pdus;
+package com.android.circleoflife.communication.pdus.sync;
 
 import com.android.circleoflife.application.App;
+import com.android.circleoflife.communication.pdus.PDU;
 import com.android.circleoflife.logging.model.DBLog;
 import com.android.circleoflife.logging.serializing.LogSerializer;
 

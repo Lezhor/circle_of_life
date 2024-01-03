@@ -1,4 +1,6 @@
-package com.android.circleoflife.communication.pdus;
+package com.android.circleoflife.communication.pdus.sync;
+
+import com.android.circleoflife.communication.pdus.PDUWithNoData;
 
 import java.io.IOException;
 import java.io.InputStream;

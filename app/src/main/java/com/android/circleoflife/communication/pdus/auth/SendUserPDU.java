@@ -1,5 +1,6 @@
-package com.android.circleoflife.communication.pdus;
+package com.android.circleoflife.communication.pdus.auth;
 
+import com.android.circleoflife.communication.pdus.PDU;
 import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.database.models.additional.EntityStringParser;
 

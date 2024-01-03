@@ -3,10 +3,10 @@ package com.android.circleoflife.communication.protocols;
 import android.util.Log;
 
 import com.android.circleoflife.application.App;
-import com.android.circleoflife.communication.pdus.LoginFailedPDU;
-import com.android.circleoflife.communication.pdus.SendLoginAuthDataPDU;
+import com.android.circleoflife.communication.pdus.auth.LoginFailedPDU;
+import com.android.circleoflife.communication.pdus.auth.SendLoginAuthDataPDU;
 import com.android.circleoflife.communication.pdus.PDU;
-import com.android.circleoflife.communication.pdus.SendUserPDU;
+import com.android.circleoflife.communication.pdus.auth.SendUserPDU;
 import com.android.circleoflife.communication.socket_communication.SocketCommunication;
 import com.android.circleoflife.database.models.User;
 

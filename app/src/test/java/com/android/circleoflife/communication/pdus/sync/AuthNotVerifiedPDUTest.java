@@ -1,9 +1,9 @@
-package com.android.circleoflife.communication.pdus;
+package com.android.circleoflife.communication.pdus.sync;
 
 import static org.junit.Assert.*;
 
-import com.android.circleoflife.communication.pdus.AuthNotVerifiedPDU;
 import com.android.circleoflife.communication.pdus.PDU;
+import com.android.circleoflife.communication.pdus.sync.AuthNotVerifiedPDU;
 
 import org.junit.Test;
 

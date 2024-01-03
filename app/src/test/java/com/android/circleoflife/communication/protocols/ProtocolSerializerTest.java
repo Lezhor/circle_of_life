@@ -2,7 +2,7 @@ package com.android.circleoflife.communication.protocols;
 
 import static org.junit.Assert.*;
 
-import com.android.circleoflife.communication.pdus.SendInstructionsPDU;
+import com.android.circleoflife.communication.pdus.sync.SendInstructionsPDU;
 import com.android.circleoflife.communication.socket_communication.SocketCommunication;
 
 import org.junit.Before;
