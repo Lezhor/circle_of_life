@@ -61,7 +61,7 @@ public class LoginProtocolEngine implements LoginProtocol {
 
             // Step 1:
             SendLoginAuthDataPDU sendLoginAuthDataPDU = new SendLoginAuthDataPDU(username, password);
-            Log.d(TAG, "1) Sending LoginPDU");
+            Log.d(TAG, "1) Sending SendLoginAuthDataPDU");
             serializer.serialize(sendLoginAuthDataPDU);
 
             // Step 2:
