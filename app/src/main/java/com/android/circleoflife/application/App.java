@@ -7,6 +7,8 @@ import com.android.circleoflife.auth.Authentication;
 import com.android.circleoflife.auth.AuthenticationImpl;
 import com.android.circleoflife.communication.protocols.LoginProtocol;
 import com.android.circleoflife.communication.protocols.LoginProtocolEngine;
+import com.android.circleoflife.communication.protocols.SignUpProtocol;
+import com.android.circleoflife.communication.protocols.SignUpProtocolEngine;
 import com.android.circleoflife.communication.socket_communication.SocketCommunication;
 import com.android.circleoflife.communication.socket_communication.SocketCommunicationImpl;
 import com.android.circleoflife.communication.protocols.SyncProtocol;
@@ -65,12 +67,21 @@ public final class App {
     }
 
     /**
-     * {@link LoginProtocol follows the Singleton pattern.}
+     * {@link LoginProtocolEngine} follows the Singleton pattern.
      * @return the only existing instance of {@link LoginProtocol}
      * @see LoginProtocolEngine#getInstance()
      */
     public static LoginProtocol getLoginProtocol() {
         return LoginProtocolEngine.getInstance();
+    }
+
+    /**
+     * {@link SignUpProtocolEngine} follows the Singleton pattern.
+     * @return the only existing instance of {@link SignUpProtocol}
+     * @see SignUpProtocolEngine#getInstance()
+     */
+    public static SignUpProtocol getSignUpProtocol() {
+        return SignUpProtocolEngine.getInstance();
     }
 
     /**
