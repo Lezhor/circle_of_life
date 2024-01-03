@@ -4,11 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Part of the LoginProtocol. server sends this to client if login failed
+ * Part of the {@link com.android.circleoflife.communication.protocols.SignUpProtocol SignUpProtocol}.
+ * Server sends this to client if signUp succeeded
  */
-public class LoginFailedPDU implements PDUWithNoData {
+public class SignUpSucceededPDU implements PDUWithNoData {
 
-    public static final int ID = 103;
+    public static final int ID = 105;
 
     @Override
     public int getID() {
@@ -21,8 +22,8 @@ public class LoginFailedPDU implements PDUWithNoData {
      * @return instance of this class
      * @throws IOException if deserializing fails
      */
-    public static LoginFailedPDU fromInputStream(InputStream is) throws IOException {
-        LoginFailedPDU pdu = new LoginFailedPDU();
+    public static SignUpSucceededPDU fromInputStream(InputStream is) throws IOException {
+        SignUpSucceededPDU pdu = new SignUpSucceededPDU();
         pdu.deserialize(is);
         return pdu;
     }
