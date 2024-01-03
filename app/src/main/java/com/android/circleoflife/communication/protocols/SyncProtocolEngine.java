@@ -8,7 +8,6 @@ import com.android.circleoflife.communication.pdus.*;
 import com.android.circleoflife.communication.pdus.sync.AuthNotVerifiedPDU;
 import com.android.circleoflife.communication.pdus.sync.AuthVerifiedPDU;
 import com.android.circleoflife.communication.pdus.sync.SendAuthPDU;
-import com.android.circleoflife.communication.pdus.sync.SendInstructionsPDU;
 import com.android.circleoflife.communication.pdus.sync.SendLogsPDU;
 import com.android.circleoflife.communication.pdus.sync.SyncSuccessfulPDU;
 import com.android.circleoflife.communication.socket_communication.SocketCommunication;
@@ -65,7 +64,7 @@ public class SyncProtocolEngine implements SyncProtocol {
     public static String VERSION = "v1.0";
 
     @Override
-    public boolean sync(User user, DBLog<?>[] logs, List<String> outSQLQueries) {
+    public boolean sync(User user, DBLog<?>[] logs, List<DBLog<?>> outSQLQueries) {
         boolean successful = true;
         Log.d("SyncProtocolEngine", "Begin syncing...");
         SocketCommunication com = App.openCommunicationSessionWithServer();
@@ -98,9 +97,9 @@ public class SyncProtocolEngine implements SyncProtocol {
             serializer.serialize(sendLogsPDU);
 
             // Step 4:
-            SendInstructionsPDU instructionsPDU = serializer.deserialize(SendInstructionsPDU.class);
-            String[] instructions = instructionsPDU.getInstructions();
-            Log.d("SyncProtocolEngine", "4) Received InstructionsPDU with " + instructions.length + " instructions.");
+            SendLogsPDU instructionsPDU = serializer.deserialize(SendLogsPDU.class);
+            DBLog<?>[] instructions = instructionsPDU.getLogs();
+            Log.d("SyncProtocolEngine", "4) Received SendLogsPDU with " + instructions.length + " instructions.");
             outSQLQueries.addAll(Arrays.stream(instructions).collect(Collectors.toSet()));
 
             // Step 5:

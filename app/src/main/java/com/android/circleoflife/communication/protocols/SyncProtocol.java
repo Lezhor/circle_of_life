@@ -19,7 +19,7 @@ public interface SyncProtocol extends Protocol {
      * @param outSQLQueries where the received sql-queries
      * @return true if sync was successful. false if either synchronisation didn't work or connection to server failed
      */
-    boolean sync(User user, DBLog<?>[] logs, List<String> outSQLQueries);
+    boolean sync(User user, DBLog<?>[] logs, List<DBLog<?>> outSQLQueries);
 
     /**
      * Returns the timestamp when the last successful sync happened.
