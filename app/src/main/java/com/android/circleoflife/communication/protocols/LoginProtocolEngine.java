@@ -12,6 +12,9 @@ import com.android.circleoflife.database.models.User;
 
 import java.io.IOException;
 
+/**
+ * Engine for {@link LoginProtocol}. Follows the Singleton-Pattern.
+ */
 public class LoginProtocolEngine implements LoginProtocol {
     private static final String TAG = LoginProtocolEngine.class.getSimpleName();
 
