@@ -16,8 +16,8 @@ import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.logging.model.DBLog;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,7 +53,7 @@ public class SyncProtocolEngine implements SyncProtocol {
         return instance;
     }
 
-    private Date lastSyncDate;
+    private LocalDateTime lastSyncDate;
 
     /**
      * Private Constructor (for singleton principle)
@@ -116,13 +116,13 @@ public class SyncProtocolEngine implements SyncProtocol {
         }
 
         if (successful) {
-            lastSyncDate = new Date();
+            lastSyncDate = LocalDateTime.now();
         }
         return successful;
     }
 
     @Override
-    public Date getLastSuccessfulSyncDate() {
+    public LocalDateTime getLastSuccessfulSyncDate() {
         return lastSyncDate;
     }
 

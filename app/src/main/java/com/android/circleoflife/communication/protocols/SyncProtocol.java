@@ -3,7 +3,7 @@ package com.android.circleoflife.communication.protocols;
 import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.logging.model.DBLog;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -25,6 +25,6 @@ public interface SyncProtocol extends Protocol {
      * Returns the timestamp when the last successful sync happened.
      * @return timestamp of last successful sync
      */
-    Date getLastSuccessfulSyncDate();
+    LocalDateTime getLastSuccessfulSyncDate();
 
 }
