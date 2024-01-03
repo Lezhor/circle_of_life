@@ -30,8 +30,7 @@ public class ProtocolSerializer {
 
 
     /**
-     * Constructor for the serializer
-     *
+     * Constructor for the serializer. Also sends the Header to OutputStream
      * @param protocol      protocol in order to get the protocol name and version
      * @param communication instance of socket Communication.
      */
@@ -42,6 +41,11 @@ public class ProtocolSerializer {
             this.os = Objects.requireNonNull(communication.getOutputStream());
         } else {
             throw new NullPointerException("Cannot retrieve streams from SocketCommunication because not connected to server yet");
+        }
+        try {
+            serializeHeader();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
