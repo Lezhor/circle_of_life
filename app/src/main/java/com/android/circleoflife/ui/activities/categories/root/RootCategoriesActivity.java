@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
+import com.android.circleoflife.auth.AuthenticationFailedException;
 import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.ui.activities.SuperActivity;
@@ -28,7 +29,6 @@ import com.android.circleoflife.ui.activities.categories.CreateNameableDialog;
 import com.android.circleoflife.ui.activities.categories.EditNameDialog;
 import com.android.circleoflife.ui.activities.categories.not_root.CategoryActivity;
 import com.android.circleoflife.ui.recyclerview_utils.SwipeAndDragTouchHelper;
-import com.android.circleoflife.ui.recyclerview_utils.SwipeWithButtonsHelper;
 import com.android.circleoflife.ui.viewmodels.CategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -43,7 +43,6 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
 
     RecyclerView recyclerView;
     RootCategoryRecyclerViewAdapter adapter;
-    SwipeWithButtonsHelper swipeHelper;
     FloatingActionButton fab;
 
     @Override
@@ -184,7 +183,14 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
 
         TextView invisText = findViewById(R.id.category_invis_text);
 
-        final User user = App.getAuthentication().getUser();
+        User temp = null;
+        try {
+            temp = App.getAuthentication().getUser();
+        } catch (AuthenticationFailedException e) {
+            Log.w(TAG, "onCreate: getting user from authentication failed", e);
+        }
+        final User user = temp;
+
         if (user != null) {
             categoryViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
                 @NonNull

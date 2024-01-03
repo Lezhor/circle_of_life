@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
+import com.android.circleoflife.auth.AuthenticationFailedException;
 import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.Cycle;
 import com.android.circleoflife.database.models.Todo;
@@ -118,7 +119,13 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
 
             setUpSwipeAndDrag(recyclerView);
 
-            final User user = App.getAuthentication().getUser();
+            User temp = null;
+            try {
+                temp = App.getAuthentication().getUser();
+            } catch (AuthenticationFailedException e) {
+                Log.w(TAG, "onCreate: getting user from authentication failed", e);
+            }
+            final User user = temp;
             if (user != null) {
                 categoryViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
                     @NonNull
