@@ -64,15 +64,14 @@ public class SyncProtocolEngine implements SyncProtocol {
     public static String VERSION = "v1.0";
 
     @Override
-    public boolean sync(User user, DBLog<?>[] logs, List<DBLog<?>> outSQLQueries) {
-        boolean successful = true;
+    public boolean sync(User user, DBLog<?>[] logs, List<DBLog<?>> outLogs) throws IOException {
         Log.d("SyncProtocolEngine", "Begin syncing...");
         SocketCommunication com = App.openCommunicationSessionWithServer();
         try {
             com.connectToServer();
         } catch (IOException e) {
             Log.i("SyncProtocolEngine", "Connection to Server failed!");
-            return false;
+            throw new IOException(e);
         }
         try {
             ProtocolSerializer serializer = new ProtocolSerializer(this, com);
@@ -100,7 +99,7 @@ public class SyncProtocolEngine implements SyncProtocol {
             SendLogsPDU instructionsPDU = serializer.deserialize(SendLogsPDU.class);
             DBLog<?>[] instructions = instructionsPDU.getLogs();
             Log.d("SyncProtocolEngine", "4) Received SendLogsPDU with " + instructions.length + " instructions.");
-            outSQLQueries.addAll(Arrays.stream(instructions).collect(Collectors.toSet()));
+            outLogs.addAll(Arrays.stream(instructions).collect(Collectors.toSet()));
 
             // Step 5:
             SyncSuccessfulPDU syncSuccessfulPDU = new SyncSuccessfulPDU();
@@ -109,15 +108,13 @@ public class SyncProtocolEngine implements SyncProtocol {
 
         } catch (NullPointerException | AuthenticationFailedException | IOException e) {
             Log.i("SyncProtocolEngine", "Synchronisation failed: " + e.getMessage());
-            successful = false;
+            throw new IOException(e);
         } finally {
             com.disconnectFromServer();
         }
 
-        if (successful) {
-            lastSyncDate = LocalDateTime.now();
-        }
-        return successful;
+        lastSyncDate = LocalDateTime.now();
+        return true;
     }
 
     @Override
