@@ -52,7 +52,7 @@ public class SyncProtocolEngine implements SyncProtocol {
         return instance;
     }
 
-    private LocalDateTime lastSyncDate;
+    private LocalDateTime lastSyncDate = LocalDateTime.of(2000, 1, 1, 0, 0);
 
     /**
      * Private Constructor (for singleton principle)
@@ -91,13 +91,14 @@ public class SyncProtocolEngine implements SyncProtocol {
             }
 
             // Step 3:
-            SendLogsPDU sendLogsPDU = new SendLogsPDU(logs);
+            SendLogsPDU sendLogsPDU = new SendLogsPDU(lastSyncDate, logs);
             Log.d("SyncProtocolEngine", "3) Sending Logs to Server...");
             serializer.serialize(sendLogsPDU);
 
             // Step 4:
             SendLogsPDU instructionsPDU = serializer.deserialize(SendLogsPDU.class);
             DBLog<?>[] instructions = instructionsPDU.getLogs();
+            lastSyncDate = instructionsPDU.getLastSyncDate();
             Log.d("SyncProtocolEngine", "4) Received SendLogsPDU with " + instructions.length + " instructions.");
             outLogs.addAll(Arrays.stream(instructions).collect(Collectors.toSet()));
 
@@ -112,8 +113,6 @@ public class SyncProtocolEngine implements SyncProtocol {
         } finally {
             com.disconnectFromServer();
         }
-
-        lastSyncDate = LocalDateTime.now();
         return true;
     }
 

@@ -3,10 +3,9 @@ package com.android.circleoflife.communication.pdus.sync;
 import static org.junit.Assert.*;
 
 import com.android.circleoflife.application.App;
-import com.android.circleoflife.communication.pdus.PDU;
-import com.android.circleoflife.communication.pdus.sync.SendLogsPDU;
 import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.User;
+import com.android.circleoflife.database.models.type_converters.LocalDateTimeConverter;
 import com.android.circleoflife.logging.model.DBLog;
 import com.android.circleoflife.logging.serializing.LogSerializer;
 
@@ -46,11 +45,13 @@ public class SendLogsPDUTest {
         System.out.println("Testing SendLogsPDU Serializing");
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            PDU pdu = new SendLogsPDU(logArray);
+            LocalDateTime lastSyncDate = LocalDateTime.now();
+            SendLogsPDU pdu = new SendLogsPDU(lastSyncDate, logArray);
             pdu.serialize(os);
             InputStream is = new ByteArrayInputStream(os.toByteArray());
             DataInputStream dis = new DataInputStream(is);
             assertEquals(pdu.getID(), dis.readInt());
+            assertEquals(LocalDateTimeConverter.localDateTimeToString(lastSyncDate), dis.readUTF());
             assertEquals(logArray.length, dis.readInt());
 
             LogSerializer serializer = App.getLogSerializer();
@@ -75,8 +76,10 @@ public class SendLogsPDUTest {
             DataOutputStream dos = new DataOutputStream(bos);
 
             LogSerializer serializer = App.getLogSerializer();
+            LocalDateTime lastSyncDate = LocalDateTime.now();
 
             dos.writeInt(SendLogsPDU.ID);
+            dos.writeUTF(LocalDateTimeConverter.localDateTimeToString(lastSyncDate));
             dos.writeInt(logArray.length);
             for (DBLog<?> log : logArray) {
                 serializer.serialize(bos, log);
