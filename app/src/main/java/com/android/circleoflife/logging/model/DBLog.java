@@ -89,7 +89,7 @@ public class DBLog<E extends HasUserId> {
      * @param changeMode    changeMode
      * @param timestamp     timestamp
      */
-    DBLog(UUID id, UUID userID, E changedObject, ChangeMode changeMode, LocalDateTime timestamp) {
+    public DBLog(UUID id, UUID userID, E changedObject, ChangeMode changeMode, LocalDateTime timestamp) {
         this.id = id;
         this.userID = userID;
         this.changedObject = changedObject;
