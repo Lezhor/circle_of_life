@@ -10,7 +10,7 @@ public interface LoginProtocol extends Protocol {
 
     /**
      * Fetches user from server with given username and password.
-     * If no user with given username is found or if password is null returns null
+     * If no user with given username is found or if password is invalid returns null
      * @param username username
      * @param password password
      * @return user or null if no user found
