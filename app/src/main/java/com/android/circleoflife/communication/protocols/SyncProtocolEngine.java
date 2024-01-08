@@ -16,20 +16,19 @@ import com.android.circleoflife.logging.model.DBLog;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Implementation of interface {@link SyncProtocol}.<br>
- * Implements {@link SyncProtocolEngine#sync(User, DBLog[], List)} and {@link SyncProtocolEngine#getLastSuccessfulSyncDate()}<br><br>
+ * Implements {@link SyncProtocolEngine#sync(User, LocalDateTime, DBLog[], List)}<br><br>
  * <code>
  * PROTOCOL_NAME = "COL_SyncProt";<br>
  * VERSION = "v1.0";<br><br>
  * </code>
  * Follows the singleton pattern.
  *
- * @see SyncProtocolEngine#sync(User, DBLog[], List)
+ * @see SyncProtocolEngine#sync(User, LocalDateTime, DBLog[], List)
  * @see App#getSyncProtocol()
  * @see SyncProtocol
  */
@@ -52,8 +51,6 @@ public class SyncProtocolEngine implements SyncProtocol {
         return instance;
     }
 
-    private LocalDateTime lastSyncDate = LocalDateTime.of(2000, 1, 1, 0, 0);
-
     /**
      * Private Constructor (for singleton principle)
      */
@@ -64,15 +61,16 @@ public class SyncProtocolEngine implements SyncProtocol {
     public static String VERSION = "v1.0";
 
     @Override
-    public boolean sync(User user, DBLog<?>[] logs, List<DBLog<?>> outLogs) throws IOException {
+    public LocalDateTime sync(User user, LocalDateTime lastSyncDate, DBLog<?>[] logs, List<DBLog<?>> outLogs) {
         Log.d("SyncProtocolEngine", "Begin syncing...");
         SocketCommunication com = App.openCommunicationSessionWithServer();
         try {
             com.connectToServer();
         } catch (IOException e) {
             Log.i("SyncProtocolEngine", "Connection to Server failed!");
-            throw new IOException(e);
+            return null;
         }
+        LocalDateTime newLastSyncDate;
         try {
             ProtocolSerializer serializer = new ProtocolSerializer(this, com);
 
@@ -98,9 +96,9 @@ public class SyncProtocolEngine implements SyncProtocol {
             // Step 4:
             SendLogsPDU instructionsPDU = serializer.deserialize(SendLogsPDU.class);
             DBLog<?>[] instructions = instructionsPDU.getLogs();
-            lastSyncDate = instructionsPDU.getLastSyncDate();
+            newLastSyncDate = instructionsPDU.getLastSyncDate();
             Log.d("SyncProtocolEngine", "4) Received SendLogsPDU with " + instructions.length + " instructions.");
-            outLogs.addAll(Arrays.stream(instructions).collect(Collectors.toSet()));
+            Collections.addAll(outLogs, instructions);
 
             // Step 5:
             SyncSuccessfulPDU syncSuccessfulPDU = new SyncSuccessfulPDU();
@@ -109,16 +107,11 @@ public class SyncProtocolEngine implements SyncProtocol {
 
         } catch (NullPointerException | AuthenticationFailedException | IOException e) {
             Log.i("SyncProtocolEngine", "Synchronisation failed: " + e.getMessage());
-            throw new IOException(e);
+            return null;
         } finally {
             com.disconnectFromServer();
         }
-        return true;
-    }
-
-    @Override
-    public LocalDateTime getLastSuccessfulSyncDate() {
-        return lastSyncDate;
+        return newLastSyncDate;
     }
 
     @Override

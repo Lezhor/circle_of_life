@@ -9,7 +9,6 @@ import com.android.circleoflife.logging.model.DBLog;
 
 import org.junit.Test;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,13 +26,9 @@ public class SyncProtocolEngineTest {
 
         SyncProtocol syncProtocol = App.getSyncProtocol();
 
-        boolean result = false;
-        try {
-            result = syncProtocol.sync(user, logs, outLogs);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        assertTrue(result);
+        LocalDateTime result;
+        result = syncProtocol.sync(user, user.getTimeOfCreation(), logs, outLogs);
+        assertNotNull(result);
         assertEquals(0, outLogs.size());
     }
 }
