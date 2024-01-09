@@ -3,8 +3,10 @@ package com.android.circleoflife.database.control;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
+import com.android.circleoflife.auth.Authentication;
 import com.android.circleoflife.database.control.observers.DatabaseObserver;
 import com.android.circleoflife.database.models.*;
+import com.android.circleoflife.logging.model.DBLog;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -33,6 +35,12 @@ public interface DatabaseController {
      * @param observer observer
      */
     void removeObserver(DatabaseObserver observer);
+
+    /**
+     * Synchronizes database with server by calling the {@link com.android.circleoflife.communication.protocols.SyncProtocol#sync(User, LocalDateTime, DBLog[], List)} method.
+     * @param auth the SyncProtocol-parameters are retrieved from this parameter: user, lastSyncDate...
+     */
+    void syncWithServer(Authentication auth);
 
 
     // Users
@@ -135,13 +143,9 @@ public interface DatabaseController {
 
     // Logs
 
-    void insertLog(LogEntity... logs);
+    void insertLog(DBLog<?>... logs);
 
-    default void insertLog(Collection<LogEntity> logs) {
-        insertLog(logs.stream().toArray(LogEntity[]::new));
+    default void insertLog(Collection<DBLog<?>> logs) {
+        insertLog(logs.toArray(DBLog[]::new));
     }
-
-    void updateLog(LogEntity log);
-
-    void deleteLog(LogEntity log);
 }

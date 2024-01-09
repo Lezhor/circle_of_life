@@ -1,13 +1,20 @@
 package com.android.circleoflife.database.control;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.android.circleoflife.application.App;
+import com.android.circleoflife.auth.Authentication;
+import com.android.circleoflife.database.control.daos.BaseDao;
 import com.android.circleoflife.database.control.observers.DatabaseObserver;
 import com.android.circleoflife.database.models.*;
+import com.android.circleoflife.database.models.additional.HasUserId;
+import com.android.circleoflife.logging.model.DBLog;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +25,7 @@ import java.util.function.Consumer;
  * Implementation of the {@link DatabaseController}. Offers methods for communicating with the database
  */
 public class DatabaseControllerImpl implements DatabaseController {
+    private static final String TAG = DatabaseController.class.getSimpleName();
 
     private static volatile DatabaseController instance;
 
@@ -53,6 +61,45 @@ public class DatabaseControllerImpl implements DatabaseController {
     @Override
     public void removeObserver(DatabaseObserver observer) {
         observers.remove(observer);
+    }
+
+    @Override
+    public void syncWithServer(Authentication auth) {
+        List<DBLog<?>> serverInstructions = new LinkedList<>();
+        LocalDateTime newLastSyncDate = App.getSyncProtocol().sync(
+                auth.getUser(),
+                auth.getSettings().getLastSyncDate(),
+                db.getLogDao().getLogsBetweenTimestamps(auth.getUser(), auth.getSettings().getLastSyncDate(), LocalDateTime.now()),
+                serverInstructions
+        );
+        if (newLastSyncDate == null) {
+            Log.d(TAG, "syncWithServer: Synchronisation failed");
+        } else {
+            Log.d(TAG, "syncWithServer: Synchronisation succeeded!");
+            auth.getSettings().setLastSyncDate(newLastSyncDate);
+            // executing server instructions:
+            for (DBLog<?> log : serverInstructions) {
+                if (executeLog(log)) {
+                    insertLog(log);
+                }
+            }
+        }
+    }
+
+    /**
+     * Gets correct dao with {@link AppDatabase#getDao(Class)} and executes log on it
+     * @param log log to be executed
+     * @param <E> type of the log-object
+     */
+    private <E extends HasUserId> boolean executeLog(DBLog<E> log) {
+        try {
+            //noinspection unchecked
+            BaseDao<E> dao = (BaseDao<E>) db.getDao(log.getChangedObject().getClass());
+            dao.executeLog(log);
+            return true;
+        } catch (ClassCastException e) {
+            return false;
+        }
     }
 
     private void triggerObservers(Consumer<DatabaseObserver> observedMethod) {
@@ -247,17 +294,11 @@ public class DatabaseControllerImpl implements DatabaseController {
     }
 
     @Override
-    public void insertLog(LogEntity... logs) {
-        db.getLogDao().insert(logs);
-    }
-
-    @Override
-    public void updateLog(LogEntity log) {
-        db.getLogDao().update(log);
-    }
-
-    @Override
-    public void deleteLog(LogEntity log) {
-        db.getLogDao().delete(log);
+    public void insertLog(DBLog<?>... logs) {
+        db.getLogDao().insert(
+                Arrays.stream(logs)
+                        .map(LogEntity::new)
+                        .toArray(LogEntity[]::new)
+        );
     }
 }

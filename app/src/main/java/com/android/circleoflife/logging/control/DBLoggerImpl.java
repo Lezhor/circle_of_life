@@ -5,7 +5,6 @@ import com.android.circleoflife.database.control.observers.DatabaseObserver;
 import com.android.circleoflife.database.models.Accomplishment;
 import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.Cycle;
-import com.android.circleoflife.database.models.LogEntity;
 import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.logging.model.DBLog;
@@ -39,7 +38,7 @@ public class DBLoggerImpl implements DBLogger, DatabaseObserver {
     }
 
     private void saveLogToDB(DBLog<?> log) {
-        App.getDatabaseController().insertLog(new LogEntity(log));
+        App.getDatabaseController().insertLog(log);
     }
 
     @Override
