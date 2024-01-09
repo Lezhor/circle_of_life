@@ -7,7 +7,6 @@ import com.android.circleoflife.communication.pdus.PDU;
 import com.android.circleoflife.communication.pdus.auth.SendLoginAuthDataPDU;
 import com.android.circleoflife.communication.pdus.auth.SendUserPDU;
 import com.android.circleoflife.communication.pdus.auth.SignUpFailedPDU;
-import com.android.circleoflife.communication.pdus.auth.SignUpSucceededPDU;
 import com.android.circleoflife.communication.socket_communication.SocketCommunication;
 import com.android.circleoflife.database.models.User;
 
@@ -59,14 +58,14 @@ public class SignUpProtocolEngine implements SignUpProtocol {
     }
 
     @Override
-    public User signUp(String username, String password) {
+    public User signUp(String username, String password) throws IOException {
         Log.d(TAG, "Begin syncing...");
         SocketCommunication com = App.openCommunicationSessionWithServer();
         try {
             com.connectToServer();
         } catch (IOException e) {
             Log.w(TAG, "Connection to server failed");
-            return null;
+            throw e;
         }
         try {
             ProtocolSerializer serializer = new ProtocolSerializer(this, com);
@@ -88,47 +87,10 @@ public class SignUpProtocolEngine implements SignUpProtocol {
 
         } catch (IOException e) {
             Log.w(TAG, "Communication failed", e);
+            throw e;
         } finally {
             com.disconnectFromServer();
         }
         return null;
-    }
-
-    @Override
-    public boolean signUp(User user) {
-        Log.d(TAG, "Begin syncing...");
-        SocketCommunication com = App.openCommunicationSessionWithServer();
-        try {
-            com.connectToServer();
-        } catch (IOException e) {
-            Log.w(TAG, "Connection to server failed");
-            return false;
-        }
-        try {
-            ProtocolSerializer serializer = new ProtocolSerializer(this, com);
-
-            // Step 1:
-            SendUserPDU sendUserPDU = new SendUserPDU(user);
-            Log.d(TAG, "1) Sending SendUserPDU: " + user);
-            serializer.serialize(sendUserPDU);
-
-            // Step 2:
-            PDU pdu = serializer.deserialize();
-            Log.d(TAG, "2) received PDU with ID: " + pdu.getID());
-            switch (pdu.getID()) {
-                case SignUpSucceededPDU.ID -> {
-                    Log.d(TAG, "signUp: succeeded");
-                    return true;
-                }
-                case SignUpFailedPDU.ID -> Log.d(TAG, "signUp: failed");
-                default -> Log.i(TAG, "signUp: unknown pdu received: " + pdu.getID());
-            }
-
-        } catch (IOException e) {
-            Log.w(TAG, "Communication failed", e);
-        } finally {
-            com.disconnectFromServer();
-        }
-        return false;
     }
 }
