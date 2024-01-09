@@ -49,6 +49,13 @@ public interface Authentication {
     boolean login(String userName, String password) throws IOException;
 
     /**
+     * retrieves loginData from SharedPrefs and tries to login with this data
+     * @return true if login was successful
+     * @see #login(String, String)
+     */
+    boolean loginWithSavedLoginData();
+
+    /**
      * After this method is called the no user will be authenticated.
      * No matter if they were beforehand or not.
      */

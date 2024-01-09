@@ -111,7 +111,8 @@ public class AuthenticationImpl implements Authentication {
      * @return true if login was successful
      * @see #login(String, String)
      */
-    private boolean loginWithSavedLoginData() {
+    @Override
+    public boolean loginWithSavedLoginData() {
         SharedPreferences sp = App.getApplicationContext().getSharedPreferences(LAST_LOGIN_DATA_PREFS, Context.MODE_PRIVATE);
         String username = sp.getString(PREFS_USERNAME, null);
         String password = sp.getString(PREFS_PASSWORD, null);
