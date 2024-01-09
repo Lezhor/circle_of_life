@@ -11,6 +11,7 @@ import com.android.circleoflife.logging.model.DBLog;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,12 +33,16 @@ public class SyncIntegrationTest {
 
     @Before
     public void setUp() {
-        user = App.getLoginProtocol().login(USER_NAME, PASSWORD);
-        if (user == null) {
-            user = App.getSignUpProtocol().signUp(USER_NAME, PASSWORD);
+        try {
+            user = App.getLoginProtocol().login(USER_NAME, PASSWORD);
             if (user == null) {
-                fail("Neither succeeded to login nor to signUp! - Check if server is up and running!");
+                user = App.getSignUpProtocol().signUp(USER_NAME, PASSWORD);
             }
+        } catch (IOException e) {
+            fail(e.getLocalizedMessage());
+        }
+        if (user == null) {
+            fail("Neither succeeded to login nor to signUp! - Check if server is up and running!");
         }
     }
 
