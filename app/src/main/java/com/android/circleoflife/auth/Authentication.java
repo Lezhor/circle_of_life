@@ -4,7 +4,6 @@ import com.android.circleoflife.communication.protocols.SyncProtocol;
 import com.android.circleoflife.database.models.User;
 
 import java.io.IOException;
-import java.util.Date;
 
 /**
  * This is where the authentication happens. Every script can get the Username but not the password (only its hash value).<br>
@@ -56,7 +55,7 @@ public interface Authentication {
     void logout();
 
     /**
-     * creates a new account both on server and client and {@link Authentication#login(String, String) logs in} into it.
+     * creates a new account. If localOnly is set to false, the server creates
      * @param userName username
      * @param password password
      * @param localOnly if true syncing to server is disabled. can be turned on later however fails to do so if username already exists.
@@ -64,6 +63,12 @@ public interface Authentication {
      */
     boolean signUp(String userName, String password, boolean localOnly) throws IOException;
 
+    // TODO: 09.01.2024 signUp(User) for the case that a user which was localOnly wants to sync to server now
+
+    /**
+     * Getter for user settings
+     * @return user settings
+     */
     UserSettings getSettings();
 
 }

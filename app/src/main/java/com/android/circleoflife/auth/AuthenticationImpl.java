@@ -2,20 +2,17 @@ package com.android.circleoflife.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.control.DatabaseController;
 import com.android.circleoflife.database.models.User;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class AuthenticationImpl implements Authentication {
+    private static final String TAG = Authentication.class.getSimpleName();
 
     public static String LAST_LOGIN_DATA_PREFS = "lastLoginPrefs";
     public static String PREFS_USERNAME = "username";
@@ -133,9 +130,28 @@ public class AuthenticationImpl implements Authentication {
     }
 
     @Override
-    public boolean signUp(String userName, String password, boolean localOnly) throws IOException {
-        // TODO: 09.01.2024 signUp
-        return false;
+    public boolean signUp(String username, String password, boolean localOnly) throws IOException {
+        User user;
+        DatabaseController db = App.getDatabaseController();
+        if (localOnly) {
+            user = db.getUserByUsername(username);
+            if (user != null) {
+                // username already exists
+                user = null;
+            } else {
+                user = new User(UUID.randomUUID(), username, password, LocalDateTime.now());
+            }
+        } else {
+            user = App.getSignUpProtocol().signUp(username, password);
+        }
+        if (user != null) {
+            setUser(user);
+            db.insertUsers(user);
+            return true;
+        } else {
+            // signup failed
+            return false;
+        }
     }
 
     @Override
