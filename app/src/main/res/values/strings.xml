@@ -1,9 +1,15 @@
 <resources>
     <string name="app_name">Circle of Life</string>
 
-    <string name="username_hint">Username</string>
-    <string name="password_hint">Password</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
     <string name="login">LOGIN</string>
+    <string name="go_to_signup_text">No Account? Sign Up!</string>
+
+    <string name="signup">SIGN UP</string>
+    <string name="go_to_login_text">Already have an account? Login!</string>
+    <string name="switch_server_sync_text">Enable Server Synchronisation</string>
+    <string name="switch_automatic_sync_text">Automatic Synchronisation</string>
 
 
     <!-- used if value is not set -->

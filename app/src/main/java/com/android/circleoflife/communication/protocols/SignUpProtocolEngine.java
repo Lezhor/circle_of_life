@@ -62,11 +62,13 @@ public class SignUpProtocolEngine implements SignUpProtocol {
         Log.d(TAG, "Begin syncing...");
         SocketCommunication com = App.openCommunicationSessionWithServer();
         try {
+            Log.d(TAG, "Connecting to Server");
             com.connectToServer();
         } catch (IOException e) {
             Log.w(TAG, "Connection to server failed");
             throw e;
         }
+        Log.d(TAG, "Connection Successful");
         try {
             ProtocolSerializer serializer = new ProtocolSerializer(this, com);
 
