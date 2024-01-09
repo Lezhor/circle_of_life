@@ -11,6 +11,7 @@ import com.android.circleoflife.database.control.daos.BaseDao;
 import com.android.circleoflife.database.control.observers.DatabaseObserver;
 import com.android.circleoflife.database.models.*;
 import com.android.circleoflife.database.models.additional.HasUserId;
+import com.android.circleoflife.logging.control.DBLogger;
 import com.android.circleoflife.logging.model.DBLog;
 
 import java.time.LocalDateTime;
@@ -51,6 +52,7 @@ public class DatabaseControllerImpl implements DatabaseController {
     private DatabaseControllerImpl() {
         this.observers = new LinkedList<>();
         db = AppDatabase.getInstance(App.getApplicationContext());
+        new DBLogger(this);
     }
 
     @Override

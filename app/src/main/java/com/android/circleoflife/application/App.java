@@ -15,8 +15,6 @@ import com.android.circleoflife.communication.protocols.SyncProtocol;
 import com.android.circleoflife.communication.protocols.SyncProtocolEngine;
 import com.android.circleoflife.database.control.DatabaseController;
 import com.android.circleoflife.database.control.DatabaseControllerImpl;
-import com.android.circleoflife.logging.control.DBLogger;
-import com.android.circleoflife.logging.control.DBLoggerImpl;
 import com.android.circleoflife.logging.serializing.LogSerializer;
 import com.android.circleoflife.logging.serializing.LogSerializerImpl;
 
@@ -98,15 +96,6 @@ public final class App {
      */
     public static Authentication getAuthentication() {
         return AuthenticationImpl.getInstance();
-    }
-
-    /**
-     * singleton principle.
-     * @return only existing instance of {@link DBLogger}
-     * @see DBLoggerImpl
-     */
-    public static DBLogger getDBLoggerInstance() {
-        return DBLoggerImpl.getInstance();
     }
 
     /**
