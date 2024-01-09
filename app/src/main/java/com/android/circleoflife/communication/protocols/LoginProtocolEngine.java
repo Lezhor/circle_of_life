@@ -47,14 +47,13 @@ public class LoginProtocolEngine implements LoginProtocol {
     public static final String VERSION = "v1.0";
 
     @Override
-    public User login(String username, String password) {
+    public User login(String username, String password) throws IOException {
         Log.d(TAG, "Begin syncing...");
         SocketCommunication com = App.openCommunicationSessionWithServer();
         try {
             com.connectToServer();
         } catch (IOException e) {
-            Log.w(TAG, "Connection to server failed");
-            return null;
+            throw new IOException("Connecting to Server failed");
         }
         try {
             ProtocolSerializer serializer = new ProtocolSerializer(this, com);
@@ -76,6 +75,7 @@ public class LoginProtocolEngine implements LoginProtocol {
 
         } catch (IOException e) {
             Log.w(TAG, "Communication failed", e);
+            throw e;
         } finally {
             com.disconnectFromServer();
         }
