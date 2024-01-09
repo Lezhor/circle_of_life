@@ -5,8 +5,8 @@ import com.android.circleoflife.communication.protocols.SyncProtocolEngine;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 /**
  * SocketCommunication used in {@link SyncProtocolEngine}
@@ -14,14 +14,9 @@ import java.net.UnknownHostException;
 public class SocketCommunicationImpl implements SocketCommunication {
 
     /**
-     * Default IP address
+     * Timeout after which stops trying to connect to server.
      */
-    public static String SERVER_IP = "192.168.188.70";
-
-    /**
-     * Default port
-     */
-    public static int PORT = 7777;
+    public final static int CONNECTION_TIMEOUT_MILLIS = 1500;
 
     private final String serverIP;
     private final int port;
@@ -31,29 +26,20 @@ public class SocketCommunicationImpl implements SocketCommunication {
 
     /**
      * Constructor for SocketCommunication
+     *
      * @param serverIP new value for serverIP
-     * @param port new value for port
+     * @param port     new value for port
      */
     public SocketCommunicationImpl(String serverIP, int port) {
         this.serverIP = serverIP;
         this.port = port;
     }
 
-    /**
-     * Default Constructor for te SocketCommunication
-     */
-    public SocketCommunicationImpl() {
-        this(SERVER_IP, PORT);
-    }
-
     @Override
     public void connectToServer(String serverIP, int port) throws IOException {
         if (!connected()) {
-            try {
-                socket = new Socket(serverIP, port);
-            } catch (UnknownHostException e) {
-                throw new IOException("Host unknown");
-            }
+            socket = new Socket();
+            socket.connect(new InetSocketAddress(serverIP, port), CONNECTION_TIMEOUT_MILLIS);
         }
     }
 
@@ -88,7 +74,7 @@ public class SocketCommunicationImpl implements SocketCommunication {
 
 
     @Override
-    public InputStream getInputStream()  {
+    public InputStream getInputStream() {
         if (connected()) {
             try {
                 return socket.getInputStream();

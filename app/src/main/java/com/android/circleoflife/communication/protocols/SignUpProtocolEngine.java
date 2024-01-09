@@ -59,14 +59,14 @@ public class SignUpProtocolEngine implements SignUpProtocol {
 
     @Override
     public User signUp(String username, String password) throws IOException {
-        Log.d(TAG, "Begin syncing...");
+        Log.d(TAG, "Begin signUp request...");
         SocketCommunication com = App.openCommunicationSessionWithServer();
         try {
             Log.d(TAG, "Connecting to Server");
             com.connectToServer();
         } catch (IOException e) {
-            Log.w(TAG, "Connection to server failed");
-            throw e;
+            Log.w(TAG, "Connection to server failed", e);
+            throw new IOException("Connection to Server failed");
         }
         Log.d(TAG, "Connection Successful");
         try {

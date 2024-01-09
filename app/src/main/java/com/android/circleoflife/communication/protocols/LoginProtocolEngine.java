@@ -48,10 +48,11 @@ public class LoginProtocolEngine implements LoginProtocol {
 
     @Override
     public User login(String username, String password) throws IOException {
-        Log.d(TAG, "Begin syncing...");
+        Log.d(TAG, "Begin login request...");
         SocketCommunication com = App.openCommunicationSessionWithServer();
         try {
             com.connectToServer();
+            Log.d(TAG, "Connection to server succeeded!");
         } catch (IOException e) {
             throw new IOException("Connecting to Server failed");
         }

@@ -33,6 +33,7 @@ import java.util.List;
  * @see SyncProtocol
  */
 public class SyncProtocolEngine implements SyncProtocol {
+    private static final String TAG = SyncProtocolEngine.class.getSimpleName();
 
     private static volatile SyncProtocol instance;
 
@@ -62,12 +63,12 @@ public class SyncProtocolEngine implements SyncProtocol {
 
     @Override
     public LocalDateTime sync(User user, LocalDateTime lastSyncDate, DBLog<?>[] logs, List<DBLog<?>> outLogs) {
-        Log.d("SyncProtocolEngine", "Begin syncing...");
+        Log.d(TAG, "Begin syncing...");
         SocketCommunication com = App.openCommunicationSessionWithServer();
         try {
             com.connectToServer();
         } catch (IOException e) {
-            Log.i("SyncProtocolEngine", "Connection to Server failed!");
+            Log.i(TAG, "Connection to Server failed!");
             return null;
         }
         LocalDateTime newLastSyncDate;
@@ -76,12 +77,12 @@ public class SyncProtocolEngine implements SyncProtocol {
 
             // Step 1:
             SendAuthPDU authPDU = new SendAuthPDU(user);
-            Log.d("SyncProtocolEngine", "1) Sending AuthPDU...");
+            Log.d(TAG, "1) Sending AuthPDU...");
             serializer.serialize(authPDU);
 
             // Step 2:
             PDU pdu2 = serializer.deserialize();
-            Log.d("SyncProtocolEngine", "2) Received PDU with ID " + pdu2.getID());
+            Log.d(TAG, "2) Received PDU with ID " + pdu2.getID());
             if (pdu2.getID() == AuthNotVerifiedPDU.ID) {
                 throw new AuthenticationFailedException("Server did not confirm authentication: '" + authPDU.getUser() + "'");
             } else if (pdu2.getID() != AuthVerifiedPDU.ID) {
@@ -90,23 +91,23 @@ public class SyncProtocolEngine implements SyncProtocol {
 
             // Step 3:
             SendLogsPDU sendLogsPDU = new SendLogsPDU(lastSyncDate, logs);
-            Log.d("SyncProtocolEngine", "3) Sending Logs to Server...");
+            Log.d(TAG, "3) Sending Logs to Server...");
             serializer.serialize(sendLogsPDU);
 
             // Step 4:
             SendLogsPDU instructionsPDU = serializer.deserialize(SendLogsPDU.class);
             DBLog<?>[] instructions = instructionsPDU.getLogs();
             newLastSyncDate = instructionsPDU.getLastSyncDate();
-            Log.d("SyncProtocolEngine", "4) Received SendLogsPDU with " + instructions.length + " instructions.");
+            Log.d(TAG, "4) Received SendLogsPDU with " + instructions.length + " instructions.");
             Collections.addAll(outLogs, instructions);
 
             // Step 5:
             SyncSuccessfulPDU syncSuccessfulPDU = new SyncSuccessfulPDU();
-            Log.d("SyncProtocolEngine", "5) Sending SyncSuccessfulPDU");
+            Log.d(TAG, "5) Sending SyncSuccessfulPDU");
             serializer.serialize(syncSuccessfulPDU);
 
         } catch (NullPointerException | AuthenticationFailedException | IOException e) {
-            Log.i("SyncProtocolEngine", "Synchronisation failed: " + e.getMessage());
+            Log.i(TAG, "Synchronisation failed: " + e.getMessage());
             return null;
         } finally {
             com.disconnectFromServer();
