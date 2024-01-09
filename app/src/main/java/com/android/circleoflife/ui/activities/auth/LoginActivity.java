@@ -11,6 +11,7 @@ import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.database.validators.StringValidator;
+import com.android.circleoflife.ui.activities.MainMenuActivity;
 import com.android.circleoflife.ui.activities.SuperActivity;
 import com.android.circleoflife.ui.activities.categories.root.RootCategoriesActivity;
 import com.android.circleoflife.ui.other.TextInputLayoutValidator;
@@ -39,14 +40,12 @@ public class LoginActivity extends SuperActivity {
         usernameInput = findViewById(R.id.edit_username);
         passwordInput = findViewById(R.id.edit_password);
 
-        Log.d(TAG, "temp: " + "Test");
-        new Thread(() -> Log.d(TAG, "temp: " + Arrays.stream(App.getResources().getStringArray(R.array.days_of_week)).reduce("", (a, b) -> a + b + "; ")))
-                .start();
+        tryLoginWithLastDate();
 
-        //tryLoginWithLastDate(); todo - comment in
-
+        /*
         executeInBackground(() -> App.getDatabaseController().getUserByUsername("john_doe"),
                 user -> Log.d(TAG, "username: '" + user.getUsername() + "', password: '" + user.getPassword() + "'"));
+         */
 
     }
 
@@ -79,7 +78,7 @@ public class LoginActivity extends SuperActivity {
 
     private void goToNextActivity() {
         // TODO: 09.01.2024 main menu should be here
-        Intent intent = new Intent(this, RootCategoriesActivity.class);
+        Intent intent = new Intent(this, MainMenuActivity.class);
         startActivity(intent);
     }
 

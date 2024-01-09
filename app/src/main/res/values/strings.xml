@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Circle of Life</string>
 
+    <!-- Login- & SignUp-->
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">LOGIN</string>
@@ -11,6 +12,11 @@
     <string name="switch_server_sync_text">Enable Server Synchronisation</string>
     <string name="switch_automatic_sync_text">Automatic Synchronisation</string>
 
+    <!-- Main Menu - Options Menu -->
+    <string name="menu_item_sync">Sync now</string>
+    <string name="menu_item_sync_enabled">Sync with server enabled</string>
+    <string name="menu_item_auto_sync_enabled">Sync automatically</string>
+    <string name="menu_item_logout">Logout</string>
 
     <!-- used if value is not set -->
     <string name="no_string" translatable="false">NULL</string>

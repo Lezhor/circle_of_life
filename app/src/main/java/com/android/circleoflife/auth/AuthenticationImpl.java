@@ -79,7 +79,7 @@ public class AuthenticationImpl implements Authentication {
     }
 
     @Override
-    public boolean authenticated(User user) {
+    public boolean authenticated() {
         return user != null;
     }
 

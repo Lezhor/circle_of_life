@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.validators.StringValidator;
+import com.android.circleoflife.ui.activities.MainMenuActivity;
 import com.android.circleoflife.ui.activities.SuperActivity;
 import com.android.circleoflife.ui.activities.categories.root.RootCategoriesActivity;
 import com.android.circleoflife.ui.other.TextInputLayoutValidator;
@@ -100,7 +101,7 @@ public class SignUpActivity extends SuperActivity {
     }
 
     private void goToNextActivity() {
-        Intent intent = new Intent(this, RootCategoriesActivity.class);
+        Intent intent = new Intent(this, MainMenuActivity.class);
         startActivity(intent);
     }
 }

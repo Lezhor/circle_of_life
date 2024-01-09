@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:id="@+id/item_group_sync">
+        <item
+            android:id="@+id/item_sync"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:title="@string/menu_item_sync" />
+
+        <item
+            android:id="@+id/item_sync_enabled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:title="@string/menu_item_sync_enabled" />
+
+        <item
+            android:id="@+id/item_auto_sync_enabled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:title="@string/menu_item_auto_sync_enabled" />
+
+    </group>
+
+    <group android:id="@+id/item_group_auth">
+        <item
+            android:id="@+id/item_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:title="@string/menu_item_logout" />
+
+    </group>
+
+</menu>

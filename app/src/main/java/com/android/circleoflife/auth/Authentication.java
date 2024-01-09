@@ -28,11 +28,10 @@ public interface Authentication {
 
 
     /**
-     * Returns authenticated status for user username
-     * @param user user to be checked.
-     * @return true if the passed userName is currently authenticated
+     * Returns true if there is a user authenticated
+     * @return true if there si a user authenticated
      */
-    boolean authenticated(User user);
+    boolean authenticated();
 
     /**
      * If a user is currently authenticated, does nothing.
