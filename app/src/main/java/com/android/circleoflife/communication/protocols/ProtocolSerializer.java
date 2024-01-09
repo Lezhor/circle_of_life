@@ -1,15 +1,8 @@
 package com.android.circleoflife.communication.protocols;
 
-import com.android.circleoflife.communication.pdus.*;
-import com.android.circleoflife.communication.pdus.auth.LoginFailedPDU;
-import com.android.circleoflife.communication.pdus.auth.SendLoginAuthDataPDU;
-import com.android.circleoflife.communication.pdus.auth.SendUserPDU;
-import com.android.circleoflife.communication.pdus.sync.AuthNotVerifiedPDU;
-import com.android.circleoflife.communication.pdus.sync.AuthVerifiedPDU;
-import com.android.circleoflife.communication.pdus.sync.SendAuthPDU;
-import com.android.circleoflife.communication.pdus.sync.SendInstructionsPDU;
-import com.android.circleoflife.communication.pdus.sync.SendLogsPDU;
-import com.android.circleoflife.communication.pdus.sync.SyncSuccessfulPDU;
+import com.android.circleoflife.communication.pdus.PDU;
+import com.android.circleoflife.communication.pdus.auth.*;
+import com.android.circleoflife.communication.pdus.sync.*;
 import com.android.circleoflife.communication.socket_communication.SocketCommunication;
 
 import java.io.DataInputStream;
@@ -71,8 +64,10 @@ public class ProtocolSerializer {
             case SendInstructionsPDU.ID -> SendInstructionsPDU.fromInputStream(is);
             case SyncSuccessfulPDU.ID -> SyncSuccessfulPDU.fromInputStream(is);
             case SendLoginAuthDataPDU.ID -> SendLoginAuthDataPDU.fromInputStream(is);
-            case LoginFailedPDU.ID -> LoginFailedPDU.fromInputStream(is);
             case SendUserPDU.ID -> SendUserPDU.fromInputStream(is);
+            case LoginFailedPDU.ID -> LoginFailedPDU.fromInputStream(is);
+            case SignUpFailedPDU.ID -> SignUpFailedPDU.fromInputStream(is);
+            case SignUpSucceededPDU.ID -> SignUpSucceededPDU.fromInputStream(is);
             default -> throw new IOException("Failed to deserialize PDU-ID");
         };
     }
