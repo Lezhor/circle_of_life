@@ -25,10 +25,7 @@ public class SendAuthPDUTest {
 
     User user;
 
-    /**
-     * Mocks the {@link Authentication} so that {@link Authentication#getAuthenticationString()}
-     * returns <code>auth[johnny_depp123|24257]</code>
-     */
+
     @Before
     public void setUp() {
         user = new User(UUID.randomUUID(), "john_doe", "a.Password123", LocalDateTime.of(2023, 12, 20, 20, 20));

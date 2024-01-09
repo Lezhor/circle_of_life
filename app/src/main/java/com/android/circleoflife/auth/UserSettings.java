@@ -35,6 +35,9 @@ public class UserSettings {
      * @return user-settings for passed user
      */
     public static UserSettings getSettings(User user) {
+        if (user == null) {
+            return null;
+        }
         SharedPreferences sp = getSharedPreferences(user.getId());
         UserSettings settings;
         if (sp.contains(USER_PREFS_SET)) {
