@@ -67,7 +67,7 @@ public class SignUpActivity extends SuperActivity {
                             if (App.getAuthentication().signUp(username, password, !serverSync)) {
                                 return null;
                             } else {
-                                return "SignUp failed";
+                                return "Username already exists";
                             }
                         } catch (IOException e) {
                             return "SignUp failed: " + e.getMessage();
@@ -79,7 +79,11 @@ public class SignUpActivity extends SuperActivity {
                             if (App.getAuthentication().getUser() != null) {
                                 App.getAuthentication().getSettings().setAutomaticServerSync(autoSync);
                                 goToNextActivity();
+                            } else {
+                                Log.i(TAG, "signUp: str is null but user is not authenticated!");
                             }
+                        } else if (str.equals("Username already exists")) {
+                            usernameInput.setError(str);
                         } else {
                             Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
                         }
