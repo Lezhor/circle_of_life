@@ -85,7 +85,7 @@ public class DatabaseControllerImpl implements DatabaseController {
     }
 
     @Override
-    public LiveData<User> getUser(String username) {
+    public User getUserByUsername(String username) {
         return db.getUserDao().getUser(username);
     }
 

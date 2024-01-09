@@ -15,6 +15,6 @@ public interface UserDao extends BaseDao<User> {
     LiveData<User> getUser(UUID userID);
 
     @Query("SELECT * FROM users WHERE username LIKE :username LIMIT 1")
-    LiveData<User> getUser(String username);
+    User getUser(String username);
 
 }

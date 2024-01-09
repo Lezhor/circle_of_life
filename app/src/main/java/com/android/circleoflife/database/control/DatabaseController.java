@@ -48,7 +48,7 @@ public interface DatabaseController {
 
     LiveData<User> getUser(UUID userID);
 
-    LiveData<User> getUser(String username);
+    User getUserByUsername(String username);
 
 
     // Categories
