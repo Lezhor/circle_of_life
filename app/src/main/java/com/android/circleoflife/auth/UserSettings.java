@@ -7,8 +7,10 @@ import androidx.annotation.NonNull;
 
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.models.User;
+import com.android.circleoflife.database.models.type_converters.LocalDateTimeConverter;
 import com.android.circleoflife.database.models.type_converters.UUIDConverter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -19,6 +21,7 @@ public class UserSettings {
     public final static String USER_PREFS_SET = "set";
     public final static String SERVER_SYNC_ENABLED = "server_sync_enabled";
     public final static String AUTOMATIC_SYNC_ENABLED = "automatic_sync_enabled";
+    public final static String LAST_SYNC_DATE = "last_sync_date";
 
     /**
      * Retrieves SharedPrefs which the user with passed userID uses to saves the settings
@@ -44,7 +47,8 @@ public class UserSettings {
             settings = new UserSettings(
                     user.getId(),
                     sp.getBoolean(SERVER_SYNC_ENABLED, true),
-                    sp.getBoolean(AUTOMATIC_SYNC_ENABLED, true)
+                    sp.getBoolean(AUTOMATIC_SYNC_ENABLED, true),
+                    LocalDateTimeConverter.localDateTimeFromString(sp.getString(LAST_SYNC_DATE, null))
             );
         } else {
             settings = new UserSettings(user);
@@ -55,6 +59,7 @@ public class UserSettings {
     private final UUID userID;
     private boolean serverSyncEnabled;
     private boolean automaticServerSync;
+    private LocalDateTime lastSyncDate;
 
     /**
      * Constructor for setting all attributes
@@ -62,11 +67,11 @@ public class UserSettings {
      * @param serverSyncEnabled if syncing to server is enabled
      * @param automaticServerSync if syncing with server is automatic
      */
-    private UserSettings(@NonNull UUID userID, boolean serverSyncEnabled, boolean automaticServerSync) {
+    private UserSettings(@NonNull UUID userID, boolean serverSyncEnabled, boolean automaticServerSync, LocalDateTime lastSyncDate) {
         this.userID = userID;
         this.serverSyncEnabled = serverSyncEnabled;
         this.automaticServerSync = automaticServerSync;
-        saveToSharedPrefs();
+        this.lastSyncDate = lastSyncDate;
     }
 
     /**
@@ -74,7 +79,8 @@ public class UserSettings {
      * @param user user to create the settings for
      */
     private UserSettings(@NonNull User user) {
-        this(user.getId(), true, true);
+        this(user.getId(), true, true, null);
+        saveToSharedPrefs();
     }
 
     /**
@@ -123,4 +129,14 @@ public class UserSettings {
             saveToSharedPrefs();
         }
     }
+
+    public LocalDateTime getLastSyncDate() {
+        return lastSyncDate;
+    }
+
+    public void setLastSyncDate(LocalDateTime lastSyncDate) {
+        this.lastSyncDate = lastSyncDate;
+        saveToSharedPrefs();
+    }
+
 }
