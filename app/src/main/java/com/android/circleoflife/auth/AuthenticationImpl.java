@@ -85,15 +85,20 @@ public class AuthenticationImpl implements Authentication {
 
     @Override
     public boolean login(String username, String password) throws IOException {
+        Log.d(TAG, "login: trying to login :'" + username + "'");
         DatabaseController db = App.getDatabaseController();
         User user = db.getUserByUsername(username);
         if (user != null) {
             // User in local db
+            Log.d(TAG, "login: User found in local db!");
             if (!user.getPassword().equals(password)) {
+                Log.d(TAG, "login: password '" + password + "' is not correct");
                 user = null;
             }
         } else {
             // Send request to server
+            Log.d(TAG, "login: user not found in local db");
+            Log.d(TAG, "login: sending login request to server");
             user = App.getLoginProtocol().login(username, password);
         }
         if (user != null) {

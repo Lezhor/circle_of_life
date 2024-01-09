@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Circle of Life</string>
 
+    <string name="username_hint">Username</string>
+    <string name="password_hint">Password</string>
+    <string name="login">LOGIN</string>
+
 
     <!-- used if value is not set -->
     <string name="no_string" translatable="false">NULL</string>

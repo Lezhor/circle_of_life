@@ -59,7 +59,7 @@ public class LogEntity implements HasUserId {
         this(log.getId(), log.getUserId(), log.getTimestamp(), log);
     }
 
-    LogEntity(@NonNull UUID id, @NonNull UUID userID, @NonNull LocalDateTime timestamp, @NonNull DBLog<?> log) {
+    public LogEntity(@NonNull UUID id, @NonNull UUID userID, @NonNull LocalDateTime timestamp, @NonNull DBLog<?> log) {
         this.id = id;
         this.userID = userID;
         this.timestamp = timestamp;

@@ -119,13 +119,7 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
 
             setUpSwipeAndDrag(recyclerView);
 
-            User temp = null;
-            try {
-                temp = App.getAuthentication().getUser();
-            } catch (AuthenticationFailedException e) {
-                Log.w(TAG, "onCreate: getting user from authentication failed", e);
-            }
-            final User user = temp;
+            final User user = App.getAuthentication().getUser();
             if (user != null) {
                 categoryViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
                     @NonNull

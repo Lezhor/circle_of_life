@@ -183,13 +183,10 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
 
         TextView invisText = findViewById(R.id.category_invis_text);
 
-        User temp = null;
-        try {
-            temp = App.getAuthentication().getUser();
-        } catch (AuthenticationFailedException e) {
-            Log.w(TAG, "onCreate: getting user from authentication failed", e);
-        }
-        final User user = temp;
+        final User user = App.getAuthentication().getUser();
+
+        // TODO: 09.01.2024 Temp Toast - remove
+        Toast.makeText(this, "Logged in: " + user.getUsername(), Toast.LENGTH_SHORT).show();
 
         if (user != null) {
             categoryViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
