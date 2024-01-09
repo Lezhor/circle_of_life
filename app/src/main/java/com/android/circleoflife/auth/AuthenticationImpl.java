@@ -2,6 +2,7 @@ package com.android.circleoflife.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.control.DatabaseController;
@@ -34,8 +35,6 @@ public class AuthenticationImpl implements Authentication {
         }
         return instance;
     }
-
-    // TODO: 16.12.2023 Implement all methods!!
 
     private volatile User user;
     private UserSettings settings;
@@ -98,9 +97,11 @@ public class AuthenticationImpl implements Authentication {
             user = App.getLoginProtocol().login(username, password);
         }
         if (user != null) {
+            Log.d(TAG, "login: successfully logged in: " + user);
             setUser(user);
             return true;
         } else {
+            Log.d(TAG, "login: failed for username: '" + username + "'");
             return false;
         }
     }
@@ -117,6 +118,7 @@ public class AuthenticationImpl implements Authentication {
         if (username == null || password == null) {
             return false;
         }
+        Log.d(TAG, "loginWithSavedLoginData: Trying to log from saved login data. username: " + username);
         try {
             return login(username, password);
         } catch (IOException e) {
@@ -126,6 +128,7 @@ public class AuthenticationImpl implements Authentication {
 
     @Override
     public void logout() {
+        Log.d(TAG, "logout: user: " + user);
         setUser(null);
     }
 
@@ -133,6 +136,7 @@ public class AuthenticationImpl implements Authentication {
     public boolean signUp(String username, String password, boolean localOnly) throws IOException {
         User user;
         DatabaseController db = App.getDatabaseController();
+        Log.d(TAG, "signUp: Trying to signUp username '" + username + "' " + (localOnly ? "on this machine" : "on remote server"));
         if (localOnly) {
             user = db.getUserByUsername(username);
             if (user != null) {
@@ -146,10 +150,12 @@ public class AuthenticationImpl implements Authentication {
         }
         if (user != null) {
             setUser(user);
+            Log.d(TAG, "signUp: successful, inserting user into database: " + user);
             db.insertUsers(user);
             return true;
         } else {
             // signup failed
+            Log.d(TAG, "signUp: failed for username: " + username + (localOnly ? " (local only)" : ""));
             return false;
         }
     }
@@ -164,6 +170,7 @@ public class AuthenticationImpl implements Authentication {
      * @param user user to be saved
      */
     private void saveLoginDataToPrefs(User user) {
+        Log.d(TAG, "saveLoginDataToPrefs: " + user);
         SharedPreferences sp = App.getApplicationContext().getSharedPreferences(LAST_LOGIN_DATA_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(PREFS_USERNAME, user.getUsername());
@@ -175,6 +182,7 @@ public class AuthenticationImpl implements Authentication {
      * Removes login data from prefs
      */
     private void removeLoginDataFromPrefs() {
+        Log.d(TAG, "removeLoginDataFromPrefs: " + user);
         SharedPreferences sp = App.getApplicationContext().getSharedPreferences(LAST_LOGIN_DATA_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.remove(PREFS_USERNAME);
