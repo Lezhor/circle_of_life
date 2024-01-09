@@ -1,4 +1,4 @@
-package com.android.circleoflife.ui.activities;
+package com.android.circleoflife.ui.activities.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.validators.StringValidator;
+import com.android.circleoflife.ui.activities.SuperActivity;
 import com.android.circleoflife.ui.activities.categories.root.RootCategoriesActivity;
 import com.android.circleoflife.ui.other.TextInputLayoutValidator;
 import com.google.android.material.textfield.TextInputLayout;
