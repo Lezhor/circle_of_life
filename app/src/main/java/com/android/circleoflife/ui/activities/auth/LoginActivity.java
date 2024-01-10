@@ -39,13 +39,9 @@ public class LoginActivity extends SuperActivity {
         usernameInput = findViewById(R.id.edit_username);
         passwordInput = findViewById(R.id.edit_password);
 
+        //executeInBackground(App.getDatabaseController()::clearDatabase);
+
         tryLoginWithLastDate();
-
-        /*
-        executeInBackground(() -> App.getDatabaseController().getUserByUsername("john_doe"),
-                user -> Log.d(TAG, "username: '" + user.getUsername() + "', password: '" + user.getPassword() + "'"));
-         */
-
     }
 
     @Override
