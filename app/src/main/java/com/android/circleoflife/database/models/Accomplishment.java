@@ -246,4 +246,13 @@ public class Accomplishment implements Nameable, HasUserId, Copyable<Accomplishm
                 && Objects.equals(this.timestamp, that.timestamp)
                 && this.durationMillis == that.durationMillis;
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Accomplishment { " +
+                "name='" + name + '\'' +
+                ", durationMillis=" + durationMillis +
+                " }";
+    }
 }

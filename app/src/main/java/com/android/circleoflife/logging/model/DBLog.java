@@ -196,5 +196,9 @@ public class DBLog<E extends HasUserId> {
 
     }
 
-
+    @NonNull
+    @Override
+    public String toString() {
+        return "DBLog { " + changedObject.toString() + ", " + changeMode.name() + ", " + LocalDateTimeConverter.localDateTimeToString(timestamp) + " }";
+    }
 }

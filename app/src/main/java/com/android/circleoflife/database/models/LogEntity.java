@@ -102,4 +102,10 @@ public class LogEntity implements HasUserId {
     public void setId(@NonNull UUID id) {
         this.id = id;
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "LogEntity{ " + log + " }";
+    }
 }

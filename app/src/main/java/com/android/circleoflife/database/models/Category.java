@@ -153,7 +153,7 @@ public class Category implements Nameable, HasUserId, Copyable<Category>, Parcel
     @NonNull
     @Override
     public String toString() {
-        return "Category[" + getName() + "]";
+        return "Category{" + getName() + "}";
     }
 
 

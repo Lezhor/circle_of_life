@@ -193,4 +193,10 @@ public class Todo implements Nameable, HasUserId, Copyable<Todo> {
     public Todo copy() {
         return new Todo(this);
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Todo{" + getName() + "}";
+    }
 }

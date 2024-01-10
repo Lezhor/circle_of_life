@@ -201,4 +201,10 @@ public class Cycle implements Nameable, HasUserId, Copyable<Cycle> {
     public Cycle copy() {
         return new Cycle(this);
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Cycle{" + getName() + "}";
+    }
 }
