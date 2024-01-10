@@ -41,4 +41,10 @@ public interface TodoDao extends BaseDao<Todo> {
         return getAccomplishments(todo.getUserID(), todo.getId());
     }
 
+    /**
+     * Deletes EVERYTHING from todos table - use with caution
+     */
+    @Query("DELETE FROM todos")
+    void deleteEverythingFromTable();
+
 }

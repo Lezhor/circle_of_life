@@ -106,4 +106,10 @@ public interface LogDao extends BaseDao<LogEntity> {
                 .toArray(DBLog[]::new);
     }
 
+    /**
+     * Deletes EVERYTHING from logs table - use with caution
+     */
+    @Query("DELETE FROM logs")
+    void deleteEverythingFromTable();
+
 }

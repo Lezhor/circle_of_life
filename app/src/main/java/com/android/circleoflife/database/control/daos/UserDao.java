@@ -17,4 +17,10 @@ public interface UserDao extends BaseDao<User> {
     @Query("SELECT * FROM users WHERE username LIKE :username LIMIT 1")
     User getUser(String username);
 
+    /**
+     * Deletes EVERYTHING from users table - use with caution
+     */
+    @Query("DELETE FROM users")
+    void deleteEverythingFromTable();
+
 }

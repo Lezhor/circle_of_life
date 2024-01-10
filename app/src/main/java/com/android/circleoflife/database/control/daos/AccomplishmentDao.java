@@ -64,4 +64,11 @@ public interface AccomplishmentDao extends BaseDao<Accomplishment> {
             return getAllAccomplishmentsBetweenTimestamps(user.getId(), timestamp1.toLocalDate(), timestamp1.toLocalTime(), timestamp2.toLocalDate(), timestamp2.toLocalTime());
         }
     }
+
+    /**
+     * Deletes EVERYTHING from accomplishments table - use with caution
+     */
+    @Query("DELETE FROM accomplishments")
+    void deleteEverythingFromTable();
+
 }

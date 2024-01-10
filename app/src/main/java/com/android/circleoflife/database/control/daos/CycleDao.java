@@ -42,5 +42,10 @@ public interface CycleDao extends BaseDao<Cycle> {
         return getAccomplishments(cycle.getUserID(), cycle.getId());
     }
 
+    /**
+     * Deletes EVERYTHING from cycles table - use with caution
+     */
+    @Query("DELETE FROM cycles")
+    void deleteEverythingFromTable();
 
 }

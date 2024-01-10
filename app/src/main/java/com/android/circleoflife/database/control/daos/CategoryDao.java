@@ -74,4 +74,11 @@ public interface CategoryDao extends BaseDao<Category> {
     default LiveData<List<Todo>> getTodos(Category category) {
         return getTodos(category.getUserID(), category.getId());
     }
+
+    /**
+     * Deletes EVERYTHING from categories table - use with caution
+     */
+    @Query("DELETE FROM categories")
+    void deleteEverythingFromTable();
+
 }
