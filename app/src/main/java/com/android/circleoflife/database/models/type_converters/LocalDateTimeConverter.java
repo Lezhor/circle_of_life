@@ -22,7 +22,7 @@ public class LocalDateTimeConverter {
      */
     @TypeConverter
     public static LocalDateTime localDateTimeFromString(String str) {
-        if (str == null) {
+        if (str == null || str.equals("null")) {
             return null;
         } else {
             return LocalDateTime.parse(str);
