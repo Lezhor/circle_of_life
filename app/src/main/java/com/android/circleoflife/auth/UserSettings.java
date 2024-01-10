@@ -92,6 +92,7 @@ public class UserSettings {
         editor.putBoolean(USER_PREFS_SET, true);
         editor.putBoolean(SERVER_SYNC_ENABLED, serverSyncEnabled);
         editor.putBoolean(AUTOMATIC_SYNC_ENABLED, automaticServerSync);
+        editor.putString(LAST_SYNC_DATE, LocalDateTimeConverter.localDateTimeToString(lastSyncDate));
         editor.apply();
     }
 
