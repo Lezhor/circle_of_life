@@ -114,6 +114,9 @@ public class AuthenticationImpl implements Authentication {
             Log.d(TAG, "login: user not found in local db");
             Log.d(TAG, "login: sending login request to server");
             user = App.getLoginProtocol().login(username, password);
+            if (user != null) {
+                App.getDatabaseController().insertUsers(user);
+            }
         }
         if (user != null) {
             Log.d(TAG, "login: successfully logged in: " + user);
