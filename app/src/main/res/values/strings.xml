@@ -21,6 +21,10 @@
     <!-- Main Menu - Other -->
     <string name="main_menu_welcome_text">Welcome Back</string>
 
+    <string name="main_menu_view_root_categories_text">View Root Folder</string>
+    <string name="main_menu_view_cycles_text">View Cycles</string>
+    <string name="main_menu_view_todos_text">View Todos</string>
+
     <!-- used if value is not set -->
     <string name="no_string" translatable="false">NULL</string>
 
