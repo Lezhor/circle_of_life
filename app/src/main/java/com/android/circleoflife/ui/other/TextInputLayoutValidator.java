@@ -1,5 +1,7 @@
 package com.android.circleoflife.ui.other;
 
+import android.text.InputType;
+
 import com.google.android.material.textfield.TextInputLayout;
 
 /**
@@ -30,7 +32,11 @@ public class TextInputLayoutValidator {
             return false;
         }
         try {
-            validator.validate(inputLayout.getEditText().getText().toString().trim());
+            String str = inputLayout.getEditText().getText().toString();
+            if (inputLayout.getEditText().getInputType() != (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
+                str = str.trim();
+            }
+            validator.validate(str);
             inputLayout.setError(null);
             return true;
         } catch (IllegalArgumentException e) {

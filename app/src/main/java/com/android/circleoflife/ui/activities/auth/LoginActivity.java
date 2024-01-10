@@ -9,16 +9,15 @@ import android.widget.Toast;
 
 import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
+import com.android.circleoflife.auth.UsernameParser;
 import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.database.validators.StringValidator;
 import com.android.circleoflife.ui.activities.MainMenuActivity;
 import com.android.circleoflife.ui.activities.SuperActivity;
-import com.android.circleoflife.ui.activities.categories.root.RootCategoriesActivity;
 import com.android.circleoflife.ui.other.TextInputLayoutValidator;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class LoginActivity extends SuperActivity {
     private static final String TAG = LoginActivity.class.getSimpleName();
@@ -77,17 +76,16 @@ public class LoginActivity extends SuperActivity {
     }
 
     private void goToNextActivity() {
-        // TODO: 09.01.2024 main menu should be here
         Intent intent = new Intent(this, MainMenuActivity.class);
         startActivity(intent);
     }
 
     private void login() {
-        String username = usernameInput.getEditText().getText().toString();
+        String username = UsernameParser.displayedUsernameToActualVersion(usernameInput.getEditText().getText().toString());
         String password = passwordInput.getEditText().getText().toString();
         Log.d(TAG, "login: tries to login with username: " + username + ", password: " + password);
         if (
-                TextInputLayoutValidator.validate(usernameInput, StringValidator::validateUsername, getString(R.string.username))
+                TextInputLayoutValidator.validate(usernameInput, StringValidator::validateDisplayedUsername, getString(R.string.username))
                 & TextInputLayoutValidator.validate(passwordInput, StringValidator::validatePassword, getString(R.string.password))
         ) {
             executeInBackground(

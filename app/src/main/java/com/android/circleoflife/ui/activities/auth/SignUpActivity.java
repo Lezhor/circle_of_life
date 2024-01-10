@@ -10,10 +10,10 @@ import android.widget.Toast;
 
 import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
+import com.android.circleoflife.auth.UsernameParser;
 import com.android.circleoflife.database.validators.StringValidator;
 import com.android.circleoflife.ui.activities.MainMenuActivity;
 import com.android.circleoflife.ui.activities.SuperActivity;
-import com.android.circleoflife.ui.activities.categories.root.RootCategoriesActivity;
 import com.android.circleoflife.ui.other.TextInputLayoutValidator;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -54,13 +54,13 @@ public class SignUpActivity extends SuperActivity {
     }
 
     private void signUp() {
-        String username = usernameInput.getEditText().getText().toString();
+        String username = UsernameParser.displayedUsernameToActualVersion(usernameInput.getEditText().getText().toString());
         String password = passwordInput.getEditText().getText().toString();
         boolean serverSync = switchServerSync.isChecked();
         boolean autoSync = switchAutoSync.isChecked();
         Log.d(TAG, "login: tries to signUp username: " + username + ", password: " + password);
         if (
-                TextInputLayoutValidator.validate(usernameInput, StringValidator::validateUsername, getString(R.string.username))
+                TextInputLayoutValidator.validate(usernameInput, StringValidator::validateDisplayedUsername, getString(R.string.username))
                         & TextInputLayoutValidator.validate(passwordInput, StringValidator::validatePassword, getString(R.string.password))
         ) {
             executeInBackground(
