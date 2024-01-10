@@ -18,6 +18,8 @@ import com.android.circleoflife.database.control.DatabaseControllerImpl;
 import com.android.circleoflife.logging.serializing.LogSerializer;
 import com.android.circleoflife.logging.serializing.LogSerializerImpl;
 
+import java.time.ZoneId;
+
 /**
  * This project follows the Singleton pattern.<br>
  * Every Class which allows only one existing instance is accessed from this class.<br>
@@ -36,6 +38,13 @@ public final class App {
      * Port the server listens on
      */
     public final static int PORT = 31163;
+
+    /**
+     * ZonId of the timezone of the server.
+     * @implNote Does not have to be the exact timezone of the server location,
+     * but this constant should be configured the same as in the server application.
+     */
+    public final static ZoneId SERVER_TIMEZONE = ZoneId.of("Europe/Berlin");
 
     /**
      * Returns Application Context.<br>
