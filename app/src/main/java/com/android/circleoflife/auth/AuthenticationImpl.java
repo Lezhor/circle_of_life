@@ -127,23 +127,27 @@ public class AuthenticationImpl implements Authentication {
 
     /**
      * Gets lastLoginData from SharedPreferences and tries to log in with those.
+     * If fails it calls {@link #removeLoginDataFromPrefs()}
      * @return true if login was successful
      * @see #login(String, String)
      */
     @Override
     public boolean loginWithSavedLoginData() {
+        boolean loggedIn = false;
         SharedPreferences sp = App.getApplicationContext().getSharedPreferences(LAST_LOGIN_DATA_PREFS, Context.MODE_PRIVATE);
         String username = sp.getString(PREFS_USERNAME, null);
         String password = sp.getString(PREFS_PASSWORD, null);
-        if (username == null || password == null) {
-            return false;
+        if (username != null && password != null) {
+            Log.d(TAG, "loginWithSavedLoginData: Trying to log from saved login data. username: " + username);
+            try {
+                loggedIn = login(username, password);
+            } catch (IOException ignored) {
+            }
+            if (!loggedIn) {
+                removeLoginDataFromPrefs();
+            }
         }
-        Log.d(TAG, "loginWithSavedLoginData: Trying to log from saved login data. username: " + username);
-        try {
-            return login(username, password);
-        } catch (IOException e) {
-            return false;
-        }
+        return loggedIn;
     }
 
     @Override
