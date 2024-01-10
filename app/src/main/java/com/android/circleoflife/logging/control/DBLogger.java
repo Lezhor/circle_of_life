@@ -39,7 +39,7 @@ public class DBLogger implements DatabaseObserver {
 
     @Override
     public void onInsertUser(User user) {
-        saveLogToDB(new DBLog<>(user, DBLog.ChangeMode.INSERT));
+        //saveLogToDB(new DBLog<>(user, DBLog.ChangeMode.INSERT));
     }
 
 
