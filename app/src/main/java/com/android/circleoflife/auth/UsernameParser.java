@@ -5,7 +5,6 @@ package com.android.circleoflife.auth;
  */
 public class UsernameParser {
 
-
     /**
      * Converts username to its displayed version<br>
      * The differences are that:<br>
@@ -16,8 +15,16 @@ public class UsernameParser {
      * @return displayed version of username
      */
     public static String usernameToDisplayedVersion(String username) {
-        // TODO: 01.01.2024 convert username
-        return null;
+        StringBuilder sb = new StringBuilder();
+        String[] split = username.replaceAll(" ", "_").split("_");
+        for (String word : split) {
+            if (!word.isEmpty()) {
+                sb.append(Character.toUpperCase(word.charAt(0)))
+                        .append(word.substring(1).toLowerCase())
+                        .append(" ");
+            }
+        }
+        return sb.toString().trim();
     }
 
     /**
@@ -30,8 +37,7 @@ public class UsernameParser {
      * @return actual version of username with underscores and lowercase letters
      */
     public static String displayedUsernameToActualVersion(String displayedUsername) {
-        // TODO: 01.01.2024 convert username
-        return null;
+        return displayedUsername.toLowerCase().replaceAll(" ", "_");
     }
 
 
