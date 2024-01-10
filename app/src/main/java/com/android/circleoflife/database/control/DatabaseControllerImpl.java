@@ -305,7 +305,7 @@ public class DatabaseControllerImpl implements DatabaseController {
     }
 
     @Override
-    public DBLog<?>[] getLogs(User user) {
-        return db.getLogDao().getLogs(user);
+    public DBLog<?>[] getLogs(User user, LocalDateTime min, LocalDateTime max) {
+        return db.getLogDao().getLogsBetweenTimestamps(user, min, max);
     }
 }

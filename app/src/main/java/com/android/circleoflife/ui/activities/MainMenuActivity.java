@@ -19,8 +19,11 @@ import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.auth.UserSettings;
 import com.android.circleoflife.auth.UsernameParser;
+import com.android.circleoflife.database.models.type_converters.LocalDateTimeConverter;
 import com.android.circleoflife.ui.activities.auth.LoginActivity;
 import com.android.circleoflife.ui.activities.categories.root.RootCategoriesActivity;
+
+import java.time.LocalDateTime;
 
 public class MainMenuActivity extends SuperActivity {
     private static final String TAG = MainMenuActivity.class.getSimpleName();
@@ -55,6 +58,20 @@ public class MainMenuActivity extends SuperActivity {
         View todoButton = findViewById(R.id.main_menu_view_todos);
         todoButton.setOnClickListener(v -> goToTodoActivity());
 
+        if (App.getAuthentication().authenticated()) {
+            executeInBackground(
+                    () -> App.getDatabaseController().getLogs(App.getAuthentication().getUser(), App.getAuthentication().getSettings().getLastSyncDate(), LocalDateTime.now()),
+                    logs -> {
+                        Log.d(TAG, "LastSyncDate: " + LocalDateTimeConverter.localDateTimeToString(App.getAuthentication().getSettings().getLastSyncDate()));
+                        Log.d(TAG, "now: " + LocalDateTimeConverter.localDateTimeToString(LocalDateTime.now()));
+                        Log.d(TAG, "Printing logs of user " + App.getAuthentication().getUser());
+                        for (int i = 0; i < logs.length; i++) {
+                            Log.d(TAG, (i + 1) + ") " + logs[i]);
+                        }
+                    }
+            );
+        }
+
     }
 
     @Override
@@ -63,6 +80,7 @@ public class MainMenuActivity extends SuperActivity {
 
         if (App.getAuthentication().authenticated()) {
             usernameDisplay.setText(UsernameParser.usernameToDisplayedVersion(App.getAuthentication().getUser().getUsername()));
+            Log.d(TAG, "LastSyncDate: " + LocalDateTimeConverter.localDateTimeToString(App.getAuthentication().getSettings().getLastSyncDate()));
             autoSync();
         } else {
             finish();

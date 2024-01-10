@@ -150,5 +150,5 @@ public interface DatabaseController {
     }
 
     // TODO: 10.01.2024 Remove method
-    DBLog<?>[] getLogs(User user);
+    DBLog<?>[] getLogs(User user, LocalDateTime min, LocalDateTime max);
 }
