@@ -26,6 +26,15 @@ public interface Authentication {
      */
     User waitForUser() throws InterruptedException;
 
+    /**
+     * Checks if automatic syncing is enabled and syncs if so
+     */
+    void autoSync();
+
+    /**
+     * Syncs even if autoSync is not enabled
+     */
+    void manualSync();
 
     /**
      * Returns true if there is a user authenticated

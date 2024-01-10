@@ -63,9 +63,15 @@ public class MainMenuActivity extends SuperActivity {
 
         if (App.getAuthentication().authenticated()) {
             usernameDisplay.setText(UsernameParser.usernameToDisplayedVersion(App.getAuthentication().getUser().getUsername()));
+            autoSync();
         } else {
             finish();
         }
+
+    }
+
+    private void autoSync() {
+        executeInBackground(App.getAuthentication()::autoSync);
     }
 
     /**
@@ -121,9 +127,8 @@ public class MainMenuActivity extends SuperActivity {
      * Called by {@link #onOptionsItemSelected(MenuItem)}, if sync is selected
      */
     private void sync() {
-        // TODO: 09.01.2024 execute sync method
         Log.d(TAG, "sync: pressed");
-        Toast.makeText(this, "Syncing (Under construction)", Toast.LENGTH_SHORT).show();
+        executeInBackground(App.getAuthentication()::manualSync);
     }
 
     /**

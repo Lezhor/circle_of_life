@@ -79,6 +79,20 @@ public class AuthenticationImpl implements Authentication {
     }
 
     @Override
+    public void autoSync() {
+        if (authenticated() && settings.isAutomaticServerSync()) {
+            App.getDatabaseController().syncWithServer(this);
+        }
+    }
+
+    @Override
+    public void manualSync() {
+        if (authenticated()) {
+            App.getDatabaseController().syncWithServer(this);
+        }
+    }
+
+    @Override
     public boolean authenticated() {
         return user != null;
     }
