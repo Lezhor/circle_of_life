@@ -15,8 +15,6 @@ import java.util.UUID;
 @Dao
 public interface LogDao extends BaseDao<LogEntity> {
 
-    // TODO: 10.12.2023 methods: getAll(), getAllAfter() etc.
-
     /**
      * Retrieves all from database with passed userID, and where the timestamp is between timestamp1 and timestamp2
      * @param userID userID
@@ -37,7 +35,7 @@ public interface LogDao extends BaseDao<LogEntity> {
     @Ignore
     default DBLog<?>[] getLogsBetweenTimestamps(User user, LocalDateTime timestamp1, LocalDateTime timestamp2) {
         if (timestamp1 == null && timestamp2 == null) {
-            return new DBLog[0];
+            return getLogs(user);
         } else if (timestamp1 == null) {
             return getLogsBeforeTimestamp(user, timestamp2);
         } else if (timestamp2 == null) {
@@ -62,7 +60,7 @@ public interface LogDao extends BaseDao<LogEntity> {
     @Ignore
     default DBLog<?>[] getLogsBeforeTimestamp(User user, LocalDateTime timestamp) {
         if (timestamp == null) {
-            return new DBLog[0];
+            return getLogs(user);
         } else {
             return getLogsBeforeTimestamp(user.getId(), timestamp)
                     .stream()
@@ -83,7 +81,7 @@ public interface LogDao extends BaseDao<LogEntity> {
     @Ignore
     default DBLog<?>[] getLogsAfterTimestamp(User user, LocalDateTime timestamp) {
         if (timestamp == null) {
-            return new DBLog[0];
+            return getLogs(user);
         } else {
             return getLogsAfterTimestamp(user.getId(), timestamp)
                     .stream()
