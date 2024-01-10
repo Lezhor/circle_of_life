@@ -1,6 +1,7 @@
 package com.android.circleoflife.database.control.daos;
 
 import androidx.room.Delete;
+import androidx.room.Ignore;
 import androidx.room.Insert;
 import androidx.room.Update;
 
@@ -9,8 +10,15 @@ import com.android.circleoflife.logging.model.DBLog;
 
 public interface BaseDao<T extends HasUserId> {
 
+    @Ignore
+    default void insert(T... entities) {
+        for (T entity : entities) {
+            insertOne(entity);
+        }
+    }
+
     @Insert
-    void insert(T... entities);
+    void insertOne(T entity);
 
     @Update()
     void update(T entity);
@@ -24,7 +32,7 @@ public interface BaseDao<T extends HasUserId> {
      */
     default void executeLog(DBLog<T> log) {
         switch (log.getChangeMode()) {
-            case INSERT -> insert(log.getChangedObject());
+            case INSERT -> insertOne(log.getChangedObject());
             case UPDATE -> update(log.getChangedObject());
             case DELETE -> delete(log.getChangedObject());
         }

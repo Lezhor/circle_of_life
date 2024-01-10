@@ -85,9 +85,13 @@ public class DatabaseControllerImpl implements DatabaseController {
             Log.d(TAG, "syncWithServer: Synchronisation succeeded!");
             auth.getSettings().setLastSyncDate(newLastSyncDate);
             // executing server instructions:
+            Log.d(TAG, "syncWithServer: Executing " + serverInstructions.size() + " logs:");
             for (DBLog<?> log : serverInstructions) {
+                Log.d(TAG, "syncWithServer: Executing " + log);
                 if (executeLog(log)) {
                     insertLog(log);
+                } else {
+                    Log.i(TAG, "syncWithServer: Executing failed!!!");
                 }
             }
         }
