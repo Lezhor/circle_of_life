@@ -42,4 +42,20 @@ public interface LogDao extends BaseDao<LogEntity> {
                 .toArray(DBLog[]::new);
     }
 
+    @Query("SELECT * FROM logs WHERE userID = :userID ORDER BY timestamp")
+    List<LogEntity> getLogs(UUID userID);
+
+    /**
+     * Returns an array of all logs of a user
+     * @param user user
+     * @return array of all logs
+     */
+    @Ignore
+    default DBLog<?>[] getLogs(User user) {
+        return getLogs(user.getId())
+                .stream()
+                .map(LogEntity::getLog)
+                .toArray(DBLog[]::new);
+    }
+
 }

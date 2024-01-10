@@ -146,6 +146,9 @@ public interface DatabaseController {
     void insertLog(DBLog<?>... logs);
 
     default void insertLog(Collection<DBLog<?>> logs) {
-        insertLog(logs.toArray(DBLog[]::new));
+        insertLog(logs.stream().toArray(DBLog[]::new));
     }
+
+    // TODO: 10.01.2024 Remove method
+    DBLog<?>[] getLogs(User user);
 }

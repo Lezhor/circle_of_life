@@ -303,4 +303,9 @@ public class DatabaseControllerImpl implements DatabaseController {
                         .toArray(LogEntity[]::new)
         );
     }
+
+    @Override
+    public DBLog<?>[] getLogs(User user) {
+        return db.getLogDao().getLogs(user);
+    }
 }
