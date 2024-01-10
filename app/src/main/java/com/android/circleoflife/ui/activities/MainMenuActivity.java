@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.window.OnBackInvokedDispatcher;
@@ -19,6 +20,7 @@ import com.android.circleoflife.application.App;
 import com.android.circleoflife.auth.UserSettings;
 import com.android.circleoflife.auth.UsernameParser;
 import com.android.circleoflife.ui.activities.auth.LoginActivity;
+import com.android.circleoflife.ui.activities.categories.root.RootCategoriesActivity;
 
 public class MainMenuActivity extends SuperActivity {
     private static final String TAG = MainMenuActivity.class.getSimpleName();
@@ -46,6 +48,13 @@ public class MainMenuActivity extends SuperActivity {
 
         usernameDisplay = findViewById(R.id.main_menu_username_display);
 
+        View rootButton = findViewById(R.id.main_menu_view_categories);
+        rootButton.setOnClickListener(v -> goToRootCategoriesActivity());
+        View cycleButton = findViewById(R.id.main_menu_view_cycles);
+        cycleButton.setOnClickListener(v -> goToCyclesActivity());
+        View todoButton = findViewById(R.id.main_menu_view_todos);
+        todoButton.setOnClickListener(v -> goToTodoActivity());
+
     }
 
     @Override
@@ -57,6 +66,27 @@ public class MainMenuActivity extends SuperActivity {
         } else {
             finish();
         }
+    }
+
+    /**
+     * Starts {@link RootCategoriesActivity}
+     */
+    private void goToRootCategoriesActivity() {
+        Log.d(TAG, "goToRootCategoriesActivity: clicked");
+        Intent intent = new Intent(this, RootCategoriesActivity.class);
+        startActivity(intent);
+    }
+
+    private void goToCyclesActivity() {
+        Log.d(TAG, "goToCyclesActivity: clicked");
+        // TODO: 10.01.2024 Go to Cycles Activity
+        Toast.makeText(this, "Under Construction", Toast.LENGTH_SHORT).show();
+    }
+
+    private void goToTodoActivity() {
+        Log.d(TAG, "goToTodoActivity: clicked");
+        // TODO: 10.01.2024 Go to Todo Activity
+        Toast.makeText(this, "Under Construction", Toast.LENGTH_SHORT).show();
     }
 
     @Override

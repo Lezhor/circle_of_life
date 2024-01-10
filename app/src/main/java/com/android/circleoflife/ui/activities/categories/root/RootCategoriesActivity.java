@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
-import com.android.circleoflife.auth.AuthenticationFailedException;
 import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.User;
 import com.android.circleoflife.ui.activities.SuperActivity;
@@ -184,9 +183,6 @@ public class RootCategoriesActivity extends SuperActivity implements RootCategor
         TextView invisText = findViewById(R.id.category_invis_text);
 
         final User user = App.getAuthentication().getUser();
-
-        // TODO: 09.01.2024 Temp Toast - remove
-        Toast.makeText(this, "Logged in: " + user.getUsername(), Toast.LENGTH_SHORT).show();
 
         if (user != null) {
             categoryViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
