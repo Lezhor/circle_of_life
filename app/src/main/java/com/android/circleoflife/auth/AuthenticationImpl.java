@@ -102,6 +102,7 @@ public class AuthenticationImpl implements Authentication {
         Log.d(TAG, "login: trying to login :'" + username + "'");
         DatabaseController db = App.getDatabaseController();
         User user = db.getUserByUsername(username);
+        boolean remoteLogin = false;
         if (user != null) {
             // User in local db
             Log.d(TAG, "login: User found in local db!");
@@ -114,13 +115,15 @@ public class AuthenticationImpl implements Authentication {
             Log.d(TAG, "login: user not found in local db");
             Log.d(TAG, "login: sending login request to server");
             user = App.getLoginProtocol().login(username, password);
-            if (user != null) {
-                App.getDatabaseController().insertUsers(user);
-            }
+            remoteLogin = true;
         }
         if (user != null) {
             Log.d(TAG, "login: successfully logged in: " + user);
             setUser(user);
+            if (remoteLogin) {
+                db.insertUsers(user);
+                getSettings().setLastSyncDate(null);
+            }
             return true;
         } else {
             Log.d(TAG, "login: failed for username: '" + username + "'");
