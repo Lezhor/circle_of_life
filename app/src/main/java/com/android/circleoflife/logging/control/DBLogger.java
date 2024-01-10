@@ -1,5 +1,7 @@
 package com.android.circleoflife.logging.control;
 
+import android.util.Log;
+
 import com.android.circleoflife.database.control.DatabaseController;
 import com.android.circleoflife.database.control.observers.DatabaseObserver;
 import com.android.circleoflife.database.models.Accomplishment;
@@ -14,6 +16,7 @@ import com.android.circleoflife.logging.model.DBLog;
  * an instance of this class assigns to the db as observer, and on every change it writes a log to it.
  */
 public class DBLogger implements DatabaseObserver {
+    private static final String TAG = DBLogger.class.getSimpleName();
 
     private final boolean active;
     private final DatabaseController db;
@@ -25,6 +28,7 @@ public class DBLogger implements DatabaseObserver {
     }
 
     private void saveLogToDB(DBLog<?> log) {
+        Log.d(TAG, "saveLogToDB: " + log);
         db.insertLog(log);
     }
 
