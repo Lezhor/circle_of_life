@@ -18,6 +18,9 @@
     <string name="menu_item_auto_sync_enabled">Sync automatically</string>
     <string name="menu_item_logout">Logout</string>
 
+    <!-- Main Menu - Other -->
+    <string name="main_menu_welcome_text">Welcome Back</string>
+
     <!-- used if value is not set -->
     <string name="no_string" translatable="false">NULL</string>
 

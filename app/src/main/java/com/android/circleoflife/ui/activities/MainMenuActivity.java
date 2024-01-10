@@ -2,8 +2,6 @@ package com.android.circleoflife.ui.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuCompat;
 
 import android.content.Intent;
@@ -12,13 +10,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.window.OnBackInvokedCallback;
 import android.window.OnBackInvokedDispatcher;
 
 import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.auth.UserSettings;
+import com.android.circleoflife.auth.UsernameParser;
 import com.android.circleoflife.ui.activities.auth.LoginActivity;
 
 public class MainMenuActivity extends SuperActivity {
@@ -26,6 +25,8 @@ public class MainMenuActivity extends SuperActivity {
 
     private MenuItem syncEnabledItem;
     private MenuItem autoSyncEnabledItem;
+
+    private TextView usernameDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +44,17 @@ public class MainMenuActivity extends SuperActivity {
             getOnBackInvokedDispatcher().registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::finish);
         }
 
+        usernameDisplay = findViewById(R.id.main_menu_username_display);
+
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    protected void onResume() {
+        super.onResume();
 
-        if (!App.getAuthentication().authenticated()) {
+        if (App.getAuthentication().authenticated()) {
+            usernameDisplay.setText(UsernameParser.usernameToDisplayedVersion(App.getAuthentication().getUser().getUsername()));
+        } else {
             finish();
         }
     }
