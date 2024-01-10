@@ -60,10 +60,10 @@ public class MainMenuActivity extends SuperActivity {
 
         if (App.getAuthentication().authenticated()) {
             executeInBackground(
-                    () -> App.getDatabaseController().getLogs(App.getAuthentication().getUser(), App.getAuthentication().getSettings().getLastSyncDate(), LocalDateTime.now()),
+                    () -> App.getDatabaseController().getLogs(App.getAuthentication().getUser(), App.getAuthentication().getSettings().getLastSyncDate(), LocalDateTime.now(App.SERVER_TIMEZONE)),
                     logs -> {
                         Log.d(TAG, "LastSyncDate: " + LocalDateTimeConverter.localDateTimeToString(App.getAuthentication().getSettings().getLastSyncDate()));
-                        Log.d(TAG, "now: " + LocalDateTimeConverter.localDateTimeToString(LocalDateTime.now()));
+                        Log.d(TAG, "now: " + LocalDateTimeConverter.localDateTimeToString(LocalDateTime.now(App.SERVER_TIMEZONE)));
                         Log.d(TAG, "Printing logs of user " + App.getAuthentication().getUser());
                         for (int i = 0; i < logs.length; i++) {
                             Log.d(TAG, (i + 1) + ") " + logs[i]);

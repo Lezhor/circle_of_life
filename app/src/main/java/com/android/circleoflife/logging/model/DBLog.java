@@ -3,6 +3,7 @@ package com.android.circleoflife.logging.model;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.models.Accomplishment;
 import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.Cycle;
@@ -120,7 +121,7 @@ public class DBLog<E extends HasUserId> {
         this.changedObject = changedObject.copy();
         this.userID = this.changedObject.getUserID();
         this.changeMode = changeMode;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = LocalDateTime.now(App.SERVER_TIMEZONE);
     }
 
     /**

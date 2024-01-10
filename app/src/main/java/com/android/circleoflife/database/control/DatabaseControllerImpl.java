@@ -71,7 +71,7 @@ public class DatabaseControllerImpl implements DatabaseController {
         LocalDateTime newLastSyncDate = App.getSyncProtocol().sync(
                 auth.getUser(),
                 auth.getSettings().getLastSyncDate(),
-                db.getLogDao().getLogsBetweenTimestamps(auth.getUser(), auth.getSettings().getLastSyncDate(), LocalDateTime.now()),
+                db.getLogDao().getLogsBetweenTimestamps(auth.getUser(), auth.getSettings().getLastSyncDate(), LocalDateTime.now(App.SERVER_TIMEZONE)),
                 serverInstructions
         );
         if (newLastSyncDate == null) {

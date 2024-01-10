@@ -163,7 +163,7 @@ public class AuthenticationImpl implements Authentication {
                 // username already exists
                 user = null;
             } else {
-                user = new User(UUID.randomUUID(), username, password, LocalDateTime.now());
+                user = new User(UUID.randomUUID(), username, password, LocalDateTime.now(App.SERVER_TIMEZONE));
             }
         } else {
             user = App.getSignUpProtocol().signUp(username, password);
