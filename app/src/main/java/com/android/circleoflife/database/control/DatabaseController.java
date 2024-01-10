@@ -151,4 +151,11 @@ public interface DatabaseController {
 
     // TODO: 10.01.2024 Remove method
     DBLog<?>[] getLogs(User user, LocalDateTime min, LocalDateTime max);
+
+    /**
+     * Deletes every entry from every table of the database
+     * @throws UnsupportedOperationException if this operation is not permitted
+     * @noinspection unused
+     */
+    void clearDatabase() throws UnsupportedOperationException;
 }

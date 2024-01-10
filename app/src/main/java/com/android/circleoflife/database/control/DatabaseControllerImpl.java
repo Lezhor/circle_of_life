@@ -45,6 +45,11 @@ public class DatabaseControllerImpl implements DatabaseController {
         return instance;
     }
 
+    /**
+     * Should be disabled for final release!
+     */
+    public static final boolean CLEARING_DATABASE_SUPPORTED = false; // TODO: 10.01.2024 Make sure it is disabled for final release
+
     private final Collection<DatabaseObserver> observers;
 
     private final AppDatabase db;
@@ -307,5 +312,19 @@ public class DatabaseControllerImpl implements DatabaseController {
     @Override
     public DBLog<?>[] getLogs(User user, LocalDateTime min, LocalDateTime max) {
         return db.getLogDao().getLogsBetweenTimestamps(user, min, max);
+    }
+
+    @Override
+    public void clearDatabase() throws UnsupportedOperationException {
+        if (!CLEARING_DATABASE_SUPPORTED) {
+            throw new UnsupportedOperationException("Clearing Database is not allowed!");
+        }
+        Log.i(TAG, "DELETING EVERYTHING FROM DATABASE");
+        db.getLogDao().deleteEverythingFromTable();
+        db.getAccomplishmentDao().deleteEverythingFromTable();
+        db.getTodoDao().deleteEverythingFromTable();
+        db.getCycleDao().deleteEverythingFromTable();
+        db.getCategoryDao().deleteEverythingFromTable();
+        db.getUserDao().deleteEverythingFromTable();
     }
 }
