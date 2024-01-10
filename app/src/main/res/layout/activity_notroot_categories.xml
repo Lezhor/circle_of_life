@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.categories.root.RootCategoriesActivity">
+    tools:context=".ui.activities.categories.not_root.CategoryActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categories_recyclerView"
@@ -31,21 +31,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
-    <TextView
-        android:id="@+id/delete_root_category_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@color/md_theme_errorContainer"
-        android:padding="12dp"
-        android:clickable="true"
-        android:text="@string/delete_category"
-        android:textAlignment="center"
-        android:textColor="@color/md_theme_error"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/category_invis_text" />
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/floating_action_menu"

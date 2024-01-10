@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
-import com.android.circleoflife.auth.AuthenticationFailedException;
 import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.Cycle;
 import com.android.circleoflife.database.models.Todo;
@@ -55,7 +54,6 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
     FloatingActionButton fabCycle;
     FloatingActionButton fabTodo;
     private TextView invisText;
-    private TextView invisDeleteButton;
 
 
     @Override
@@ -87,12 +85,6 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
             invisText = findViewById(R.id.category_invis_text);
             invisText.setText(R.string.category_empty);
             invisText.setVisibility(View.GONE);
-            invisDeleteButton = findViewById(R.id.delete_root_category_button);
-            invisDeleteButton.setVisibility(View.GONE);
-            invisDeleteButton.setOnClickListener(view -> {
-                categoryViewModel.delete(categoryViewModel.getRoot());
-                finish();
-            });
 
             fabMenu = findViewById(R.id.floating_action_menu);
             fabCategory = findViewById(R.id.fab_create_category);
@@ -272,7 +264,6 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
 
     private void setInvisText(boolean visible) {
         invisText.setVisibility(visible ? View.VISIBLE : View.GONE);
-        invisDeleteButton.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
