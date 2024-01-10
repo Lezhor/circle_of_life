@@ -30,6 +30,7 @@ public class MainMenuActivity extends SuperActivity {
 
     private MenuItem syncEnabledItem;
     private MenuItem autoSyncEnabledItem;
+    private MenuItem syncItem;
 
     private TextView usernameDisplay;
 
@@ -119,6 +120,7 @@ public class MainMenuActivity extends SuperActivity {
         MenuCompat.setGroupDividerEnabled(menu, true);
         syncEnabledItem = menu.findItem(R.id.item_sync_enabled);
         autoSyncEnabledItem = menu.findItem(R.id.item_auto_sync_enabled);
+        syncItem = menu.findItem(R.id.item_sync);
         UserSettings settings = App.getAuthentication().getSettings();
         syncEnabled(settings.isServerSyncEnabled());
         autoSyncEnabled(settings.isAutomaticServerSync());
@@ -157,6 +159,7 @@ public class MainMenuActivity extends SuperActivity {
         syncEnabledItem.setChecked(checked);
         autoSyncEnabledItem.setChecked(checked);
         autoSyncEnabledItem.setEnabled(checked);
+        syncItem.setEnabled(checked);
         App.getAuthentication().getSettings().setServerSyncEnabled(checked);
     }
 
