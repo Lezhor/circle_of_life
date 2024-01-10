@@ -1,5 +1,7 @@
 package com.android.circleoflife.database.validators;
 
+import com.android.circleoflife.auth.UsernameParser;
+
 /**
  * This class contains static methods for validating e.g. different Strings throughout the project.
  */
@@ -8,7 +10,20 @@ public final class StringValidator {
     // TODO: 20.12.2023 Error-Messages should be fetched from strings.xml
 
     public static final int MIN_LENGTH_USERNAME = 6;
+    public static final int MIN_LENGTH_PASSWORD = 6;
 
+    /**
+     * Validates a username. succeeds if:
+     * <pre>
+     *     1) username isn't null or empty
+     *     2) username has at least <code>MIN_LENGTH_USERNAME</code> characters
+     *     3) username contains letters
+     *     4) it only contains letters numbers and underscores (no special chars)
+     * </pre>
+     * @param username username to be validated
+     * @return itself if all checks succeed
+     * @throws IllegalArgumentException if at least one check fails
+     */
     public static String validateUsername(String username) throws IllegalArgumentException {
         if (username == null || username.isEmpty()) {
             throw new IllegalArgumentException("Username can't be empty");
@@ -22,10 +37,40 @@ public final class StringValidator {
         return username;
     }
 
+    /**
+     * Validates a displayed lversion of a username by converting it to the actual version with {@link UsernameParser} and then calling {@link #validateUsername(String)}
+     * @param displayedUsername displayedUsername
+     * @return displayed username (adapted version if param was somehow wrong - e.g. had too many capital letters)
+     * @throws IllegalArgumentException if validating fails
+     * @see #validateUsername(String)
+     */
+    public static String validateDisplayedUsername(String displayedUsername) throws IllegalArgumentException {
+        String username = UsernameParser.displayedUsernameToActualVersion(displayedUsername);
+        username = validateUsername(username);
+        return UsernameParser.usernameToDisplayedVersion(username);
+    }
+
+    /**
+     * Validates a password. succeeds if:
+     * <pre>
+     *     1) password isn't null or empty
+     *     2) password has at least <code>MIN_LENGTH_PASSWORD</code> characters
+     *     3) password contains letters
+     *     4) password does not contain spaces
+     * </pre>
+     * @param password username to be validated
+     * @return itself if all checks succeed
+     * @throws IllegalArgumentException if at least one check fails
+     */
     public static String validatePassword(String password) throws IllegalArgumentException {
-        // TODO: 06.12.2023 Validate password
         if (password == null || password.isEmpty()) {
             throw new IllegalArgumentException("Password can't be empty");
+        } else if (!stringHasMinLength(password, MIN_LENGTH_PASSWORD)) {
+            throw new IllegalArgumentException("Password is too short");
+        } else if (!stringContainsLetters(password)) {
+            throw new IllegalArgumentException("Password needs to contain at least 1 letter");
+        } else if (password.contains(" ")) {
+            throw new IllegalArgumentException("Password can't contain spaces");
         }
         return password;
     }
