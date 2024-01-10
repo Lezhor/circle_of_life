@@ -31,15 +31,65 @@ public interface LogDao extends BaseDao<LogEntity> {
      * calls {@link #getLogsBetweenTimestamps(UUID, LocalDateTime, LocalDateTime)}, converts result to an array of type DBLog
      * @param user user
      * @param timestamp1 min timestamp (inclusive)
-     * @param timestamp2 max timestamp (exculusive)
+     * @param timestamp2 max timestamp (exclusive)
      * @return an array of all logs matching the criteria, sorted by timestamp
      */
     @Ignore
     default DBLog<?>[] getLogsBetweenTimestamps(User user, LocalDateTime timestamp1, LocalDateTime timestamp2) {
-        return getLogsBetweenTimestamps(user.getId(), timestamp1, timestamp2)
-                .stream()
-                .map(LogEntity::getLog)
-                .toArray(DBLog[]::new);
+        if (timestamp1 == null && timestamp2 == null) {
+            return new DBLog[0];
+        } else if (timestamp1 == null) {
+            return getLogsBeforeTimestamp(user, timestamp2);
+        } else if (timestamp2 == null) {
+            return getLogsAfterTimestamp(user, timestamp1);
+        } else {
+            return getLogsBetweenTimestamps(user.getId(), timestamp1, timestamp2)
+                    .stream()
+                    .map(LogEntity::getLog)
+                    .toArray(DBLog[]::new);
+        }
+    }
+
+    @Query("SELECT * FROM logs WHERE userID = :userID AND timestamp < :timestamp ORDER BY timestamp")
+    List<LogEntity> getLogsBeforeTimestamp(UUID userID, LocalDateTime timestamp);
+
+    /**
+     * Gets all logs of a user before the given timestamp
+     * @param user user
+     * @param timestamp max timestamp (exclusive)
+     * @return array of all logs before certain timestamp
+     */
+    @Ignore
+    default DBLog<?>[] getLogsBeforeTimestamp(User user, LocalDateTime timestamp) {
+        if (timestamp == null) {
+            return new DBLog[0];
+        } else {
+            return getLogsBeforeTimestamp(user.getId(), timestamp)
+                    .stream()
+                    .map(LogEntity::getLog)
+                    .toArray(DBLog[]::new);
+        }
+    }
+
+    @Query("SELECT * FROM logs WHERE userID = :userID AND timestamp >= :timestamp ORDER BY timestamp")
+    List<LogEntity> getLogsAfterTimestamp(UUID userID, LocalDateTime timestamp);
+
+    /**
+     * Gets all logs of a user after the given timestamp
+     * @param user user
+     * @param timestamp min timestamp (inclusive)
+     * @return array of all logs before certain timestamp
+     */
+    @Ignore
+    default DBLog<?>[] getLogsAfterTimestamp(User user, LocalDateTime timestamp) {
+        if (timestamp == null) {
+            return new DBLog[0];
+        } else {
+            return getLogsAfterTimestamp(user.getId(), timestamp)
+                    .stream()
+                    .map(LogEntity::getLog)
+                    .toArray(DBLog[]::new);
+        }
     }
 
     @Query("SELECT * FROM logs WHERE userID = :userID ORDER BY timestamp")
