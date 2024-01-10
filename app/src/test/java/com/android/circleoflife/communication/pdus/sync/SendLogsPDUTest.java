@@ -32,7 +32,7 @@ public class SendLogsPDUTest {
         logArray = new DBLog[3];
         // TODO: 03.12.2023 Test SendLogsPDU Setup
         logArray[0] = new DBLog<>(new Category(UUID.randomUUID(), "Test Category", UUID.randomUUID(), null), DBLog.ChangeMode.INSERT);
-        logArray[1] = new DBLog<>(new User(UUID.randomUUID(), "john_doe", "this.password1", LocalDateTime.now()), DBLog.ChangeMode.UPDATE);
+        logArray[1] = new DBLog<>(new User(UUID.randomUUID(), "john_doe", "this.password1", LocalDateTime.now(App.SERVER_TIMEZONE)), DBLog.ChangeMode.UPDATE);
         logArray[2] = new DBLog<>(new Category(UUID.randomUUID(), "Test Category", UUID.randomUUID(), null), DBLog.ChangeMode.DELETE);
     }
 
@@ -45,7 +45,7 @@ public class SendLogsPDUTest {
         System.out.println("Testing SendLogsPDU Serializing");
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            LocalDateTime lastSyncDate = LocalDateTime.now();
+            LocalDateTime lastSyncDate = LocalDateTime.now(App.SERVER_TIMEZONE);
             SendLogsPDU pdu = new SendLogsPDU(lastSyncDate, logArray);
             pdu.serialize(os);
             InputStream is = new ByteArrayInputStream(os.toByteArray());
@@ -76,7 +76,7 @@ public class SendLogsPDUTest {
             DataOutputStream dos = new DataOutputStream(bos);
 
             LogSerializer serializer = App.getLogSerializer();
-            LocalDateTime lastSyncDate = LocalDateTime.now();
+            LocalDateTime lastSyncDate = LocalDateTime.now(App.SERVER_TIMEZONE);
 
             dos.writeInt(SendLogsPDU.ID);
             dos.writeUTF(LocalDateTimeConverter.localDateTimeToString(lastSyncDate));

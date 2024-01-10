@@ -2,6 +2,7 @@ package com.android.circleoflife.logging.model;
 
 import static org.junit.Assert.*;
 
+import com.android.circleoflife.application.App;
 import com.android.circleoflife.database.models.Accomplishment;
 import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.Cycle;
@@ -27,7 +28,7 @@ public class DBLogTest {
 
     @Before
     public void setUp() {
-        user = new User(UUID.randomUUID(), "john_doe", "SuPeRcOoL_pAsSwOrD", LocalDateTime.now());
+        user = new User(UUID.randomUUID(), "john_doe", "SuPeRcOoL_pAsSwOrD", LocalDateTime.now(App.SERVER_TIMEZONE));
         category = new Category(UUID.randomUUID(), "john_doe", user.getId(), null);
         cycle = new Cycle(UUID.randomUUID(), "Cycle", user.getId(), category.getId(), 0, CycleFrequency.fromBinaryString("10010001"));
         todo = new Todo(UUID.randomUUID(), "Cycle", user.getId(), category.getId(), 0, true, LocalDateTime.of(2024, 2, 20, 22, 0));

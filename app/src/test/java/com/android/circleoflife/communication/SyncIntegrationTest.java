@@ -57,16 +57,16 @@ public class SyncIntegrationTest {
         c1Alter.setName("Other category");
         Category c2 = new Category(UUID.randomUUID(), "Category 2", user.getId(), c1.getId());
 
-        Todo todo = new Todo(UUID.randomUUID(), "Test Todo", user.getId(), c1.getId(), 0, false, LocalDateTime.now().plusHours(5));
+        Todo todo = new Todo(UUID.randomUUID(), "Test Todo", user.getId(), c1.getId(), 0, false, LocalDateTime.now(App.SERVER_TIMEZONE).plusHours(5));
 
         DBLog<?>[] logsBefore = new DBLog[]{
-                new DBLog<>(UUID.randomUUID(), user.getId(), c1, DBLog.ChangeMode.INSERT, LocalDateTime.now().minusNanos(1))
+                new DBLog<>(UUID.randomUUID(), user.getId(), c1, DBLog.ChangeMode.INSERT, LocalDateTime.now(App.SERVER_TIMEZONE).minusNanos(1))
         };
-        App.getSyncProtocol().sync(user, LocalDateTime.now().minusNanos(1000), logsBefore, new LinkedList<>());
+        App.getSyncProtocol().sync(user, LocalDateTime.now(App.SERVER_TIMEZONE).minusNanos(1000), logsBefore, new LinkedList<>());
 
         LocalDateTime[] timestamp = new LocalDateTime[10];
         for (int i = 0; i < timestamp.length; i++) {
-            timestamp[i] = LocalDateTime.now().minusNanos(timestamp.length - i);
+            timestamp[i] = LocalDateTime.now(App.SERVER_TIMEZONE).minusNanos(timestamp.length - i);
         }
 
         DBLog<?>[] logsA = new DBLog[]{
