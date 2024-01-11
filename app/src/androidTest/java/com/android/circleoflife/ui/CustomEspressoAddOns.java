@@ -1,8 +1,18 @@
 package com.android.circleoflife.ui;
 
+import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static org.hamcrest.Matchers.allOf;
+
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.matcher.BoundedMatcher;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -66,6 +76,65 @@ public final class CustomEspressoAddOns {
             public void describeTo(Description description) {
             }
         };
+    }
+
+    /**
+     * Writes text into edittext inside a InputTextLayout
+     * @param text text to write into
+     * @return ViewAction used for Espresso
+     */
+    public static ViewAction replaceTextInInputTextLayout(final String text) {
+        return ViewActions.actionWithAssertions(new ViewAction() {
+            @Override
+            public String getDescription() {
+                return String.format("replace text(%s)", text);
+            }
+
+            @Override
+            public Matcher<View> getConstraints() {
+                return allOf(isDisplayed(), isAssignableFrom(TextInputLayout.class));
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                if (view instanceof TextInputLayout textInput) {
+                    EditText editText = textInput.getEditText();
+                    if (editText != null) {
+                        editText.setText(text);
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Used for Espresso checks to check if recyclerView's adapter has given itemCount
+     * @param itemCount itemCount
+     * @return Matcher for checking if there is given amount of items in recyclerView
+     */
+    public static Matcher<View> recyclerViewHasItemCount(final int itemCount) {
+        return new BoundedMatcher<>(RecyclerView.class) {
+            @Override
+            public void describeTo(Description description) {
+            }
+
+            @Override
+            protected boolean matchesSafely(RecyclerView recyclerView) {
+                RecyclerView.Adapter<?> adapter = recyclerView.getAdapter();
+                if (adapter != null) {
+                    return adapter.getItemCount() == itemCount;
+                }
+                return false;
+            }
+        };
+    }
+
+    /**
+     * Checks if itemCount is 0
+     * @return Matcher for checking if itemCount is 0
+     */
+    public static Matcher<View> recyclerViewIsEmpty() {
+        return recyclerViewHasItemCount(0);
     }
 
 }
