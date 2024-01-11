@@ -30,6 +30,7 @@ import com.android.circleoflife.database.models.additional.CycleFrequency;
 import com.android.circleoflife.ui.activities.SuperActivity;
 import com.android.circleoflife.ui.activities.categories.CreateNameableDialog;
 import com.android.circleoflife.ui.activities.categories.EditNameDialog;
+import com.android.circleoflife.ui.activities.categories.not_root.dialogs.CreateCycleDialog;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.CategoryRecyclerViewAdapter;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.RVHolderInterface;
 import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.RVItemWrapper;
@@ -233,7 +234,8 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
                             if (object instanceof Category category) {
                                 editNameDialog = new EditNameDialog<>(categoryViewModel::update, category, R.string.category);
                             } else if (object instanceof Cycle cycle) {
-                                editNameDialog = new EditNameDialog<>(categoryViewModel::update, cycle, R.string.cycle);
+                                openEditCycleDialog(cycle);
+                                return;
                             } else if (object instanceof Todo todo) {
                                 editNameDialog = new EditNameDialog<>(categoryViewModel::update, todo, R.string.todo);
                             } else {
@@ -353,19 +355,28 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
      */
     private void openCreateCycleDialog() {
         // TODO: 29.12.2023 Create Cycle Dialog with all params (prob in seperate activity
-        //Toast.makeText(this, "Creating Cycle", Toast.LENGTH_SHORT).show();
-        new CreateNameableDialog(R.string.cycle, name -> {
-            Log.d(TAG, "CreateTodoDialog finished with name: " + name);
+        new CreateCycleDialog(null, (name, frequency) -> {
+            Log.d(TAG, "CreateCycleDialog finished with name: '" + name + "' and frequency: '" + frequency.toBinaryString() + "'");
             categoryViewModel.insert(new Cycle(
                     UUID.randomUUID(),
                     name,
                     categoryViewModel.getUser().getId(),
                     categoryViewModel.getRoot().getId(),
                     1,
-                    new CycleFrequency(CycleFrequency.getTodayMask()),
+                    new CycleFrequency(frequency),
                     false
             ));
-        }).show(getSupportFragmentManager(), "category create dialog");
+        }).show(getSupportFragmentManager(), "cycle create dialog");
+    }
+
+    private void openEditCycleDialog(Cycle cycle) {
+        new CreateCycleDialog(cycle, (name, frequency) -> {
+            Log.d(TAG, "EditCycleDialog finished with name: '" + name + "' and frequency: '" + frequency.toBinaryString() + "'");
+            Cycle newCycle = cycle.copy();
+            newCycle.setName(name);
+            newCycle.setFrequency(frequency);
+            categoryViewModel.update(newCycle);
+        }).show(getSupportFragmentManager(), "cycle edit dialog");
     }
 
     /**
