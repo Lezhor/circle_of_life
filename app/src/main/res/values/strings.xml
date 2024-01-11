@@ -25,6 +25,9 @@
     <string name="main_menu_view_cycles_text">View Cycles</string>
     <string name="main_menu_view_todos_text">View Todos</string>
 
+    <string name="toast_sync_successful">Sync Successful!</string>
+    <string name="toast_sync_failed">Sync failed!</string>
+
     <!-- used if value is not set -->
     <string name="no_string" translatable="false">NULL</string>
 

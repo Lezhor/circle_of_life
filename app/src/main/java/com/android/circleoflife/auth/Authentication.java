@@ -33,8 +33,9 @@ public interface Authentication {
 
     /**
      * Syncs even if autoSync is not enabled
+     * @return true if synchronisation succeeds
      */
-    void manualSync();
+    boolean manualSync();
 
     /**
      * Returns true if there is a user authenticated

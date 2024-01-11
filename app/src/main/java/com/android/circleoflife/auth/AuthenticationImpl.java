@@ -86,10 +86,11 @@ public class AuthenticationImpl implements Authentication {
     }
 
     @Override
-    public void manualSync() {
+    public boolean manualSync() {
         if (authenticated()) {
-            App.getDatabaseController().syncWithServer(this);
+            return App.getDatabaseController().syncWithServer(this);
         }
+        return false;
     }
 
     @Override

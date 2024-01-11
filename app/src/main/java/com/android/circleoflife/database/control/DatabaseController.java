@@ -40,7 +40,8 @@ public interface DatabaseController {
      * Synchronizes database with server by calling the {@link com.android.circleoflife.communication.protocols.SyncProtocol#sync(User, LocalDateTime, DBLog[], List)} method.
      * @param auth the SyncProtocol-parameters are retrieved from this parameter: user, lastSyncDate...
      */
-    void syncWithServer(Authentication auth);
+    // TODO: 11.01.2024 syncWithServer should return a SyncResult
+    boolean syncWithServer(Authentication auth);
 
 
     // Users
