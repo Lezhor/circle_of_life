@@ -107,6 +107,26 @@ public class CycleFrequency {
         return counter;
     }
 
+    public boolean maskIsSet(int dayMask) {
+        return (value & dayMask) > 0;
+    }
+
+    public void setMask(int dayMask) {
+        value = value | dayMask;
+    }
+
+    public void resetMask(int dayMask) {
+        value = (value | dayMask) ^ dayMask;
+    }
+
+    /**
+     * If day with daymask was true, is set to false, and vice versa.
+     * @param dayMask dayMask.
+     */
+    public void toggleMask(int dayMask) {
+        value = value ^ dayMask;
+    }
+
     /**
      * Returns string representation of dayMask
      * @param mask daymask. e.gl {@link CycleFrequency#MASK_THURSDAY}
