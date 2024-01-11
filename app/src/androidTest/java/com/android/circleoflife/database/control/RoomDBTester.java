@@ -1,6 +1,8 @@
 package com.android.circleoflife.database.control;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -8,6 +10,7 @@ import androidx.room.Room;
 
 import com.android.circleoflife.database.models.*;
 import com.android.circleoflife.database.models.additional.CycleFrequency;
+import com.android.circleoflife.logging.model.DBLog;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -194,6 +197,52 @@ public class RoomDBTester {
         System.out.println("Stopped waiting!");
         //noinspection unchecked
         return (T) result[0];
+    }
+
+
+    public static <T> T getOrAwaitValueWithoutInstantTaskExecutorRule(final LiveData<T> liveData) throws InterruptedException {
+        final Object[] result = new Object[1];
+        final CountDownLatch latch = new CountDownLatch(1);
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> {
+            Observer<T> observer = new Observer<>() {
+                @Override
+                public void onChanged(T t) {
+                    result[0] = t;
+                    latch.countDown();
+                    liveData.removeObserver(this);
+                }
+            };
+            liveData.observeForever(observer);
+        });
+        //noinspection ResultOfMethodCallIgnored
+        latch.await(2, TimeUnit.SECONDS);
+        //noinspection unchecked
+        return (T) result[0];
+    }
+
+
+
+    /**
+     * Deletes everything from database which belongs to user.
+     * @param db database
+     * @param user user to be cleared
+     */
+    public static void clearUserData(DatabaseController db, User user) throws InterruptedException {
+        List<Category> categories = getOrAwaitValueWithoutInstantTaskExecutorRule(db.getAllCategories(user));
+        List<Cycle> cycles = getOrAwaitValueWithoutInstantTaskExecutorRule(db.getAllCycles(user));
+        List<Todo> todos = getOrAwaitValueWithoutInstantTaskExecutorRule(db.getAllTodos(user));
+        List<Accomplishment> accomplishments = getOrAwaitValueWithoutInstantTaskExecutorRule(db.getAllAccomplishments(user));
+        List<DBLog<?>> logs = Arrays.stream(db.getLogs(user, null, null)).toList();
+
+        logs.forEach(db::deleteLog);
+        accomplishments.forEach(db::deleteAccomplishment);
+        todos.forEach(db::deleteTodo);
+        cycles.forEach(db::deleteCycle);
+        categories.stream()
+                .peek(c -> c.setParentID(null))
+                .peek(db::updateCategory)
+                .forEach(db::deleteCategory);
     }
 
 
