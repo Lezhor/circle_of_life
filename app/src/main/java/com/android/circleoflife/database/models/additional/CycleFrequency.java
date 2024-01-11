@@ -6,7 +6,6 @@ import androidx.annotation.Nullable;
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.R;
 
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -46,6 +45,22 @@ public class CycleFrequency {
         };
     }
 
+    /**
+     * Constructor for cloning
+     * @param that other frequency
+     */
+    public CycleFrequency(CycleFrequency that) {
+        this.value = that.value;
+    }
+
+    /**
+     * Sets up CycleFrequency.<br>
+     * Example use:
+     * <pre>
+     *     {@code new CycleFrequency(CycleFrequency.MASK_MONDAY, CycleFrequency.MASK_WEDNESDAY);}
+     * </pre>
+     * @param days varargs masks
+     */
     public CycleFrequency(int... days) {
         value = Arrays.stream(days).reduce(MASK_END_CYCLE, (a, b) -> a | b);
     }
