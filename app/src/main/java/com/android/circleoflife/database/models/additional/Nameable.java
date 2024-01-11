@@ -1,7 +1,9 @@
 package com.android.circleoflife.database.models.additional;
 
+import com.android.circleoflife.ui.dialogs.EditNameDialog;
+
 /**
- * Interface with get and set methods for name. Used in e.g. {@link com.android.circleoflife.ui.activities.categories.EditNameDialog}.
+ * Interface with get and set methods for name. Used in e.g. {@link EditNameDialog}.
  */
 public interface Nameable {
 

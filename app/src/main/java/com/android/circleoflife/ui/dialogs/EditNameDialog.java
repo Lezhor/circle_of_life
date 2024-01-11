@@ -1,4 +1,4 @@
-package com.android.circleoflife.ui.activities.categories;
+package com.android.circleoflife.ui.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
