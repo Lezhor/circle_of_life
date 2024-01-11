@@ -228,20 +228,15 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
                         R.color.md_theme_secondaryContainer,
                         R.color.md_theme_secondary,
                         pos -> {
-                            EditNameDialog<?> editNameDialog;
                             RVItemWrapper<?> wrapper = adapter.getFilteredItemAtIndex(pos);
                             Object object = wrapper.getObject();
                             if (object instanceof Category category) {
-                                editNameDialog = new EditNameDialog<>(categoryViewModel::update, category, R.string.category);
+                                openEditCategoryDialog(category);
                             } else if (object instanceof Cycle cycle) {
                                 openEditCycleDialog(cycle);
-                                return;
                             } else if (object instanceof Todo todo) {
-                                editNameDialog = new EditNameDialog<>(categoryViewModel::update, todo, R.string.todo);
-                            } else {
-                                return;
+                                openEditTotoDialog(todo);
                             }
-                            editNameDialog.show(getSupportFragmentManager(), "dialog_edit_category");
                         }
                 ));
                 if (categoryViewModel.getRoot().getParentID() != null || viewHolder instanceof CategoryHolder) {
@@ -347,14 +342,18 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
                     categoryViewModel.getUser().getId(),
                     categoryViewModel.getRoot().getId()
             ));
-        }).show(getSupportFragmentManager(), "category create dialog");
+        }).show(getSupportFragmentManager(), "dialog_create_category");
+    }
+
+    private void openEditCategoryDialog(Category category) {
+        new EditNameDialog<>(categoryViewModel::update, category, R.string.category)
+                .show(getSupportFragmentManager(), "dialog_edit_category");
     }
 
     /**
      * Opens create cycle dialog. called from fab or from options menu
      */
     private void openCreateCycleDialog() {
-        // TODO: 29.12.2023 Create Cycle Dialog with all params (prob in seperate activity
         new CreateCycleDialog(null, (name, frequency) -> {
             Log.d(TAG, "CreateCycleDialog finished with name: '" + name + "' and frequency: '" + frequency.toBinaryString() + "'");
             categoryViewModel.insert(new Cycle(
@@ -366,7 +365,7 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
                     new CycleFrequency(frequency),
                     false
             ));
-        }).show(getSupportFragmentManager(), "cycle create dialog");
+        }).show(getSupportFragmentManager(), "dialog_create_cycle");
     }
 
     private void openEditCycleDialog(Cycle cycle) {
@@ -376,7 +375,7 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
             newCycle.setName(name);
             newCycle.setFrequency(frequency);
             categoryViewModel.update(newCycle);
-        }).show(getSupportFragmentManager(), "cycle edit dialog");
+        }).show(getSupportFragmentManager(), "dialog_edit_cycle");
     }
 
     /**
@@ -392,7 +391,12 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
                     categoryViewModel.getRoot().getId(),
                     1
             ));
-        }).show(getSupportFragmentManager(), "category create dialog");
+        }).show(getSupportFragmentManager(), "dialog_create_todo");
+    }
+
+    private void openEditTotoDialog(Todo todo) {
+        new EditNameDialog<>(categoryViewModel::update, todo, R.string.todo)
+                .show(getSupportFragmentManager(), "dialog_edit_todo");
     }
 
 
@@ -413,37 +417,41 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
 
     @Override
     public void onCategoryClicked(Category category) {
+        Log.d(TAG, "onCategoryClicked: triggered");
         Log.d(TAG, "onCategoryClicked: Switching to CategoryActivity with category: " + category.getName());
         openCategoryActivity(category);
     }
 
     @Override
     public void onCategoryLongClicked(Category category) {
-        Toast.makeText(this, "Category long clicked", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onCategoryLongClicked: triggered");
     }
 
     @Override
     public void onCycleClicked(Cycle cycle) {
-        Toast.makeText(this, "Cycle Clicked", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onCycleClicked: triggered");
+        openEditCycleDialog(cycle);
     }
 
     @Override
     public void onCycleLongClicked(Cycle cycle) {
-        Toast.makeText(this, "Cycle long clicked", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onCycleLongClicked: triggered");
     }
 
     @Override
     public void onTodoClicked(Todo todo) {
-        Toast.makeText(this, "Todo clicked", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onTodoClicked: triggered");
+        openEditTotoDialog(todo);
     }
 
     @Override
     public void onTodoLongClicked(Todo todo) {
-        Toast.makeText(this, "Todo long clicked", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onTodoLongClicked: triggered");
     }
 
     @Override
     public void onTodoCheckboxChecked(Todo todo) {
+        Log.d(TAG, "onTodoCheckboxChecked: triggered");
         todo = new Todo(todo);
         todo.setDone(true);
         categoryViewModel.update(todo);
@@ -451,6 +459,7 @@ public class CategoryActivity extends SuperActivity implements RVHolderInterface
 
     @Override
     public void onTodoCheckboxUnchecked(Todo todo) {
+        Log.d(TAG, "onTodoCheckboxUnchecked: triggered");
         todo = new Todo(todo);
         todo.setDone(false);
         categoryViewModel.update(todo);
