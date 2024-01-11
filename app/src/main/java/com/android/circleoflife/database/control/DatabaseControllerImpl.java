@@ -315,6 +315,12 @@ public class DatabaseControllerImpl implements DatabaseController {
         );
     }
 
+
+    @Override
+    public void deleteLog(DBLog<?> log) {
+        db.getLogDao().delete(new LogEntity(log));
+    }
+
     @Override
     public DBLog<?>[] getLogs(User user, LocalDateTime min, LocalDateTime max) {
         return db.getLogDao().getLogsBetweenTimestamps(user, min, max);

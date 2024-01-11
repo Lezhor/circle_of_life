@@ -150,6 +150,8 @@ public interface DatabaseController {
         insertLog(logs.stream().toArray(DBLog[]::new));
     }
 
+    void deleteLog(DBLog<?> log);
+
     // TODO: 10.01.2024 Remove method
     DBLog<?>[] getLogs(User user, LocalDateTime min, LocalDateTime max);
 
