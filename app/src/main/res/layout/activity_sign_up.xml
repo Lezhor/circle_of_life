@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/signup_activity"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,11 +12,11 @@
         android:id="@+id/app_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="16dp"
         android:text="@string/app_name"
         android:textAlignment="center"
-        android:textSize="48sp"
-        android:padding="16dp"
         android:textColor="@color/md_theme_primary"
+        android:textSize="48sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -61,10 +63,10 @@
         android:id="@+id/switch_layout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/edit_password">
 
         <Switch
@@ -72,9 +74,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:switchMinWidth="56dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
+            android:switchMinWidth="56dp"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <TextView
@@ -88,11 +90,11 @@
         android:id="@+id/switch_layout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
         android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/switch_layout1">
 
         <Switch
@@ -100,9 +102,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:switchMinWidth="56dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
+            android:switchMinWidth="56dp"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <TextView
@@ -131,11 +133,11 @@
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:clickable="true"
+        android:padding="4dp"
         android:text="@string/go_to_login_text"
         android:textColor="@color/md_theme_primary"
-        android:layout_margin="8dp"
-        android:padding="4dp"
-        android:clickable="true"
         app:layout_constraintStart_toStartOf="@+id/signup_button"
         app:layout_constraintTop_toBottomOf="@+id/signup_button" />
 

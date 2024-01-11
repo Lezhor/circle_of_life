@@ -87,4 +87,6 @@ public interface Authentication {
      */
     UserSettings getSettings();
 
+    void removeLoginDataFromPrefs();
+
 }

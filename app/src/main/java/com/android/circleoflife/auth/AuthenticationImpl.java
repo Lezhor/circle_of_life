@@ -212,7 +212,8 @@ public class AuthenticationImpl implements Authentication {
     /**
      * Removes login data from prefs
      */
-    private void removeLoginDataFromPrefs() {
+    @Override
+    public void removeLoginDataFromPrefs() {
         Log.d(TAG, "removeLoginDataFromPrefs: " + user);
         SharedPreferences sp = App.getApplicationContext().getSharedPreferences(LAST_LOGIN_DATA_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
