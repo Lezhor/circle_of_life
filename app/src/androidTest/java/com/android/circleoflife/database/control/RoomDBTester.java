@@ -10,12 +10,14 @@ import androidx.room.Room;
 
 import com.android.circleoflife.database.models.*;
 import com.android.circleoflife.database.models.additional.CycleFrequency;
+import com.android.circleoflife.logging.control.DBLogger;
 import com.android.circleoflife.logging.model.DBLog;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -229,6 +231,13 @@ public class RoomDBTester {
      * @param user user to be cleared
      */
     public static void clearUserData(DatabaseController db, User user) throws InterruptedException {
+        Collection<DBLogger> loggers = db.getObservers()
+                .stream()
+                .filter(o -> o instanceof DBLogger)
+                .map(o -> (DBLogger) o)
+                .toList();
+        loggers.forEach(logger -> logger.setActive(false));
+
         List<Category> categories = getOrAwaitValueWithoutInstantTaskExecutorRule(db.getAllCategories(user));
         List<Cycle> cycles = getOrAwaitValueWithoutInstantTaskExecutorRule(db.getAllCycles(user));
         List<Todo> todos = getOrAwaitValueWithoutInstantTaskExecutorRule(db.getAllTodos(user));
@@ -243,6 +252,8 @@ public class RoomDBTester {
                 .peek(c -> c.setParentID(null))
                 .peek(db::updateCategory)
                 .forEach(db::deleteCategory);
+
+        loggers.forEach(logger -> logger.setActive(true));
     }
 
 

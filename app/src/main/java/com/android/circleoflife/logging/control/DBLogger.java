@@ -18,7 +18,7 @@ import com.android.circleoflife.logging.model.DBLog;
 public class DBLogger implements DatabaseObserver {
     private static final String TAG = DBLogger.class.getSimpleName();
 
-    private final boolean active;
+    private boolean active;
     private final DatabaseController db;
 
     public DBLogger(DatabaseController db) {
@@ -35,6 +35,10 @@ public class DBLogger implements DatabaseObserver {
     @Override
     public boolean isActive() {
         return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override
