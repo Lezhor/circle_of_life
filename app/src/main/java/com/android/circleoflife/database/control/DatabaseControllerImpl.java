@@ -71,6 +71,11 @@ public class DatabaseControllerImpl implements DatabaseController {
     }
 
     @Override
+    public Collection<DatabaseObserver> getObservers() {
+        return observers;
+    }
+
+    @Override
     public boolean syncWithServer(Authentication auth) {
         List<DBLog<?>> serverInstructions = new LinkedList<>();
         LocalDateTime newLastSyncDate = App.getSyncProtocol().sync(

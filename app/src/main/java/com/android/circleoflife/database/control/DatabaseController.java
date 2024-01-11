@@ -36,6 +36,8 @@ public interface DatabaseController {
      */
     void removeObserver(DatabaseObserver observer);
 
+    Collection<DatabaseObserver> getObservers();
+
     /**
      * Synchronizes database with server by calling the {@link com.android.circleoflife.communication.protocols.SyncProtocol#sync(User, LocalDateTime, DBLog[], List)} method.
      * @param auth the SyncProtocol-parameters are retrieved from this parameter: user, lastSyncDate...
