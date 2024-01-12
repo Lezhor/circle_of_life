@@ -9,8 +9,8 @@
 
     <string name="signup">SIGN UP</string>
     <string name="go_to_login_text">Already have an account? Login!</string>
-    <string name="switch_server_sync_text">Enable Server Synchronisation</string>
-    <string name="switch_automatic_sync_text">Automatic Synchronisation</string>
+    <string name="switch_server_sync_text">Enable Server Synchronization</string>
+    <string name="switch_automatic_sync_text">Automatic Synchronization</string>
 
     <!-- Main Menu - Options Menu -->
     <string name="menu_item_sync">Sync now</string>
@@ -45,7 +45,7 @@
     <string name="category_dialog_name_hint">Name</string>
     <string name="category_dialog_parent_hint">Parent</string>
     <string name="category_dialog_no_parent">None</string>
-    <string name="dialog_create_new">Create new</string>
+    <string name="dialog_create_new">Create new</string>    <!-- TODO 12.01.2024 With %s -->
     <string name="category_dialog_title">Create new Category</string>
 
     <string name="dialog_cancel">Cancel</string>

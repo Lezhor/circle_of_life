@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Circle of Life</string>
+
+    <!-- Login- & SignUp-->
+    <string name="username">Benutzername</string>
+    <string name="password">Passwort</string>
+    <string name="login">Einloggen</string>
+    <string name="go_to_signup_text">Kein Account? Jetzt anmelden!</string>
+
+    <string name="signup">Anmelden</string>
+    <string name="go_to_login_text">Du hast schon einen Account? Einloggen!</string>
+    <string name="switch_server_sync_text">Aktiviere Server Synchronisation</string>
+    <string name="switch_automatic_sync_text">Automatische Synchronisation</string>
+
+    <!-- Main Menu - Options Menu -->
+    <string name="menu_item_sync">Jetzt synchronisieren</string>
+    <string name="menu_item_sync_enabled">Synchronisation mit Server aktiviert</string>
+    <string name="menu_item_auto_sync_enabled">Automatisch synchronisieren</string>
+    <string name="menu_item_logout">Ausloggen</string>
+
+    <!-- Main Menu - Other -->
+    <string name="main_menu_welcome_text">Willkommen zurück</string>
+
+    <string name="main_menu_view_root_categories_text">Wurzelverzeichnis anzeigen</string>
+    <string name="main_menu_view_cycles_text">Routinen anzeigen</string>
+    <string name="main_menu_view_todos_text">Todos anzeigen</string>
+
+    <string name="toast_sync_successful">Synchronisation erfolgreich!</string>
+    <string name="toast_sync_failed">Synchronisation fehlgeschlagen!</string>
+
+    <!-- used if value is not set -->
+
+    <string name="search">Suchen</string>
+    <string name="search_category_hint">Suchkategorie…</string>
+    <string name="search_in_hint">Suchen in</string>
+    <string name="create_category">Kategorie erstellen</string>
+    <string name="create_cycle">Routine erstellen</string>
+    <string name="create_todo">Todo erstellen</string>
+
+    <string name="categories">Kategorien</string>
+    <string name="no_categories_created_yet">Keine Kategoerien\nerstellt</string>
+    <string name="category">Kategorie</string>
+
+    <string name="category_dialog_name_hint">Name</string>
+    <string name="category_dialog_parent_hint">Übergeordneter Ordner</string>
+    <string name="category_dialog_no_parent">Keiner</string>
+    <string name="dialog_create_new">Neu erstellen</string>
+    <string name="category_dialog_title">Neue Kategorie erstellen</string>
+
+    <string name="dialog_cancel">Abbrechen</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_edit_title">Bearbeiten %s</string>
+    <string name="dialog_edit_name_hint">Neuer Name</string>
+
+    <string name="category_empty">Kategorie ist leer</string>
+    <string name="delete_category">KATEGORIE LÖSCHEN</string>
+
+    <string name="snackbar_text_inserted">Eingefügt</string>
+    <string name="snackbar_text_deleted">Gelöscht</string>
+    <string name="snackbar_text_updated">Aktualisiert</string>
+    <string name="snackbar_text_undo">Rückgängig</string>
+    <string name="snackbar_text_moved_to_parent">PLACEHOLDER in übergeordneten Ordner bewegt</string>
+    <string name="snackbar_text_moved_into">PLACEHOLDER nach PLACEHOLDER bewegt</string>
+    <string name="undo_last_action">Letzte Aktion rückgängig machen</string>
+
+    <string name="cycle">Routine</string>
+    <string name="todo">Todo</string>
+    <string name="toast_there_is_no_action_to_undo">Keine Aktion, die rückgängig gemacht werden kann</string>
+
+    <string-array name="days_of_week">
+        <item>Montag</item>
+        <item>Dienstag</item>
+        <item>Mittwoch</item>
+        <item>Donnerstag</item>
+        <item>Freitag</item>
+        <item>Samstag</item>
+        <item>Sonntag</item>
+    </string-array>
+
+    <string name="day_monday_short">Mo</string>
+    <string name="day_tuesday_short">Di</string>
+    <string name="day_wednesday_short">Mi</string>
+    <string name="day_thursday_short">Do</string>
+    <string name="day_friday_short">Fr</string>
+    <string name="day_saturday_short">Sa</string>
+    <string name="day_sunday_short">So</string>
+
+    <string-array name="days_of_week_short">
+        <item>@string/day_monday_short</item>
+        <item>@string/day_tuesday_short</item>
+        <item>@string/day_wednesday_short</item>
+        <item>@string/day_thursday_short</item>
+        <item>@string/day_friday_short</item>
+        <item>@string/day_saturday_short</item>
+        <item>@string/day_sunday_short</item>
+    </string-array>
+</resources>
