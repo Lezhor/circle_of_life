@@ -1,6 +1,7 @@
 package com.android.circleoflife.ui.activities.categories.not_root.recycler_view.holder;
 
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,5 +43,7 @@ public abstract class Holder<T> extends RecyclerView.ViewHolder {
         }
     }
     protected abstract void onLongClick(T object);
+
+    public abstract TextView getTitleView();
 
 }

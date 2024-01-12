@@ -1,7 +1,6 @@
 package com.android.circleoflife.ui.activities.categories.not_root.recycler_view.holder;
 
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,6 +32,7 @@ public class CycleHolder extends Holder<Cycle> {
         holderInterface.onCycleLongClicked(cycle);
     }
 
+    @Override
     public TextView getTitleView() {
         return title;
     }

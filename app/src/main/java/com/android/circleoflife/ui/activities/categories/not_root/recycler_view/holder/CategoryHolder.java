@@ -31,6 +31,7 @@ public class CategoryHolder extends Holder<Category> {
         holderInterface.onCategoryLongClicked(category);
     }
 
+    @Override
     public TextView getTitleView() {
         return title;
     }

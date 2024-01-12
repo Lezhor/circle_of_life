@@ -38,6 +38,7 @@ public class TodoHolder extends Holder<Todo> {
         holderInterface.onTodoLongClicked(todo);
     }
 
+    @Override
     public TextView getTitleView() {
         return title;
     }
