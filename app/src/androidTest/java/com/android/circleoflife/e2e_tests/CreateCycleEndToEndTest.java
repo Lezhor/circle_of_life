@@ -1,16 +1,20 @@
 package com.android.circleoflife.e2e_tests;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static com.android.circleoflife.e2e_tests.E2ETestUtils.*;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
@@ -79,11 +83,43 @@ public class CreateCycleEndToEndTest {
         // Go to categories
         onView(withId(R.id.main_menu_view_categories)).perform(click());
 
-        // Assert RecyclerView has 1 Item
+        // Assert RecyclerView has 1 Item with text "Test Category"
         onView(withId(R.id.recyclerView)).check(matches(CustomEspressoAddOns.recyclerViewHasItemCount(1)));
-
-        // Assert item has Text "Test Category"
         onView(withId(R.id.recyclerView)).check(matches(CustomEspressoAddOns.recyclerViewItemHasText(0, "Test Category")));
+
+        // Click on Item
+        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        // Assert RecyclerView has 1 Item with text "Another Category"
+        onView(withId(R.id.categories_recyclerView)).check(matches(CustomEspressoAddOns.recyclerViewHasItemCount(1)));
+        onView(withId(R.id.categories_recyclerView)).check(matches(CustomEspressoAddOns.recyclerViewItemHasText(0, "Another Category")));
+
+        // Open Cycle Dialog
+        onView(withId(com.getbase.floatingactionbutton.R.id.fab_expand_menu_button)).perform(click());
+        onView(withId(R.id.fab_create_cycle)).perform(click());
+
+        // Fill dialog
+        onView(withId(R.id.edit_name_dialog_input)).perform(CustomEspressoAddOns.replaceTextInInputTextLayout("My Cycle"));
+        onView(withId(R.id.option_saturday)).perform(click());
+        onView(withId(R.id.option_sunday)).perform(click());
+
+        // Press OK
+        onView(withText(R.string.dialog_ok))
+                .inRoot(isDialog())
+                .check(matches(isDisplayed()))
+                .perform(click());
+
+        // Assert RecyclerView has 2 Items. Second with text "My Cycle"
+        onView(withId(R.id.categories_recyclerView)).check(matches(CustomEspressoAddOns.recyclerViewHasItemCount(2)));
+        onView(withId(R.id.categories_recyclerView)).check(matches(CustomEspressoAddOns.recyclerViewItemHasText(1, "My Cycle")));
+
+        // Undo last action
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        onView(withText(R.string.undo_last_action)).perform(click());
+
+        // Assert RecyclerView has 1 Item with text "Another Category"
+        onView(withId(R.id.categories_recyclerView)).check(matches(CustomEspressoAddOns.recyclerViewHasItemCount(1)));
+        onView(withId(R.id.categories_recyclerView)).check(matches(CustomEspressoAddOns.recyclerViewItemHasText(0, "Another Category")));
     }
 
 
