@@ -177,7 +177,7 @@ public class RootCategoryRecyclerViewAdapter extends RecyclerView.Adapter<RootCa
         }
     };
 
-    static class CategoryHolder extends RecyclerView.ViewHolder {
+    public static class CategoryHolder extends RecyclerView.ViewHolder {
 
         private final TextView title;
 
@@ -205,6 +205,10 @@ public class RootCategoryRecyclerViewAdapter extends RecyclerView.Adapter<RootCa
             void onCategoryClicked(Category category);
 
             void onLongCategoryClicked(Category category);
+        }
+
+        public TextView getTitleView() {
+            return title;
         }
     }
 }
