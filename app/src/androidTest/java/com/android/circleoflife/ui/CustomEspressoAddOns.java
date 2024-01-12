@@ -14,6 +14,8 @@ import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.BoundedMatcher;
 
+import com.android.circleoflife.ui.activities.categories.not_root.recycler_view.holder.Holder;
+import com.android.circleoflife.ui.activities.categories.root.RootCategoryRecyclerViewAdapter;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.hamcrest.Description;
@@ -135,6 +137,27 @@ public final class CustomEspressoAddOns {
      */
     public static Matcher<View> recyclerViewIsEmpty() {
         return recyclerViewHasItemCount(0);
+    }
+
+    public static Matcher<View> recyclerViewItemHasText(final int itemIndex, final String text) {
+        return new BoundedMatcher<>(RecyclerView.class) {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("rv-item " + itemIndex + " matches \"" + text + "\"");
+            }
+
+            @Override
+            protected boolean matchesSafely(RecyclerView recyclerView) {
+                RecyclerView.ViewHolder viewHolder = recyclerView.getChildViewHolder(recyclerView.getChildAt(itemIndex));
+                if (viewHolder instanceof Holder<?> holder) {
+                    return holder.getTitleView().getText().toString().equals(text);
+                } else if (viewHolder instanceof RootCategoryRecyclerViewAdapter.CategoryHolder holder) {
+                    return holder.getTitleView().getText().toString().equals(text);
+                } else {
+                    return false;
+                }
+            }
+        };
     }
 
 }

@@ -9,6 +9,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static com.android.circleoflife.e2e_tests.E2ETestUtils.*;
 import static org.junit.Assert.fail;
 
 import android.content.Context;
@@ -42,9 +43,6 @@ import java.io.IOException;
 public class SyncEndToEndTest {
     @Rule
     public ActivityScenarioRule<LoginActivity> activityScenario = new ActivityScenarioRule<>(LoginActivity.class);
-
-    public static final String USERNAME = "test_this_is_a_username_3294832";
-    public static final String PASSWORD = "password_23948486";
 
     @Test
     public void aaaTestSetup() {
