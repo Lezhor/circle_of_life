@@ -59,7 +59,15 @@ public class SyncEndToEndTest {
     public void testLoginOnServerE2E() {
         User user = App.getDatabaseController().getUserByUsername(USERNAME);
         if (user != null) {
-            fail("User already exists in local db!");
+            try {
+                RoomDBTester.clearUserData(App.getDatabaseController(), user);
+            } catch (InterruptedException ignored) {
+            }
+            try {
+                App.getDatabaseController().deleteUser(user);
+            } catch (Exception e) {
+                fail("Deleting user failed: " + e.getLocalizedMessage());
+            }
         }
 
         try {

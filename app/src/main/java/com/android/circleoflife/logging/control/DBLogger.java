@@ -54,7 +54,7 @@ public class DBLogger implements DatabaseObserver {
 
     @Override
     public void onDeleteUser(User user) {
-        saveLogToDB(new DBLog<>(user, DBLog.ChangeMode.DELETE));
+        //saveLogToDB(new DBLog<>(user, DBLog.ChangeMode.DELETE));
     }
 
     @Override
