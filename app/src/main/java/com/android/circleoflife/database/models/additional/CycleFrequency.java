@@ -69,11 +69,34 @@ public class CycleFrequency {
     @Override
     public String toString() {
         // TODO: 06.12.2023 String Representation of Frequency - e.g. "every day", "every monday" etc.
-        return Arrays.stream(CycleFrequency.MASKS_DAYS_ALL)
+        switch (countDaysAWeek(this)) {
+            case 0 -> {
+                return "";
+            }
+            case 2 -> {
+                if (maskIsSet(MASK_SATURDAY) && maskIsSet(MASK_SUNDAY)) {
+                    return App.getResources().getString(R.string.frequency_on_weekends);
+                }
+            }
+            case 5 -> {
+                if (!maskIsSet(MASK_SATURDAY) && !maskIsSet(MASK_SUNDAY)) {
+                    return App.getResources().getString(R.string.frequency_on_weekdays);
+                }
+            }
+            case 7 -> {
+                return App.getResources().getString(R.string.frequency_every_day);
+            }
+            default -> {
+            }
+        }
+        return App.getResources().getString(
+                R.string.frequency_on_preposition,
+                (Arrays.stream(CycleFrequency.MASKS_DAYS_ALL)
                 .boxed()
                 .filter(this::maskIsSet)
-                .map(CycleFrequency::getDayString)
-                .reduce("Frequency{ ", (a, b) -> a + b + "; ") + "}";
+                .map(CycleFrequency::getDayStringWithOnPreposition)
+                .reduce("", (a, b) -> a + b + ", ") + ",").replace(", ,", "")
+        );
     }
 
     @Override
@@ -137,15 +160,44 @@ public class CycleFrequency {
             return "";
         }
         String[] days_of_week = App.getResources().getStringArray(R.array.days_of_week);
+        return days_of_week[getDayIndex(mask)];
+    }
+
+    /**
+     * Returns string representation of dayMask from the array R.array.days_of_week_on_preposition
+     * @param mask daymask. e.gl {@link CycleFrequency#MASK_THURSDAY}
+     * @return String from {@link App#getResources() SystemResources}.getString()
+     */
+    public static String getDayStringWithOnPreposition(int mask) {
+        if (Arrays.stream(MASKS_DAYS_ALL).noneMatch(day -> mask == day)) {
+            return "";
+        }
+        String[] days_of_week = App.getResources().getStringArray(R.array.days_of_week_on_preposition);
+        return days_of_week[getDayIndex(mask)];
+    }
+
+    /**
+     * Returns index of daymask. e.g.
+     * <pre>
+     *     MASK_MONDAY -> 0
+     *     MASK_TUESDAY -> 1
+     *     ...
+     *     MASK_SUNDAY -> 6
+     * </pre>
+     * Can be used for string arrays from String-Resource-Files
+     * @param mask dayMask
+     * @return index
+     */
+    private static int getDayIndex(int mask) {
         return switch (mask) {
-            case MASK_MONDAY -> days_of_week[0];
-            case MASK_TUESDAY -> days_of_week[1];
-            case MASK_WEDNESDAY -> days_of_week[2];
-            case MASK_THURSDAY -> days_of_week[3];
-            case MASK_FRIDAY -> days_of_week[4];
-            case MASK_SATURDAY -> days_of_week[5];
-            case MASK_SUNDAY -> days_of_week[6];
-            default -> App.getResources().getString(R.string.no_string);
+            case MASK_MONDAY -> 0;
+            case MASK_TUESDAY -> 1;
+            case MASK_WEDNESDAY -> 2;
+            case MASK_THURSDAY -> 3;
+            case MASK_FRIDAY -> 4;
+            case MASK_SATURDAY -> 5;
+            case MASK_SUNDAY -> 6;
+            default -> throw new IllegalStateException("Unexpected mask: " + mask);
         };
     }
 

@@ -68,6 +68,8 @@
     <string name="todo">Todo</string>
     <string name="toast_there_is_no_action_to_undo">There is no action to undo</string>
 
+
+    <!-- Cycle Frequency Strings -->
     <string-array name="days_of_week">
         <item>Monday</item>
         <item>Tuesday</item>
@@ -77,6 +79,22 @@
         <item>Saturday</item>
         <item>Sunday</item>
     </string-array>
+
+    <string-array name="days_of_week_on_preposition">
+        <item>Mondays</item>
+        <item>Tuesdays</item>
+        <item>Wednesdays</item>
+        <item>Thursdays</item>
+        <item>Fridays</item>
+        <item>Saturdays</item>
+        <item>Sundays</item>
+    </string-array>
+
+    <string name="frequency_on_preposition">On %s</string>
+    <string name="frequency_every_day">Every Day</string>
+    <string name="frequency_on_weekdays">On Weekdays</string>
+    <string name="frequency_on_weekends">On Weekends</string>
+    <string name="frequency_on_days_a_week">%d days a week</string>
 
     <string name="day_monday_short">Mon</string>
     <string name="day_tuesday_short">Tue</string>

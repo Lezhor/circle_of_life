@@ -78,6 +78,22 @@
         <item>Sonntag</item>
     </string-array>
 
+    <string-array name="days_of_week_on_preposition">
+        <item>Montags</item>
+        <item>Dienstags</item>
+        <item>Mittwochs</item>
+        <item>Donnerstags</item>
+        <item>Freitags</item>
+        <item>Samstags</item>
+        <item>Sonntags</item>
+    </string-array>
+
+    <string name="frequency_every_day">Jeden Tag</string>
+    <string name="frequency_on_preposition">%s</string>
+    <string name="frequency_on_weekdays">An Wochentagen</string>
+    <string name="frequency_on_weekends">An Wochenenden</string>
+    <string name="frequency_on_days_a_week">%d Tage die Woche</string>
+
     <string name="day_monday_short">Mo</string>
     <string name="day_tuesday_short">Di</string>
     <string name="day_wednesday_short">Mi</string>
