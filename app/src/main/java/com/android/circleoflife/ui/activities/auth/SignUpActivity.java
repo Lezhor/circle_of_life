@@ -49,6 +49,7 @@ public class SignUpActivity extends SuperActivity {
             if (switchAutoSync.isChecked() != isChecked) {
                 switchAutoSync.setChecked(isChecked);
             }
+            switchAutoSync.setEnabled(isChecked);
         });
 
     }
