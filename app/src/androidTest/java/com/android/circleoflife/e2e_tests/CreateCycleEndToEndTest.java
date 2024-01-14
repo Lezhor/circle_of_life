@@ -11,9 +11,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static com.android.circleoflife.e2e_tests.E2ETestUtils.*;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -21,8 +18,10 @@ import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.android.circleoflife.R;
-import com.android.circleoflife.auth.AuthenticationImpl;
+import com.android.circleoflife.application.App;
 import com.android.circleoflife.auth.UsernameParser;
+import com.android.circleoflife.database.control.RoomDBTester;
+import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.ui.CustomEspressoAddOns;
 import com.android.circleoflife.ui.activities.auth.LoginActivity;
 
@@ -32,6 +31,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
+import java.io.IOException;
+import java.util.UUID;
+
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -39,18 +41,54 @@ public class CreateCycleEndToEndTest {
     @Rule
     public ActivityScenarioRule<LoginActivity> activityScenario = new ActivityScenarioRule<>(LoginActivity.class);
 
+    /**
+     * Deletes SharedPrefs
+     */
     @Test
     public void aaaTestSetup() {
         // This should be the fist test called
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        SharedPreferences sp = context.getSharedPreferences(AuthenticationImpl.LAST_LOGIN_DATA_PREFS, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.remove(AuthenticationImpl.PREFS_USERNAME);
-        editor.remove(AuthenticationImpl.PREFS_PASSWORD);
-        editor.apply();
+        App.getAuthentication().logout();
     }
 
     /**
+     * Sets database to what is needed
+     */
+    @Test
+    public void aabTestSetup() {
+        boolean loginSuccessful = false;
+        try {
+            loginSuccessful = App.getAuthentication().login(USERNAME, PASSWORD);
+        } catch (IOException ignored) {
+        }
+        try {
+            if (!loginSuccessful) {
+                App.getAuthentication().signUp(USERNAME, PASSWORD, true);
+            }
+        } catch (IOException ignored) {
+        }
+        try {
+            App.getAuthentication().getSettings().setAutomaticServerSync(false);
+            RoomDBTester.clearUserData(App.getDatabaseController(), App.getAuthentication().getUser());
+            Category category1 = new Category(
+                    UUID.randomUUID(),
+                    "Test Category",
+                    App.getAuthentication().getUser().getId(),
+                    null
+            );
+            Category category2 = new Category(
+                    UUID.randomUUID(),
+                    "Another Category",
+                    App.getAuthentication().getUser().getId(),
+                    category1.getId()
+            );
+            App.getDatabaseController().insertCategories(category1, category2);
+        } catch (InterruptedException ignored) {
+        }
+        App.getAuthentication().logout();
+    }
+
+    /**
+     * IMPORTANT: If this test doesn't work on the first try just do it again!<br>
      * Espresso e2e-Test contains following steps:
      * <pre>
      *     1) Login
@@ -64,7 +102,7 @@ public class CreateCycleEndToEndTest {
      * </pre>
      */
     @Test
-    public void testZCreateMoveUndoAndDeleteCycle() {
+    public void testZCreateAndUndoCycle() {
 
         // Typing Login data:
         onView(withId(R.id.edit_username))
