@@ -10,10 +10,18 @@ import com.android.circleoflife.database.models.User;
 
 import java.util.List;
 
+/**
+ * Repository which offers db-transaction methods for the ViewModel {@link com.android.circleoflife.ui.viewmodels.CategoryViewModel}<br>
+ * The purpose of this class is to call the DatabaseController-Methods on a background-thread.
+ */
 public class CategoryRepository extends BaseRepository {
 
     private final DatabaseController db;
 
+    /**
+     * Constructor for the repository. Sets its instance of DatabaseController
+     * @param db databaseController where all transaction should be executed on.
+     */
     public CategoryRepository(DatabaseController db) {
         super();
         this.db = db;

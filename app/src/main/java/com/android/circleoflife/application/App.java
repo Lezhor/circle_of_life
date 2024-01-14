@@ -26,9 +26,6 @@ import java.time.ZoneId;
  * This way every component can access each other component easily
  */
 public final class App {
-
-    // TODO: 03.12.2023 SERVER connection data can't just be saevd in final attributes! Change!
-
     /**
      * IP of the server
      */

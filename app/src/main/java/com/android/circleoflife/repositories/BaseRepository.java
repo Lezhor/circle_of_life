@@ -41,7 +41,7 @@ public abstract class BaseRepository {
     }
 
     /**
-     * Runs a task on a background-thread. After the task is fini
+     * Runs a task on a background-thread. After the task is finished, executes the after-task on the main-thread
      * @param task to be executed on background-thread
      * @param after to be executed on main-thread
      */
@@ -55,7 +55,7 @@ public abstract class BaseRepository {
     }
 
     /**
-     * Executes task in background and afterwards executes 'after' with the result of task as parameter
+     * Executes task in background and afterwards executes 'after' with the result of 'task' as parameter
      * @param task task
      * @param after after
      * @param <T> Type of result
