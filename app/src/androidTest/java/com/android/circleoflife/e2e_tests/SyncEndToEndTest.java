@@ -25,7 +25,9 @@ import com.android.circleoflife.application.App;
 import com.android.circleoflife.auth.AuthenticationImpl;
 import com.android.circleoflife.auth.UsernameParser;
 import com.android.circleoflife.database.control.RoomDBTester;
+import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.User;
+import com.android.circleoflife.logging.model.DBLog;
 import com.android.circleoflife.ui.CustomEspressoAddOns;
 import com.android.circleoflife.ui.activities.auth.LoginActivity;
 
@@ -36,6 +38,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -101,14 +104,27 @@ public class SyncEndToEndTest {
             fail(e.getLocalizedMessage());
         }
 
-        // Setting automaticServerSync to false for this account
+        // adding log to server if not there - and clearing local database for testuser
         if (App.getAuthentication().authenticated()) {
             App.getAuthentication().getSettings().setAutomaticServerSync(false);
             App.getAuthentication().getSettings().setLastSyncDate(null);
+            App.getAuthentication().manualSync();
+            DBLog<?>[] logs = App.getDatabaseController().getLogs(App.getAuthentication().getUser(), null, null);
+            if (logs.length == 0) {
+                App.getDatabaseController().insertCategories(new Category(UUID.randomUUID(), "Test Category", App.getAuthentication().getUser().getId(), null));
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException ignored) {
+                }
+                App.getAuthentication().getSettings().setLastSyncDate(null);
+                App.getAuthentication().manualSync();
+            }
             try {
                 RoomDBTester.clearUserData(App.getDatabaseController(), App.getAuthentication().getUser());
             } catch (InterruptedException ignored) {
             }
+            App.getAuthentication().getSettings().setAutomaticServerSync(false);
+            App.getAuthentication().getSettings().setLastSyncDate(null);
             App.getAuthentication().logout();
         } else {
             fail("Login doesn't work - Check if server is running!");
