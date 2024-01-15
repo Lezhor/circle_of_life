@@ -29,7 +29,7 @@ public final class App {
     /**
      * IP of the server
      */
-    public final static String SERVER_IP = "192.168.188.70";
+    public final static String SERVER_IP = "localhost";
 
     /**
      * Port the server listens on
