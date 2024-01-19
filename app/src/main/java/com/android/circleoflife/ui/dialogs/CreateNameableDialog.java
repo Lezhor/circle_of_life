@@ -40,7 +40,7 @@ public class CreateNameableDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.edit_name_dialog, null);
 
         builder.setView(view)
-                .setTitle(getString(R.string.dialog_create_new) + " " + getString(nameableType))
+                .setTitle(getString(R.string.dialog_create_new, getString(nameableType)))
                 .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> {})
                 .setPositiveButton(R.string.dialog_ok, null);
 

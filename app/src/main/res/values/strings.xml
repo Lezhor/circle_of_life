@@ -45,8 +45,7 @@
     <string name="category_dialog_name_hint">Name</string>
     <string name="category_dialog_parent_hint">Parent</string>
     <string name="category_dialog_no_parent">None</string>
-    <string name="dialog_create_new">Create new</string>    <!-- TODO 12.01.2024 With %s -->
-    <string name="category_dialog_title">Create new Category</string>
+    <string name="dialog_create_new">Create new %s</string>
 
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_ok">OK</string>

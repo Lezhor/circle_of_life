@@ -51,7 +51,7 @@ public class CreateCycleDialog extends AppCompatDialogFragment {
 
         String title;
         if (passedCycle == null) {
-            title = getString(R.string.dialog_create_new) + " " + getString(R.string.cycle);
+            title = getString(R.string.dialog_create_new, getString(R.string.cycle));
         } else {
             title = getString(R.string.dialog_edit_title, getString(R.string.cycle));
         }

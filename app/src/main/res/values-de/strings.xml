@@ -45,12 +45,11 @@
     <string name="category_dialog_name_hint">Name</string>
     <string name="category_dialog_parent_hint">Übergeordneter Ordner</string>
     <string name="category_dialog_no_parent">Keiner</string>
-    <string name="dialog_create_new">Neu erstellen</string>
-    <string name="category_dialog_title">Neue Kategorie erstellen</string>
+    <string name="dialog_create_new">%s erstellen</string>
 
     <string name="dialog_cancel">Abbrechen</string>
     <string name="dialog_ok">OK</string>
-    <string name="dialog_edit_title">Bearbeiten %s</string>
+    <string name="dialog_edit_title">%s bearbeiten</string>
     <string name="dialog_edit_name_hint">Neuer Name</string>
 
     <string name="category_empty">Kategorie ist leer</string>
