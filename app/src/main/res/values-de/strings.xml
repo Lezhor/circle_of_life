@@ -31,8 +31,8 @@
 
     <!-- used if value is not set -->
 
-    <string name="search">Suchen</string>
-    <string name="search_category_hint">Suchkategorie…</string>
+    <string name="search">Suche</string>
+    <string name="search_category_hint">Suche Kategorie…</string>
     <string name="search_in_hint">Suchen in</string>
     <string name="create_category">Kategorie erstellen</string>
     <string name="create_cycle">Routine erstellen</string>
@@ -47,7 +47,7 @@
     <string name="category_dialog_no_parent">Keiner</string>
     <string name="dialog_create_new">%s erstellen</string>
 
-    <string name="dialog_cancel">Abbrechen</string>
+    <string name="dialog_cancel">ABBRECHEN</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_edit_title">%s bearbeiten</string>
     <string name="dialog_edit_name_hint">Neuer Name</string>
