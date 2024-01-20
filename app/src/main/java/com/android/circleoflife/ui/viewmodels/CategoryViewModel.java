@@ -17,6 +17,7 @@ import com.android.circleoflife.database.models.additional.Nameable;
 import com.android.circleoflife.repositories.CategoryRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -250,25 +251,19 @@ public class CategoryViewModel extends ViewModel implements RevertibleActions {
     }
 
     /**
-     * Retrieves given String from Resources. If string contains String 'PLACEHOLDER' than 'PLACEHOLDER' is replaced with item.getName() else it just appends item.getName() to the end.
+     * Retrieves given String from Resources. If string contains String '%s' than '%s' is replaced with item.getName() else it just appends item.getName() to the end.
      * @param actionStringResId description of action
      * @param item item
      */
     public void setLastActionText(@StringRes int actionStringResId, Nameable... item) {
         String passedString = App.getApplicationContext().getString(actionStringResId);
-        if (item.length == 0) {
-            Log.e(TAG, "setLastActionText: no items passed!!!");
-        } else if (passedString.contains("PLACEHOLDER")) {
-            for (int i = 0; passedString.contains("PLACEHOLDER"); i++) {
-                passedString = passedString.replaceFirst("PLACEHOLDER", item[i % item.length].getName());
-            }
-            this.lastActionText = passedString.replaceAll("PLACEHOLDER", item[0].getName());
-        } else {
-            if (item.length != 1) {
-                Log.e(TAG, "setLastActionText: wrong number of items: " + item.length);
-            }
-            this.lastActionText = passedString + ": " + item[0].getName();
-        }
+
+        String[] itemNames = Arrays.stream(item).map(Nameable::getName).toArray(String[]::new);
+
+        this.lastActionText = App.getResources().getString(actionStringResId, (Object[]) itemNames);
+
+        Log.d(TAG, "setLastActionText: Text: '" + passedString + "', items: " + Arrays.stream(itemNames).reduce("", (a, b) -> a + "'" + b + "'; "));
+        Log.d(TAG, "setLastActionText: actual text: '" + this.lastActionText + "'");
     }
 
     public LiveData<List<Category>> getAllCategories() {

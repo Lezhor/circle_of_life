@@ -53,14 +53,13 @@
     <string name="dialog_edit_name_hint">Neuer Name</string>
 
     <string name="category_empty">Kategorie ist leer</string>
-    <string name="delete_category">KATEGORIE LÖSCHEN</string>
 
-    <string name="snackbar_text_inserted">Eingefügt</string>
-    <string name="snackbar_text_deleted">Gelöscht</string>
-    <string name="snackbar_text_updated">Aktualisiert</string>
+    <string name="snackbar_text_inserted">\'%s\' eingefügt</string>
+    <string name="snackbar_text_deleted">\'%s\' gelöscht</string>
+    <string name="snackbar_text_updated">\'%s\' aktualisiert</string>
     <string name="snackbar_text_undo">Rückgängig</string>
-    <string name="snackbar_text_moved_to_parent">PLACEHOLDER in übergeordneten Ordner bewegt</string>
-    <string name="snackbar_text_moved_into">PLACEHOLDER nach PLACEHOLDER bewegt</string>
+    <string name="snackbar_text_moved_to_parent">%s in übergeordneten Ordner bewegt</string>
+    <string name="snackbar_text_moved_into">%s nach %s bewegt</string>
     <string name="undo_last_action">Letzte Aktion rückgängig machen</string>
 
     <string name="cycle">Routine</string>
