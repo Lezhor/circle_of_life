@@ -68,24 +68,41 @@
 
 
     <!-- Cycle Frequency Strings -->
+
+    <string name="day_monday">Monday</string>
+    <string name="day_tuesday">Tuesday</string>
+    <string name="day_wednesday">Wednesday</string>
+    <string name="day_thursday">Thursday</string>
+    <string name="day_friday">Friday</string>
+    <string name="day_saturday">Saturday</string>
+    <string name="day_sunday">Sunday</string>
+
     <string-array name="days_of_week">
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-        <item>Sunday</item>
+        <item>@string/day_monday</item>
+        <item>@string/day_tuesday</item>
+        <item>@string/day_wednesday</item>
+        <item>@string/day_thursday</item>
+        <item>@string/day_friday</item>
+        <item>@string/day_saturday</item>
+        <item>@string/day_sunday</item>
     </string-array>
 
+    <string name="day_prep_monday">Mondays</string>
+    <string name="day_prep_tuesday">Tuesdays</string>
+    <string name="day_prep_wednesday">Wednesdays</string>
+    <string name="day_prep_thursday">Thursdays</string>
+    <string name="day_prep_friday">Fridays</string>
+    <string name="day_prep_saturday">Saturdays</string>
+    <string name="day_prep_sunday">Sundays</string>
+
     <string-array name="days_of_week_on_preposition">
-        <item>Mondays</item>
-        <item>Tuesdays</item>
-        <item>Wednesdays</item>
-        <item>Thursdays</item>
-        <item>Fridays</item>
-        <item>Saturdays</item>
-        <item>Sundays</item>
+        <item>@string/day_prep_monday</item>
+        <item>@string/day_prep_tuesday</item>
+        <item>@string/day_prep_wednesday</item>
+        <item>@string/day_prep_thursday</item>
+        <item>@string/day_prep_friday</item>
+        <item>@string/day_prep_saturday</item>
+        <item>@string/day_prep_sunday</item>
     </string-array>
 
     <string name="frequency_on_preposition">On %s</string>
