@@ -3,6 +3,7 @@ package com.android.circleoflife.communication;
 
 import static org.junit.Assert.*;
 import com.android.circleoflife.application.App;
+import com.android.circleoflife.communication.models.SyncResult;
 import com.android.circleoflife.database.models.Category;
 import com.android.circleoflife.database.models.Todo;
 import com.android.circleoflife.database.models.User;
@@ -13,8 +14,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.UUID;
 
 public class SyncIntegrationTest {
@@ -62,7 +61,7 @@ public class SyncIntegrationTest {
         DBLog<?>[] logsBefore = new DBLog[]{
                 new DBLog<>(UUID.randomUUID(), user.getId(), c1, DBLog.ChangeMode.INSERT, LocalDateTime.now(App.SERVER_TIMEZONE).minusNanos(1))
         };
-        App.getSyncProtocol().sync(user, LocalDateTime.now(App.SERVER_TIMEZONE).minusNanos(1000), logsBefore, new LinkedList<>());
+        App.getSyncProtocol().sync(user, LocalDateTime.now(App.SERVER_TIMEZONE).minusNanos(1000), logsBefore);
 
         LocalDateTime[] timestamp = new LocalDateTime[10];
         for (int i = 0; i < timestamp.length; i++) {
@@ -78,22 +77,21 @@ public class SyncIntegrationTest {
         };
 
         // A syncs
-        List<DBLog<?>> outLogs = new LinkedList<>();
-        LocalDateTime newLastSyncDate = App.getSyncProtocol().sync(user, timestamp[2], logsA, outLogs);
-        assertNotNull(newLastSyncDate);
-        assertEquals(0, outLogs.size());
+        SyncResult sync = App.getSyncProtocol().sync(user, timestamp[2], logsA);
+        assertNotNull(sync.getNewLastSyncDate());
+        assertEquals(0, sync.getOutLogs().size());
+
+        LocalDateTime lastSyncA = sync.getNewLastSyncDate();
 
         // B syncs
-        outLogs = new LinkedList<>();
-        LocalDateTime newLastSyncDate2 = App.getSyncProtocol().sync(user, timestamp[3], logsB, outLogs);
-        assertNotNull(newLastSyncDate2);
-        assertArrayEquals(logsA, outLogs.toArray(DBLog[]::new));
+        sync = App.getSyncProtocol().sync(user, timestamp[3], logsB);
+        assertNotNull(sync.getNewLastSyncDate());
+        assertArrayEquals(logsA, sync.getOutLogs().toArray(DBLog[]::new));
 
         // A syncs again
-        outLogs = new LinkedList<>();
-        LocalDateTime newLastSyncDate3 = App.getSyncProtocol().sync(user, newLastSyncDate, new DBLog[0], outLogs);
-        assertNotNull(newLastSyncDate3);
-        assertArrayEquals(logsB, outLogs.toArray(DBLog[]::new));
+        sync = App.getSyncProtocol().sync(user, lastSyncA, new DBLog[0]);
+        assertNotNull(sync.getNewLastSyncDate());
+        assertArrayEquals(logsB, sync.getOutLogs().toArray(DBLog[]::new));
     }
 
     /**

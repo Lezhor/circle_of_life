@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.auth.Authentication;
+import com.android.circleoflife.communication.models.SyncResult;
 import com.android.circleoflife.database.control.daos.BaseDao;
 import com.android.circleoflife.database.control.observers.DatabaseObserver;
 import com.android.circleoflife.database.models.*;
@@ -77,22 +78,20 @@ public class DatabaseControllerImpl implements DatabaseController {
 
     @Override
     public boolean syncWithServer(Authentication auth) {
-        List<DBLog<?>> serverInstructions = new LinkedList<>();
-        LocalDateTime newLastSyncDate = App.getSyncProtocol().sync(
+        SyncResult sync = App.getSyncProtocol().sync(
                 auth.getUser(),
                 auth.getSettings().getLastSyncDate(),
-                db.getLogDao().getLogsBetweenTimestamps(auth.getUser(), auth.getSettings().getLastSyncDate(), LocalDateTime.now(App.SERVER_TIMEZONE)),
-                serverInstructions
+                db.getLogDao().getLogsBetweenTimestamps(auth.getUser(), auth.getSettings().getLastSyncDate(), LocalDateTime.now(App.SERVER_TIMEZONE))
         );
-        if (newLastSyncDate == null) {
+        if (!sync.wasSuccessful()) {
             Log.d(TAG, "syncWithServer: Synchronisation failed");
             return false;
         } else {
             Log.d(TAG, "syncWithServer: Synchronisation succeeded!");
-            auth.getSettings().setLastSyncDate(newLastSyncDate);
+            auth.getSettings().setLastSyncDate(sync.getNewLastSyncDate());
             // executing server instructions:
-            Log.d(TAG, "syncWithServer: Executing " + serverInstructions.size() + " logs:");
-            for (DBLog<?> log : serverInstructions) {
+            Log.d(TAG, "syncWithServer: Executing " + sync.getOutLogs().size() + " logs:");
+            for (DBLog<?> log : sync.getOutLogs()) {
                 Log.d(TAG, "syncWithServer: Executing " + log);
                 try {
                     if (executeLog(log)) {

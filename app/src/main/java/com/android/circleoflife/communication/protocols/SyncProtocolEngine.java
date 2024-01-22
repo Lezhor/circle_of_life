@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.auth.AuthenticationFailedException;
+import com.android.circleoflife.communication.models.SimpleSyncResult;
+import com.android.circleoflife.communication.models.SyncResult;
 import com.android.circleoflife.communication.pdus.*;
 import com.android.circleoflife.communication.pdus.sync.AuthNotVerifiedPDU;
 import com.android.circleoflife.communication.pdus.sync.AuthVerifiedPDU;
@@ -17,18 +19,19 @@ import com.android.circleoflife.logging.model.DBLog;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Implementation of interface {@link SyncProtocol}.<br>
- * Implements {@link SyncProtocolEngine#sync(User, LocalDateTime, DBLog[], List)}<br><br>
+ * Implements {@link SyncProtocolEngine#sync(User, LocalDateTime, DBLog[])}<br><br>
  * <code>
  * PROTOCOL_NAME = "COL_SyncProt";<br>
  * VERSION = "v1.0";<br><br>
  * </code>
  * Follows the singleton pattern.
  *
- * @see SyncProtocolEngine#sync(User, LocalDateTime, DBLog[], List)
+ * @see SyncProtocolEngine#sync(User, LocalDateTime, DBLog[])
  * @see App#getSyncProtocol()
  * @see SyncProtocol
  */
@@ -62,57 +65,66 @@ public class SyncProtocolEngine implements SyncProtocol {
     public static String VERSION = "v1.0";
 
     @Override
-    public LocalDateTime sync(User user, LocalDateTime lastSyncDate, DBLog<?>[] logs, List<DBLog<?>> outLogs) {
+    public SyncResult sync(User user, LocalDateTime lastSyncDate, DBLog<?>[] logs) {
         Log.d(TAG, "Begin syncing...");
         SocketCommunication com = App.openCommunicationSessionWithServer();
+        LocalDateTime newLastSyncDate = lastSyncDate;
+        boolean syncSuccessful = true;
+        List<DBLog<?>> outLogs = new LinkedList<>();
+        IOException exception = null;
+        // TODO: 22.01.2024 Set the Exception message based on strings.xml
         try {
             com.connectToServer();
         } catch (IOException e) {
             Log.i(TAG, "Connection to Server failed!");
-            return null;
-        }
-        LocalDateTime newLastSyncDate;
-        try {
-            ProtocolSerializer serializer = new ProtocolSerializer(this, com);
-
-            // Step 1:
-            SendAuthPDU authPDU = new SendAuthPDU(user);
-            Log.d(TAG, "1) Sending AuthPDU...");
-            serializer.serialize(authPDU);
-
-            // Step 2:
-            PDU pdu2 = serializer.deserialize();
-            Log.d(TAG, "2) Received PDU with ID " + pdu2.getID());
-            if (pdu2.getID() == AuthNotVerifiedPDU.ID) {
-                throw new AuthenticationFailedException("Server did not confirm authentication: '" + authPDU.getUser() + "'");
-            } else if (pdu2.getID() != AuthVerifiedPDU.ID) {
-                throw new IOException("Wrong PDU received: PDU" + pdu2.getID());
-            }
-
-            // Step 3:
-            SendLogsPDU sendLogsPDU = new SendLogsPDU(lastSyncDate, logs);
-            Log.d(TAG, "3) Sending Logs to Server...");
-            serializer.serialize(sendLogsPDU);
-
-            // Step 4:
-            SendLogsPDU instructionsPDU = serializer.deserialize(SendLogsPDU.class);
-            DBLog<?>[] instructions = instructionsPDU.getLogs();
-            newLastSyncDate = instructionsPDU.getLastSyncDate();
-            Log.d(TAG, "4) Received SendLogsPDU with " + instructions.length + " instructions.");
-            Collections.addAll(outLogs, instructions);
-
-            // Step 5:
-            SyncSuccessfulPDU syncSuccessfulPDU = new SyncSuccessfulPDU();
-            Log.d(TAG, "5) Sending SyncSuccessfulPDU");
-            serializer.serialize(syncSuccessfulPDU);
-
-        } catch (NullPointerException | AuthenticationFailedException | IOException e) {
-            Log.i(TAG, "Synchronisation failed: " + e.getMessage());
-            return null;
-        } finally {
+            syncSuccessful = false;
+            exception = new IOException("Connection to Server failed");
             com.disconnectFromServer();
         }
-        return newLastSyncDate;
+        if (syncSuccessful) {
+            try {
+                ProtocolSerializer serializer = new ProtocolSerializer(this, com);
+
+                // Step 1:
+                SendAuthPDU authPDU = new SendAuthPDU(user);
+                Log.d(TAG, "1) Sending AuthPDU...");
+                serializer.serialize(authPDU);
+
+                // Step 2:
+                PDU pdu2 = serializer.deserialize();
+                Log.d(TAG, "2) Received PDU with ID " + pdu2.getID());
+                if (pdu2.getID() == AuthNotVerifiedPDU.ID) {
+                    throw new AuthenticationFailedException("Server did not confirm authentication: '" + authPDU.getUser() + "'");
+                } else if (pdu2.getID() != AuthVerifiedPDU.ID) {
+                    throw new IOException("Wrong PDU received: PDU" + pdu2.getID());
+                }
+
+                // Step 3:
+                SendLogsPDU sendLogsPDU = new SendLogsPDU(lastSyncDate, logs);
+                Log.d(TAG, "3) Sending Logs to Server...");
+                serializer.serialize(sendLogsPDU);
+
+                // Step 4:
+                SendLogsPDU instructionsPDU = serializer.deserialize(SendLogsPDU.class);
+                DBLog<?>[] instructions = instructionsPDU.getLogs();
+                newLastSyncDate = instructionsPDU.getLastSyncDate();
+                Log.d(TAG, "4) Received SendLogsPDU with " + instructions.length + " instructions.");
+                Collections.addAll(outLogs, instructions);
+
+                // Step 5:
+                SyncSuccessfulPDU syncSuccessfulPDU = new SyncSuccessfulPDU();
+                Log.d(TAG, "5) Sending SyncSuccessfulPDU");
+                serializer.serialize(syncSuccessfulPDU);
+
+            } catch (NullPointerException | AuthenticationFailedException | IOException e) {
+                Log.i(TAG, "Synchronisation failed: " + e.getMessage());
+                syncSuccessful = false;
+                exception = new IOException(e);
+            } finally {
+                com.disconnectFromServer();
+            }
+        }
+        return new SimpleSyncResult(user, syncSuccessful, newLastSyncDate, outLogs, exception);
     }
 
     @Override
