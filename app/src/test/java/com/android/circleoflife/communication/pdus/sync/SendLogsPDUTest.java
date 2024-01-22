@@ -30,7 +30,6 @@ public class SendLogsPDUTest {
     @Before
     public void setUp() {
         logArray = new DBLog[3];
-        // TODO: 03.12.2023 Test SendLogsPDU Setup
         logArray[0] = new DBLog<>(new Category(UUID.randomUUID(), "Test Category", UUID.randomUUID(), null), DBLog.ChangeMode.INSERT);
         logArray[1] = new DBLog<>(new User(UUID.randomUUID(), "john_doe", "this.password1", LocalDateTime.now(App.SERVER_TIMEZONE)), DBLog.ChangeMode.UPDATE);
         logArray[2] = new DBLog<>(new Category(UUID.randomUUID(), "Test Category", UUID.randomUUID(), null), DBLog.ChangeMode.DELETE);
