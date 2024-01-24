@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.android.circleoflife.application.App;
+import com.android.circleoflife.communication.models.SyncResult;
 import com.android.circleoflife.database.control.DatabaseController;
 import com.android.circleoflife.database.models.User;
 
@@ -86,11 +87,11 @@ public class AuthenticationImpl implements Authentication {
     }
 
     @Override
-    public boolean manualSync() {
+    public SyncResult manualSync() {
         if (authenticated()) {
             return App.getDatabaseController().syncWithServer(this);
         }
-        return false;
+        return null;
     }
 
     @Override

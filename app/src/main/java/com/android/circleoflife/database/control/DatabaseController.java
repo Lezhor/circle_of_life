@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.android.circleoflife.auth.Authentication;
+import com.android.circleoflife.communication.models.SyncResult;
 import com.android.circleoflife.database.control.observers.DatabaseObserver;
 import com.android.circleoflife.database.models.*;
 import com.android.circleoflife.logging.model.DBLog;
@@ -39,11 +40,11 @@ public interface DatabaseController {
     Collection<DatabaseObserver> getObservers();
 
     /**
-     * Synchronizes database with server by calling the {@link com.android.circleoflife.communication.protocols.SyncProtocol#sync(User, LocalDateTime, DBLog[], List)} method.
+     * Synchronizes database with server by calling the {@link com.android.circleoflife.communication.protocols.SyncProtocol#sync(User, LocalDateTime, DBLog[])} method.
      * @param auth the SyncProtocol-parameters are retrieved from this parameter: user, lastSyncDate...
      */
     // TODO: 11.01.2024 syncWithServer should return a SyncResult
-    boolean syncWithServer(Authentication auth);
+    SyncResult syncWithServer(Authentication auth);
 
 
     // Users

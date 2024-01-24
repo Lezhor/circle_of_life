@@ -1,5 +1,6 @@
 package com.android.circleoflife.auth;
 
+import com.android.circleoflife.communication.models.SyncResult;
 import com.android.circleoflife.communication.protocols.SyncProtocol;
 import com.android.circleoflife.database.models.User;
 
@@ -35,7 +36,7 @@ public interface Authentication {
      * Syncs even if autoSync is not enabled
      * @return true if synchronisation succeeds
      */
-    boolean manualSync();
+    SyncResult manualSync();
 
     /**
      * Returns true if there is a user authenticated

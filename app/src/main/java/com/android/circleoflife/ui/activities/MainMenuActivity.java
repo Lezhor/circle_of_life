@@ -148,8 +148,9 @@ public class MainMenuActivity extends SuperActivity {
      */
     private void sync() {
         Log.d(TAG, "sync: pressed");
-        executeInBackground(App.getAuthentication()::manualSync, succeeded ->
-                Toast.makeText(this, succeeded ? R.string.toast_sync_successful : R.string.toast_sync_failed, Toast.LENGTH_SHORT).show());
+        // TODO: 24.01.2024 Print Actual message
+        executeInBackground(App.getAuthentication()::manualSync, sync ->
+                Toast.makeText(this, sync.wasSuccessful() ? R.string.toast_sync_successful : R.string.toast_sync_failed, Toast.LENGTH_SHORT).show());
     }
 
     /**

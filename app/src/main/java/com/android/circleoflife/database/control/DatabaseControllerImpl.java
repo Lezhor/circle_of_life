@@ -77,7 +77,7 @@ public class DatabaseControllerImpl implements DatabaseController {
     }
 
     @Override
-    public boolean syncWithServer(Authentication auth) {
+    public SyncResult syncWithServer(Authentication auth) {
         SyncResult sync = App.getSyncProtocol().sync(
                 auth.getUser(),
                 auth.getSettings().getLastSyncDate(),
@@ -85,7 +85,6 @@ public class DatabaseControllerImpl implements DatabaseController {
         );
         if (!sync.wasSuccessful()) {
             Log.d(TAG, "syncWithServer: Synchronisation failed");
-            return false;
         } else {
             Log.d(TAG, "syncWithServer: Synchronisation succeeded!");
             auth.getSettings().setLastSyncDate(sync.getNewLastSyncDate());
@@ -103,8 +102,8 @@ public class DatabaseControllerImpl implements DatabaseController {
                     Log.w(TAG, "syncWithServer: Executing of inserting log failed!", e);
                 }
             }
-            return true;
         }
+        return sync;
     }
 
     /**
