@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Circle of Life</string>
 
     <!-- Login- & SignUp-->
@@ -47,7 +47,7 @@
     <string name="category_dialog_no_parent">None</string>
     <string name="dialog_create_new">Create new %s</string>
 
-    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_cancel" tools:ignore="ButtonCase">CANCEL</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_edit_title">Edit %s</string>
     <string name="dialog_edit_name_hint">New name</string>

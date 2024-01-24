@@ -8,9 +8,9 @@
     <string name="login">Einloggen</string>
     <string name="go_to_signup_text">Kein Account? Jetzt anmelden!</string>
 
-    <string name="signup">Anmelden</string>
+    <string name="signup">Account erstellen</string>
     <string name="go_to_login_text">Du hast schon einen Account? Einloggen!</string>
-    <string name="switch_server_sync_text">Aktiviere Server Synchronisation</string>
+    <string name="switch_server_sync_text">Server Synchronisation aktivieren</string>
     <string name="switch_automatic_sync_text">Automatische Synchronisation</string>
 
     <!-- Main Menu - Options Menu -->
@@ -22,7 +22,7 @@
     <!-- Main Menu - Other -->
     <string name="main_menu_welcome_text">Willkommen zurück</string>
 
-    <string name="main_menu_view_root_categories_text">Wurzelverzeichnis anzeigen</string>
+    <string name="main_menu_view_root_categories_text">Ordner anzeigen</string>
     <string name="main_menu_view_cycles_text">Routinen anzeigen</string>
     <string name="main_menu_view_todos_text">Todos anzeigen</string>
 
