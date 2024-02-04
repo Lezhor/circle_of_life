@@ -74,4 +74,5 @@
     <string name="day_prep_saturday">Субботам</string>
     <string name="day_prep_sunday">Воскресеньям</string>
     <string name="exception_connection_failed">Комуникация с сервером не получилась</string>
+    <string name="exception_server_authentication_failed">Аутентикация безуспешна</string>
 </resources>

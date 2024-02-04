@@ -130,4 +130,5 @@
     </string-array>
 
     <string name="exception_connection_failed">Connection to Server failed!</string>
+    <string name="exception_server_authentication_failed">Authentication on Server failed!</string>
 </resources>
