@@ -27,13 +27,13 @@ public class ProtocolSerializer {
      * @param protocol      protocol in order to get the protocol name and version
      * @param communication instance of socket Communication.
      */
-    public ProtocolSerializer(Protocol protocol, SocketCommunication communication) throws NullPointerException {
+    public ProtocolSerializer(Protocol protocol, SocketCommunication communication) throws IOException {
         this.protocol = protocol;
         if (communication.connected()) {
             this.is = Objects.requireNonNull(communication.getInputStream());
             this.os = Objects.requireNonNull(communication.getOutputStream());
         } else {
-            throw new NullPointerException("Cannot retrieve streams from SocketCommunication because not connected to server yet");
+            throw new IOException("Cannot retrieve streams from SocketCommunication because not connected to server yet");
         }
         try {
             serializeHeader();
