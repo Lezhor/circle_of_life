@@ -128,4 +128,6 @@
         <item>@string/day_saturday_short</item>
         <item>@string/day_sunday_short</item>
     </string-array>
+
+    <string name="exception_connection_failed">Connection to Server failed!</string>
 </resources>

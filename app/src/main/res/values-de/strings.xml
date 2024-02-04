@@ -95,4 +95,5 @@
     <string name="day_friday_short">Fr</string>
     <string name="day_saturday_short">Sa</string>
     <string name="day_sunday_short">So</string>
+    <string name="exception_connection_failed">Verbindung mit Server fehlgeschlagen</string>
 </resources>
