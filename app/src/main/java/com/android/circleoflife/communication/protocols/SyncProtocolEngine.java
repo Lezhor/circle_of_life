@@ -2,6 +2,7 @@ package com.android.circleoflife.communication.protocols;
 
 import android.util.Log;
 
+import com.android.circleoflife.R;
 import com.android.circleoflife.application.App;
 import com.android.circleoflife.auth.AuthenticationFailedException;
 import com.android.circleoflife.communication.models.SimpleSyncResult;
@@ -72,13 +73,12 @@ public class SyncProtocolEngine implements SyncProtocol {
         boolean syncSuccessful = true;
         List<DBLog<?>> outLogs = new LinkedList<>();
         IOException exception = null;
-        // TODO: 22.01.2024 Set the Exception message based on strings.xml
         try {
             com.connectToServer();
         } catch (IOException e) {
             Log.i(TAG, "Connection to Server failed!");
             syncSuccessful = false;
-            exception = new IOException("Connection to Server failed");
+            exception = new IOException(App.getResources().getString(R.string.exception_server_connection_failed));
             com.disconnectFromServer();
         }
         if (syncSuccessful) {
@@ -116,10 +116,14 @@ public class SyncProtocolEngine implements SyncProtocol {
                 Log.d(TAG, "5) Sending SyncSuccessfulPDU");
                 serializer.serialize(syncSuccessfulPDU);
 
-            } catch (NullPointerException | AuthenticationFailedException | IOException e) {
+            } catch (AuthenticationFailedException e) {
                 Log.i(TAG, "Synchronisation failed: " + e.getMessage());
                 syncSuccessful = false;
-                exception = new IOException(e);
+                exception = new IOException(App.getResources().getString(R.string.exception_server_authentication_failed));
+            } catch (IOException e) {
+                Log.i(TAG, "Synchronisation failed: " + e.getMessage());
+                syncSuccessful = false;
+                exception = new IOException(App.getResources().getString(R.string.exception_server_connection_failed));
             } finally {
                 com.disconnectFromServer();
             }

@@ -95,6 +95,6 @@
     <string name="day_friday_short">Fr</string>
     <string name="day_saturday_short">Sa</string>
     <string name="day_sunday_short">So</string>
-    <string name="exception_connection_failed">Verbindung mit Server fehlgeschlagen</string>
+    <string name="exception_server_connection_failed">Verbindung mit Server fehlgeschlagen</string>
     <string name="exception_server_authentication_failed">Server-Authentikation fehlgeschlagen!</string>
 </resources>
